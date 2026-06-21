@@ -1,0 +1,35 @@
+{
+  "appName": "RestoApp",
+  "nearbyTitle": "Places near you",
+  "filters": {
+    "category": "Category",
+    "purpose": "Purpose",
+    "promo": "With promotion",
+    "open": "Open now",
+    "radius": "Radius",
+    "all": "All"
+  },
+  "categories": {
+    "bar": "Bar",
+    "pub": "Pub",
+    "restaurant": "Restaurant",
+    "cafe": "Café"
+  },
+  "branch": {
+    "hours": "Hours",
+    "menu": "Menu",
+    "promos": "Promotions",
+    "distance": "{{km}} km",
+    "noResults": "No matching places",
+    "back": "Back"
+  },
+  "geo": {
+    "requesting": "Getting your location…",
+    "denied": "Enable location to see nearby places",
+    "unavailable": "Location unavailable"
+  },
+  "errors": {
+    "loadFailed": "Could not load places"
+  },
+  "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+}
