@@ -1,3 +1,12 @@
+import { Routes, Route } from "react-router-dom";
+import { HomePage } from "./pages/HomePage.js";
+import { BranchDetailPage } from "./pages/BranchDetailPage.js";
+
 export default function App() {
-  return <div className="p-4 text-slate-900">RestoApp</div>;
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/branch/:id" element={<BranchDetailPage />} />
+    </Routes>
+  );
 }
