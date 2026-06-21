@@ -39,6 +39,18 @@ services:
       - ./api:/app
       - /app/node_modules
 
+  web:
+    build: ./web
+    environment:
+      VITE_API_URL: http://localhost:3000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+    volumes:
+      - ./web:/app
+      - /app/node_modules
+
 volumes:
   pgdata:
   miniodata:
