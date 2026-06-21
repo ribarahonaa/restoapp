@@ -50,6 +50,41 @@
   "weekdays": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
   "admin": {
     "login": { "title": "Panel · Ingreso", "email": "Correo", "password": "Contraseña", "submit": "Entrar", "error": "Credenciales inválidas" },
-    "home": { "title": "Panel de administración", "logout": "Cerrar sesión" }
+    "home": { "title": "Panel de administración", "logout": "Cerrar sesión" },
+    "owner": {
+      "title": "Panel",
+      "myBranches": "Mis locales",
+      "inactive": "Inactivo",
+      "closedNow": "Cerrado",
+      "menuCount_one": "{{count}} ítem",
+      "menuCount_other": "{{count}} ítems",
+      "promoCount_one": "{{count}} promo",
+      "promoCount_other": "{{count}} promos",
+      "chooseImage": "Elegir imagen",
+      "uploading": "Subiendo…",
+      "uploadError": "No se pudo subir la imagen",
+      "data": "Datos",
+      "name": "Nombre",
+      "category": "Categoría",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "description": "Descripción",
+      "image": "Imagen del local",
+      "location": "Ubicación (toca el mapa)",
+      "save": "Guardar",
+      "saved": "Guardado",
+      "status": "Estado",
+      "closeUntil": "Cerrar hasta",
+      "closeNow": "Cerrar",
+      "closedUntil": "Cerrado hasta {{date}}",
+      "reopen": "Reabrir",
+      "activate": "Activar local",
+      "deactivate": "Desactivar local",
+      "hours": "Horarios",
+      "openTime": "apertura",
+      "closeTime": "cierre",
+      "saveHours": "Guardar horarios",
+      "saveError": "No se pudo guardar, intenta de nuevo"
+    }
   }
 }

@@ -50,6 +50,41 @@
   "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
   "admin": {
     "login": { "title": "Admin · Sign in", "email": "Email", "password": "Password", "submit": "Sign in", "error": "Invalid credentials" },
-    "home": { "title": "Admin panel", "logout": "Sign out" }
+    "home": { "title": "Admin panel", "logout": "Sign out" },
+    "owner": {
+      "title": "Panel",
+      "myBranches": "My branches",
+      "inactive": "Inactive",
+      "closedNow": "Closed",
+      "menuCount_one": "{{count}} item",
+      "menuCount_other": "{{count}} items",
+      "promoCount_one": "{{count}} promo",
+      "promoCount_other": "{{count}} promos",
+      "chooseImage": "Choose image",
+      "uploading": "Uploading…",
+      "uploadError": "Could not upload the image",
+      "data": "Data",
+      "name": "Name",
+      "category": "Category",
+      "address": "Address",
+      "phone": "Phone",
+      "description": "Description",
+      "image": "Branch image",
+      "location": "Location (tap the map)",
+      "save": "Save",
+      "saved": "Saved",
+      "status": "Status",
+      "closeUntil": "Close until",
+      "closeNow": "Close",
+      "closedUntil": "Closed until {{date}}",
+      "reopen": "Reopen",
+      "activate": "Activate branch",
+      "deactivate": "Deactivate branch",
+      "hours": "Hours",
+      "openTime": "open",
+      "closeTime": "close",
+      "saveHours": "Save hours",
+      "saveError": "Could not save, try again"
+    }
   }
 }

@@ -50,6 +50,41 @@
   "weekdays": ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
   "admin": {
     "login": { "title": "Painel · Entrar", "email": "E-mail", "password": "Senha", "submit": "Entrar", "error": "Credenciais inválidas" },
-    "home": { "title": "Painel de administração", "logout": "Sair" }
+    "home": { "title": "Painel de administração", "logout": "Sair" },
+    "owner": {
+      "title": "Painel",
+      "myBranches": "Meus locais",
+      "inactive": "Inativo",
+      "closedNow": "Fechado",
+      "menuCount_one": "{{count}} item",
+      "menuCount_other": "{{count}} itens",
+      "promoCount_one": "{{count}} promo",
+      "promoCount_other": "{{count}} promos",
+      "chooseImage": "Escolher imagem",
+      "uploading": "Enviando…",
+      "uploadError": "Não foi possível enviar a imagem",
+      "data": "Dados",
+      "name": "Nome",
+      "category": "Categoria",
+      "address": "Endereço",
+      "phone": "Telefone",
+      "description": "Descrição",
+      "image": "Imagem do local",
+      "location": "Localização (toque no mapa)",
+      "save": "Salvar",
+      "saved": "Salvo",
+      "status": "Status",
+      "closeUntil": "Fechar até",
+      "closeNow": "Fechar",
+      "closedUntil": "Fechado até {{date}}",
+      "reopen": "Reabrir",
+      "activate": "Ativar local",
+      "deactivate": "Desativar local",
+      "hours": "Horários",
+      "openTime": "abertura",
+      "closeTime": "fechamento",
+      "saveHours": "Salvar horários",
+      "saveError": "Não foi possível salvar, tente novamente"
+    }
   }
 }
