@@ -5,6 +5,10 @@ export async function resetDb() {
   // orden respeta FKs
   await prisma.placeSuggestion.deleteMany();
   await prisma.review.deleteMany();
+  await prisma.ad.deleteMany();
+  await prisma.adRequest.deleteMany();
+  await prisma.planUpgradeRequest.deleteMany();
+  await prisma.discountCode.deleteMany();
   await prisma.branchPurpose.deleteMany();
   await prisma.menuItem.deleteMany();
   await prisma.promotion.deleteMany();
