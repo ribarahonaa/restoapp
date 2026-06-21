@@ -52,6 +52,14 @@
     "login": { "title": "Admin · Sign in", "email": "Email", "password": "Password", "submit": "Sign in", "error": "Invalid credentials" },
     "home": { "title": "Admin panel", "logout": "Sign out" },
     "owner": {
+      "title": "Panel",
+      "myBranches": "My branches",
+      "inactive": "Inactive",
+      "closedNow": "Closed",
+      "menuCount_one": "{{count}} item",
+      "menuCount_other": "{{count}} items",
+      "promoCount_one": "{{count}} promo",
+      "promoCount_other": "{{count}} promos",
       "chooseImage": "Choose image",
       "uploading": "Uploading…",
       "uploadError": "Could not upload the image"
