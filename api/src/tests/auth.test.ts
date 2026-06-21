@@ -53,4 +53,19 @@ describe("auth", () => {
     const res = await request(app).get("/auth/me");
     expect(res.status).toBe(401);
   });
+
+  it("rechaza registro con email inválido con 400", async () => {
+    const res = await request(app)
+      .post("/auth/register")
+      .send({ email: "no-es-email", password: "secret123", name: "Ana" });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("validation_error");
+  });
+
+  it("rechaza registro con password corta con 400", async () => {
+    const res = await request(app)
+      .post("/auth/register")
+      .send({ email: "a@b.cl", password: "123", name: "Ana" });
+    expect(res.status).toBe(400);
+  });
 });
