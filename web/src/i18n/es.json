@@ -87,7 +87,20 @@
       "saveError": "No se pudo guardar, intenta de nuevo",
       "menuTab": "Menú",
       "promosTab": "Promos",
-      "discountsTab": "Descuentos"
+      "discountsTab": "Descuentos",
+      "addItem": "Agregar ítem",
+      "itemName": "Nombre del ítem",
+      "price": "Precio",
+      "itemCategory": "Categoría",
+      "itemDescription": "Descripción",
+      "itemImage": "Imagen del ítem",
+      "delete": "Eliminar",
+      "limitReached": "Llegaste al límite de tu plan",
+      "requestUpgrade": "Solicitar upgrade",
+      "plan": "Plan",
+      "note": "Nota (opcional)",
+      "send": "Enviar",
+      "requestSent": "Solicitud enviada"
     }
   }
 }

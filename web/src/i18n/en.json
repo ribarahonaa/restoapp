@@ -87,7 +87,20 @@
       "saveError": "Could not save, try again",
       "menuTab": "Menu",
       "promosTab": "Promos",
-      "discountsTab": "Discounts"
+      "discountsTab": "Discounts",
+      "addItem": "Add item",
+      "itemName": "Item name",
+      "price": "Price",
+      "itemCategory": "Category",
+      "itemDescription": "Description",
+      "itemImage": "Item image",
+      "delete": "Delete",
+      "limitReached": "You've reached your plan limit",
+      "requestUpgrade": "Request upgrade",
+      "plan": "Plan",
+      "note": "Note (optional)",
+      "send": "Send",
+      "requestSent": "Request sent"
     }
   }
 }

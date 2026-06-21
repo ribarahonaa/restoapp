@@ -87,7 +87,20 @@
       "saveError": "Não foi possível salvar, tente novamente",
       "menuTab": "Cardápio",
       "promosTab": "Promos",
-      "discountsTab": "Descontos"
+      "discountsTab": "Descontos",
+      "addItem": "Adicionar item",
+      "itemName": "Nome do item",
+      "price": "Preço",
+      "itemCategory": "Categoria",
+      "itemDescription": "Descrição",
+      "itemImage": "Imagem do item",
+      "delete": "Excluir",
+      "limitReached": "Você atingiu o limite do seu plano",
+      "requestUpgrade": "Solicitar upgrade",
+      "plan": "Plano",
+      "note": "Nota (opcional)",
+      "send": "Enviar",
+      "requestSent": "Solicitação enviada"
     }
   }
 }
