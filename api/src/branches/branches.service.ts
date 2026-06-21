@@ -73,7 +73,18 @@ export async function getBranchDetail(id: string) {
   const ratingAvg = ratingCount
     ? branch.reviews.reduce((s, r) => s + r.rating, 0) / ratingCount
     : 0;
-  return { ...branch, ratingAvg, ratingCount };
+  const discountCodes = await prisma.discountCode.findMany({
+    where: {
+      businessId: branch.businessId,
+      active: true,
+      startsAt: { lte: now },
+      endsAt: { gte: now },
+      OR: [{ branchId: branch.id }, { branchId: null }],
+    },
+    orderBy: { createdAt: "desc" },
+    select: { id: true, code: true, type: true, value: true, startsAt: true, endsAt: true, branchId: true },
+  });
+  return { ...branch, ratingAvg, ratingCount, discountCodes };
 }
 
 export async function addReview(branchId: string, input: ReviewInput) {

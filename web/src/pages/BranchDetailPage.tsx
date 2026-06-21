@@ -79,14 +79,14 @@ export function BranchDetailPage() {
           <ArrowLeft size={20} strokeWidth={2.5} />
         </Link>
 
-        <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+        <div className="absolute inset-x-0 bottom-0 px-4 pb-9 pt-10 text-white">
           <span className="inline-block rounded-full bg-white/20 px-2.5 py-1 text-xs font-bold uppercase tracking-wide backdrop-blur">
             {t(`categories.${branch.category}`)}
           </span>
-          <h1 className="mt-1.5 font-display text-2xl font-extrabold leading-tight drop-shadow">
+          <h1 className="mt-2 font-display text-2xl font-extrabold leading-tight drop-shadow">
             {branch.name}
           </h1>
-          <div className="mt-1 flex items-center gap-3 text-sm">
+          <div className="mt-2 flex items-center gap-3 text-sm">
             <RatingBadge value={branch.ratingAvg} count={branch.ratingCount} />
             <span className="inline-flex items-center gap-1 opacity-90">
               <MapPin size={13} strokeWidth={2.25} />

@@ -49,6 +49,7 @@ export function buildNearbyQuery(p: NearbyParams): Prisma.Sql {
           (sh."closeTime" < sh."openTime" AND (${p.hhmm} >= sh."openTime" OR ${p.hhmm} <= sh."closeTime"))
         )
     )`);
+    filters.push(Prisma.sql`(b."closedUntil" IS NULL OR b."closedUntil" <= now())`);
   }
 
   const where = Prisma.join(filters, " AND ");
