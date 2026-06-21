@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client";
 export interface NearbyParams {
   lat: number;
   lng: number;
-  radius: number; // metros
+  radius?: number; // metros — opcional: si falta, no se acota por distancia
   now: Date;
   weekday: number; // 0=domingo..6=sábado
   hhmm: string; // "HH:MM"
@@ -17,7 +17,10 @@ export function buildNearbyQuery(p: NearbyParams): Prisma.Sql {
   const origin = Prisma.sql`ST_SetSRID(ST_MakePoint(${p.lng}, ${p.lat}), 4326)::geography`;
 
   const filters: Prisma.Sql[] = [Prisma.sql`b."active" = true`];
-  filters.push(Prisma.sql`ST_DWithin(b."geog", ${origin}, ${p.radius})`);
+  // Radio opcional: por defecto se muestran todos los locales, ordenados por cercanía.
+  if (p.radius != null) {
+    filters.push(Prisma.sql`ST_DWithin(b."geog", ${origin}, ${p.radius})`);
+  }
 
   if (p.category) {
     filters.push(Prisma.sql`b."category" = ${p.category}::"Category"`);
@@ -52,9 +55,15 @@ export function buildNearbyQuery(p: NearbyParams): Prisma.Sql {
 
   return Prisma.sql`
     SELECT b."id", b."name", b."category", b."address", b."lat", b."lng",
-           b."phone", b."description",
+           b."phone", b."description", b."imageUrl",
+           COALESCE(r."avg", 0)::float8 AS "ratingAvg",
+           COALESCE(r."cnt", 0)::int    AS "ratingCount",
            ST_Distance(b."geog", ${origin}) AS distance
     FROM "Branch" b
+    LEFT JOIN (
+      SELECT "branchId", AVG("rating") AS "avg", COUNT(*) AS "cnt"
+      FROM "Review" GROUP BY "branchId"
+    ) r ON r."branchId" = b."id"
     WHERE ${where}
     ORDER BY distance ASC
     LIMIT 100

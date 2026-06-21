@@ -50,6 +50,19 @@ describe("GET /branches/nearby", () => {
     expect(res.body.map((b: any) => b.name)).toContain("Lejano");
   });
 
+  it("sin radio devuelve TODOS los locales activos, ordenados por cercanía", async () => {
+    const res = await request(app).get("/branches/nearby").query({ ...origin });
+    expect(res.status).toBe(200);
+    const names = res.body.map((b: any) => b.name);
+    expect(names).toContain("Lejano"); // ya no se acota por distancia
+    expect(names).not.toContain("Inactivo");
+    const dists = res.body.map((b: any) => b.distance);
+    expect(dists).toEqual([...dists].sort((a, b) => a - b));
+    expect(res.body[0]).toHaveProperty("imageUrl");
+    expect(res.body[0]).toHaveProperty("ratingAvg");
+    expect(res.body[0]).toHaveProperty("ratingCount");
+  });
+
   it("400 si faltan lat/lng", async () => {
     const res = await request(app).get("/branches/nearby").query({ radius: 5000 });
     expect(res.status).toBe(400);

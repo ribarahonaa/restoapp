@@ -18,7 +18,7 @@ describe("FilterBar", () => {
   it("llama onChange al activar promo", () => {
     const onChange = vi.fn();
     render(
-      <FilterBar value={{ promo: false, open: false, radius: 5000 }} purposes={purposes} onChange={onChange} />
+      <FilterBar value={{ promo: false, open: false }} purposes={purposes} onChange={onChange} />
     );
     fireEvent.click(screen.getByLabelText(/promo/i));
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ promo: true }));
@@ -27,9 +27,9 @@ describe("FilterBar", () => {
   it("llama onChange al elegir categoría", () => {
     const onChange = vi.fn();
     render(
-      <FilterBar value={{ promo: false, open: false, radius: 5000 }} purposes={purposes} onChange={onChange} />
+      <FilterBar value={{ promo: false, open: false }} purposes={purposes} onChange={onChange} />
     );
-    fireEvent.change(screen.getByLabelText(/category/i), { target: { value: "bar" } });
+    fireEvent.click(screen.getByRole("button", { name: /^bar$/i }));
     expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ category: "bar" }));
   });
 });

@@ -4,6 +4,7 @@ import { hashPassword } from "../auth/password.js";
 export async function resetDb() {
   // orden respeta FKs
   await prisma.placeSuggestion.deleteMany();
+  await prisma.review.deleteMany();
   await prisma.branchPurpose.deleteMany();
   await prisma.menuItem.deleteMany();
   await prisma.promotion.deleteMany();
