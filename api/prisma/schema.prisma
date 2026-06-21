@@ -1,0 +1,164 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  superadmin
+  admin_general
+  admin_sucursal
+  usuario
+}
+
+enum Lang {
+  es
+  en
+  pt
+}
+
+enum Category {
+  bar
+  pub
+  restaurant
+  cafe
+}
+
+enum SuggestionStatus {
+  pending
+  approved
+  rejected
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  passwordHash  String
+  role          Role     @default(usuario)
+  name          String
+  preferredLang Lang     @default(es)
+  createdAt     DateTime @default(now())
+
+  ownedBusinesses Business[]      @relation("BusinessOwner")
+  branchAdmins    BranchAdmin[]
+  suggestions     PlaceSuggestion[] @relation("Suggester")
+  reviewed        PlaceSuggestion[] @relation("Reviewer")
+}
+
+model Business {
+  id          String   @id @default(uuid())
+  name        String
+  ownerUserId String
+  owner       User     @relation("BusinessOwner", fields: [ownerUserId], references: [id])
+  createdAt   DateTime @default(now())
+  branches    Branch[]
+}
+
+model Branch {
+  id          String   @id @default(uuid())
+  businessId  String
+  business    Business @relation(fields: [businessId], references: [id])
+  name        String
+  category    Category
+  address     String
+  lat         Float
+  lng         Float
+  phone       String?
+  description String?
+  planId      String?
+  plan        Plan?    @relation(fields: [planId], references: [id])
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  admins      BranchAdmin[]
+  hours       ServiceHours[]
+  promotions  Promotion[]
+  menuItems   MenuItem[]
+  purposes    BranchPurpose[]
+}
+
+model BranchAdmin {
+  userId   String
+  branchId String
+  user     User   @relation(fields: [userId], references: [id])
+  branch   Branch @relation(fields: [branchId], references: [id])
+  @@id([userId, branchId])
+}
+
+model ServiceHours {
+  id        String @id @default(uuid())
+  branchId  String
+  branch    Branch @relation(fields: [branchId], references: [id])
+  weekday   Int    // 0=domingo .. 6=sábado
+  openTime  String // "HH:MM"
+  closeTime String
+}
+
+model Promotion {
+  id          String   @id @default(uuid())
+  branchId    String
+  branch      Branch   @relation(fields: [branchId], references: [id])
+  title       String
+  description String?
+  imageUrl    String?
+  startsAt    DateTime
+  endsAt      DateTime
+  active      Boolean  @default(true)
+}
+
+model MenuItem {
+  id          String  @id @default(uuid())
+  branchId    String
+  branch      Branch  @relation(fields: [branchId], references: [id])
+  name        String
+  description String?
+  price       Decimal @db.Decimal(10, 2)
+  imageUrl    String?
+  category    String?
+}
+
+model PurposeTag {
+  id       String          @id @default(uuid())
+  slug     String          @unique
+  labelEs  String
+  labelEn  String
+  labelPt  String
+  branches BranchPurpose[]
+}
+
+model BranchPurpose {
+  branchId String
+  tagId    String
+  branch   Branch     @relation(fields: [branchId], references: [id])
+  tag      PurposeTag @relation(fields: [tagId], references: [id])
+  @@id([branchId, tagId])
+}
+
+model Plan {
+  id           String   @id @default(uuid())
+  name         String   @unique
+  features     Json     @default("{}")
+  maxPromos    Int      @default(1)
+  maxMenuItems Int      @default(10)
+  branches     Branch[]
+}
+
+model PlaceSuggestion {
+  id          String           @id @default(uuid())
+  suggestedBy String
+  suggester   User             @relation("Suggester", fields: [suggestedBy], references: [id])
+  name        String
+  category    Category
+  address     String
+  lat         Float
+  lng         Float
+  note        String?
+  status      SuggestionStatus @default(pending)
+  createdAt   DateTime         @default(now())
+  reviewedBy  String?
+  reviewer    User?            @relation("Reviewer", fields: [reviewedBy], references: [id])
+  reviewedAt  DateTime?
+}
