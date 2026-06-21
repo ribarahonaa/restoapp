@@ -28,5 +28,8 @@
     "denied": "Enable location to see nearby places",
     "unavailable": "Location unavailable"
   },
+  "errors": {
+    "loadFailed": "Could not load places"
+  },
   "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
 }

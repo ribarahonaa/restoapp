@@ -28,5 +28,8 @@
     "denied": "Activa la ubicación para ver locales cercanos",
     "unavailable": "Ubicación no disponible"
   },
+  "errors": {
+    "loadFailed": "No se pudieron cargar los locales"
+  },
   "weekdays": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
 }

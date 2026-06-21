@@ -28,5 +28,8 @@
     "denied": "Ative a localização para ver lugares próximos",
     "unavailable": "Localização indisponível"
   },
+  "errors": {
+    "loadFailed": "Não foi possível carregar os lugares"
+  },
   "weekdays": ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
 }

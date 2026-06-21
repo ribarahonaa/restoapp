@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePurposes } from "../hooks/usePurposes.js";
 import { useNearby } from "../hooks/useNearby.js";
@@ -14,6 +15,7 @@ const FALLBACK = { lat: -33.4378, lng: -70.6504 };
 
 export function HomePage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const geo = useGeolocation();
   const purposes = usePurposes();
   const [filter, setFilter] = useState<FilterValue>({ promo: false, open: false, radius: 5000 });
@@ -34,13 +36,14 @@ export function HomePage() {
     [center.lat, center.lng, filter]
   );
 
-  const { branches } = useNearby(nearbyFilters);
+  const { branches, error } = useNearby(nearbyFilters);
 
   const markers: MapMarker[] = branches.map((b) => ({
     id: b.id,
     lat: b.lat,
     lng: b.lng,
     label: b.name,
+    onClick: () => navigate(`/branch/${b.id}`),
   }));
 
   return (
@@ -62,6 +65,9 @@ export function HomePage() {
         </div>
         <div className="h-1/2 md:h-auto md:w-1/2 overflow-y-auto">
           <h2 className="px-4 pt-3 text-sm font-semibold text-slate-700">{t("nearbyTitle")}</h2>
+          {error && (
+            <p className="px-4 py-2 text-sm text-red-700 bg-red-50">{t("errors.loadFailed")}</p>
+          )}
           <BranchList branches={branches} />
         </div>
       </div>
