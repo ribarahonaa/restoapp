@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import iconUrl from "leaflet/dist/images/marker-icon.png";
@@ -31,7 +32,9 @@ interface MapViewProps {
 
 function Recenter({ center }: { center: { lat: number; lng: number } }) {
   const map = useMap();
-  map.setView([center.lat, center.lng]);
+  useEffect(() => {
+    map.setView([center.lat, center.lng]);
+  }, [center.lat, center.lng, map]);
   return null;
 }
 
