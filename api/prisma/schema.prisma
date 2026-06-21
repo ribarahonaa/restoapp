@@ -41,6 +41,7 @@ model User {
   name          String
   preferredLang Lang     @default(es)
   createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   ownedBusinesses Business[]      @relation("BusinessOwner")
   branchAdmins    BranchAdmin[]
@@ -54,7 +55,10 @@ model Business {
   ownerUserId String
   owner       User     @relation("BusinessOwner", fields: [ownerUserId], references: [id])
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   branches    Branch[]
+
+  @@index([ownerUserId])
 }
 
 model Branch {
@@ -72,12 +76,16 @@ model Branch {
   plan        Plan?    @relation(fields: [planId], references: [id])
   active      Boolean  @default(true)
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   admins      BranchAdmin[]
   hours       ServiceHours[]
   promotions  Promotion[]
   menuItems   MenuItem[]
   purposes    BranchPurpose[]
+
+  @@index([businessId])
+  @@index([planId])
 }
 
 model BranchAdmin {
@@ -86,6 +94,7 @@ model BranchAdmin {
   user     User   @relation(fields: [userId], references: [id])
   branch   Branch @relation(fields: [branchId], references: [id])
   @@id([userId, branchId])
+  @@index([branchId])
 }
 
 model ServiceHours {
@@ -95,6 +104,8 @@ model ServiceHours {
   weekday   Int    // 0=domingo .. 6=sábado
   openTime  String // "HH:MM"
   closeTime String
+
+  @@index([branchId])
 }
 
 model Promotion {
@@ -107,6 +118,9 @@ model Promotion {
   startsAt    DateTime
   endsAt      DateTime
   active      Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+
+  @@index([branchId])
 }
 
 model MenuItem {
@@ -118,6 +132,9 @@ model MenuItem {
   price       Decimal @db.Decimal(10, 2)
   imageUrl    String?
   category    String?
+  updatedAt   DateTime @updatedAt
+
+  @@index([branchId])
 }
 
 model PurposeTag {
@@ -135,6 +152,7 @@ model BranchPurpose {
   branch   Branch     @relation(fields: [branchId], references: [id])
   tag      PurposeTag @relation(fields: [tagId], references: [id])
   @@id([branchId, tagId])
+  @@index([tagId])
 }
 
 model Plan {
@@ -161,4 +179,9 @@ model PlaceSuggestion {
   reviewedBy  String?
   reviewer    User?            @relation("Reviewer", fields: [reviewedBy], references: [id])
   reviewedAt  DateTime?
+  updatedAt   DateTime         @updatedAt
+
+  @@index([suggestedBy])
+  @@index([reviewedBy])
+  @@index([status])
 }
