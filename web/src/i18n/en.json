@@ -79,7 +79,11 @@
       "closedUntil": "Closed until {{date}}",
       "reopen": "Reopen",
       "activate": "Activate branch",
-      "deactivate": "Deactivate branch"
+      "deactivate": "Deactivate branch",
+      "hours": "Hours",
+      "openTime": "open",
+      "closeTime": "close",
+      "saveHours": "Save hours"
     }
   }
 }

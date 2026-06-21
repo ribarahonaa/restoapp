@@ -79,7 +79,11 @@
       "closedUntil": "Cerrado hasta {{date}}",
       "reopen": "Reabrir",
       "activate": "Activar local",
-      "deactivate": "Desactivar local"
+      "deactivate": "Desactivar local",
+      "hours": "Horarios",
+      "openTime": "apertura",
+      "closeTime": "cierre",
+      "saveHours": "Guardar horarios"
     }
   }
 }

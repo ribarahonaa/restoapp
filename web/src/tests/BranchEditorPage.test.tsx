@@ -42,7 +42,7 @@ describe("BranchEditorPage", () => {
     const nameInput = (await screen.findByLabelText(/nombre/i)) as HTMLInputElement;
     expect(nameInput.value).toBe("Café Central");
     fireEvent.change(nameInput, { target: { value: "Café Nuevo" } });
-    fireEvent.click(screen.getByRole("button", { name: /guardar/i }));
+    fireEvent.click(screen.getAllByRole("button", { name: /guardar/i })[0]);
     await waitFor(() =>
       expect(update).toHaveBeenCalledWith("b1", expect.objectContaining({ name: "Café Nuevo" }))
     );
