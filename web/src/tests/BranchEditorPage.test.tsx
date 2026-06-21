@@ -61,6 +61,6 @@ describe("BranchEditorPage", () => {
     expect(screen.getByRole("tab", { name: /^menú$/i })).toBeInTheDocument();
     // al cambiar a Menú, el formulario de datos deja de mostrarse
     fireEvent.click(screen.getByRole("tab", { name: /^menú$/i }));
-    expect(screen.queryByLabelText(/nombre/i)).not.toBeInTheDocument();
+    expect(screen.queryByLabelText(/dirección/i)).not.toBeInTheDocument();
   });
 });
