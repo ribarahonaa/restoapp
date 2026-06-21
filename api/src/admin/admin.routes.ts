@@ -5,6 +5,7 @@ import { uploadsRouter } from "./uploads.routes.js";
 import { ownerBranchesRouter } from "./branches.routes.js";
 import { requireBranchAccess } from "../middleware/ownership.js";
 import { menuRouter } from "./menu.routes.js";
+import { promotionsRouter } from "./promotions.routes.js";
 
 export const adminRouter = Router();
 
@@ -15,3 +16,4 @@ adminRouter.use(authorize("superadmin", "admin_general", "admin_sucursal"));
 adminRouter.use("/uploads", uploadsRouter);
 adminRouter.use("/branches", ownerBranchesRouter);
 adminRouter.use("/branches/:branchId/menu", requireBranchAccess(), menuRouter);
+adminRouter.use("/branches/:branchId/promotions", requireBranchAccess(), promotionsRouter);

@@ -30,7 +30,7 @@ menuRouter.post("/", async (req, res, next) => {
 
 menuRouter.patch("/:itemId", async (req, res, next) => {
   try {
-    const branchId = (req.params as { branchId: string }).branchId;
+    const branchId = (req.params as unknown as { branchId: string }).branchId;
     const existing = await prisma.menuItem.findUnique({ where: { id: req.params.itemId } });
     if (!existing || existing.branchId !== branchId) throw new HttpError(404, "item_not_found");
     const data = updateSchema.parse(req.body);
@@ -43,7 +43,7 @@ menuRouter.patch("/:itemId", async (req, res, next) => {
 
 menuRouter.delete("/:itemId", async (req, res, next) => {
   try {
-    const branchId = (req.params as { branchId: string }).branchId;
+    const branchId = (req.params as unknown as { branchId: string }).branchId;
     const existing = await prisma.menuItem.findUnique({ where: { id: req.params.itemId } });
     if (!existing || existing.branchId !== branchId) throw new HttpError(404, "item_not_found");
     await prisma.menuItem.delete({ where: { id: existing.id } });
