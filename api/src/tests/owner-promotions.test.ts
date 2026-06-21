@@ -32,4 +32,10 @@ describe("CRUD de promociones", () => {
     expect(res.status).toBe(403);
     expect(res.body.error).toBe("plan_limit_promos");
   });
+
+  it("404 al eliminar una promo de otra sucursal", async () => {
+    const alien = await prisma.promotion.create({ data: { branchId: ctx.otherBranch.id, title: "ajena", startsAt: new Date(), endsAt: new Date() } });
+    const res = await request(app).delete(`${base()}/${alien.id}`).set("Authorization", await auth());
+    expect(res.status).toBe(404);
+  });
 });

@@ -48,4 +48,10 @@ describe("CRUD de menú", () => {
     const res = await request(app).patch(`${base()}/${alien.id}`).set("Authorization", await auth()).send({ price: 2 });
     expect(res.status).toBe(404);
   });
+
+  it("404 al eliminar un ítem de otra sucursal", async () => {
+    const alien = await prisma.menuItem.create({ data: { branchId: ctx.otherBranch.id, name: "ajeno", price: 1 } });
+    const res = await request(app).delete(`${base()}/${alien.id}`).set("Authorization", await auth());
+    expect(res.status).toBe(404);
+  });
 });
