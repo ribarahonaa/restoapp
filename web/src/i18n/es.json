@@ -50,6 +50,11 @@
   "weekdays": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
   "admin": {
     "login": { "title": "Panel · Ingreso", "email": "Correo", "password": "Contraseña", "submit": "Entrar", "error": "Credenciales inválidas" },
-    "home": { "title": "Panel de administración", "logout": "Cerrar sesión" }
+    "home": { "title": "Panel de administración", "logout": "Cerrar sesión" },
+    "owner": {
+      "chooseImage": "Elegir imagen",
+      "uploading": "Subiendo…",
+      "uploadError": "No se pudo subir la imagen"
+    }
   }
 }

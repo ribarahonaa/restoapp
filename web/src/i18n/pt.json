@@ -50,6 +50,11 @@
   "weekdays": ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
   "admin": {
     "login": { "title": "Painel · Entrar", "email": "E-mail", "password": "Senha", "submit": "Entrar", "error": "Credenciais inválidas" },
-    "home": { "title": "Painel de administração", "logout": "Sair" }
+    "home": { "title": "Painel de administração", "logout": "Sair" },
+    "owner": {
+      "chooseImage": "Escolher imagem",
+      "uploading": "Enviando…",
+      "uploadError": "Não foi possível enviar a imagem"
+    }
   }
 }
