@@ -84,7 +84,10 @@
       "openTime": "apertura",
       "closeTime": "cierre",
       "saveHours": "Guardar horarios",
-      "saveError": "No se pudo guardar, intenta de nuevo"
+      "saveError": "No se pudo guardar, intenta de nuevo",
+      "menuTab": "Menú",
+      "promosTab": "Promos",
+      "discountsTab": "Descuentos"
     }
   }
 }

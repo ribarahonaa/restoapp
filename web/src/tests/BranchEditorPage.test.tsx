@@ -53,4 +53,14 @@ describe("BranchEditorPage", () => {
     await screen.findByLabelText(/nombre/i);
     expect(screen.queryByText(/desactivar local/i)).not.toBeInTheDocument();
   });
+
+  it("muestra las pestañas y cambia a Menú", async () => {
+    setup();
+    await screen.findByLabelText(/nombre/i);
+    // pestañas presentes
+    expect(screen.getByRole("tab", { name: /^menú$/i })).toBeInTheDocument();
+    // al cambiar a Menú, el formulario de datos deja de mostrarse
+    fireEvent.click(screen.getByRole("tab", { name: /^menú$/i }));
+    expect(screen.queryByLabelText(/nombre/i)).not.toBeInTheDocument();
+  });
 });

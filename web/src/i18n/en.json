@@ -84,7 +84,10 @@
       "openTime": "open",
       "closeTime": "close",
       "saveHours": "Save hours",
-      "saveError": "Could not save, try again"
+      "saveError": "Could not save, try again",
+      "menuTab": "Menu",
+      "promosTab": "Promos",
+      "discountsTab": "Discounts"
     }
   }
 }
