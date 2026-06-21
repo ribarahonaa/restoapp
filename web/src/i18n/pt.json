@@ -62,7 +62,24 @@
       "promoCount_other": "{{count}} promos",
       "chooseImage": "Escolher imagem",
       "uploading": "Enviando…",
-      "uploadError": "Não foi possível enviar a imagem"
+      "uploadError": "Não foi possível enviar a imagem",
+      "data": "Dados",
+      "name": "Nome",
+      "category": "Categoria",
+      "address": "Endereço",
+      "phone": "Telefone",
+      "description": "Descrição",
+      "image": "Imagem do local",
+      "location": "Localização (toque no mapa)",
+      "save": "Salvar",
+      "saved": "Salvo",
+      "status": "Status",
+      "closeUntil": "Fechar até",
+      "closeNow": "Fechar",
+      "closedUntil": "Fechado até {{date}}",
+      "reopen": "Reabrir",
+      "activate": "Ativar local",
+      "deactivate": "Desativar local"
     }
   }
 }

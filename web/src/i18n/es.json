@@ -62,7 +62,24 @@
       "promoCount_other": "{{count}} promos",
       "chooseImage": "Elegir imagen",
       "uploading": "Subiendo…",
-      "uploadError": "No se pudo subir la imagen"
+      "uploadError": "No se pudo subir la imagen",
+      "data": "Datos",
+      "name": "Nombre",
+      "category": "Categoría",
+      "address": "Dirección",
+      "phone": "Teléfono",
+      "description": "Descripción",
+      "image": "Imagen del local",
+      "location": "Ubicación (toca el mapa)",
+      "save": "Guardar",
+      "saved": "Guardado",
+      "status": "Estado",
+      "closeUntil": "Cerrar hasta",
+      "closeNow": "Cerrar",
+      "closedUntil": "Cerrado hasta {{date}}",
+      "reopen": "Reabrir",
+      "activate": "Activar local",
+      "deactivate": "Desactivar local"
     }
   }
 }

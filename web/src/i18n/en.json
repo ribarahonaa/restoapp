@@ -62,7 +62,24 @@
       "promoCount_other": "{{count}} promos",
       "chooseImage": "Choose image",
       "uploading": "Uploading…",
-      "uploadError": "Could not upload the image"
+      "uploadError": "Could not upload the image",
+      "data": "Data",
+      "name": "Name",
+      "category": "Category",
+      "address": "Address",
+      "phone": "Phone",
+      "description": "Description",
+      "image": "Branch image",
+      "location": "Location (tap the map)",
+      "save": "Save",
+      "saved": "Saved",
+      "status": "Status",
+      "closeUntil": "Close until",
+      "closeNow": "Close",
+      "closedUntil": "Closed until {{date}}",
+      "reopen": "Reopen",
+      "activate": "Activate branch",
+      "deactivate": "Deactivate branch"
     }
   }
 }
