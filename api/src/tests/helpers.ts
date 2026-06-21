@@ -1,10 +1,15 @@
 import { prisma } from "../prisma.js";
 import { hashPassword } from "../auth/password.js";
+import { signAccessToken } from "../auth/tokens.js";
 
 export async function resetDb() {
   // orden respeta FKs
   await prisma.placeSuggestion.deleteMany();
   await prisma.review.deleteMany();
+  await prisma.ad.deleteMany();
+  await prisma.adRequest.deleteMany();
+  await prisma.planUpgradeRequest.deleteMany();
+  await prisma.discountCode.deleteMany();
   await prisma.branchPurpose.deleteMany();
   await prisma.menuItem.deleteMany();
   await prisma.promotion.deleteMany();
@@ -63,4 +68,35 @@ export async function seedDiscoveryFixture() {
       lat: -33.4379, lng: -70.6505, planId: free.id, businessId: biz.id, active: false,
     },
   });
+}
+
+// Fixture admin: un business con su admin_general, una sucursal con admin_sucursal,
+// y un segundo business "ajeno" para probar ownership.
+export async function seedAdminFixture() {
+  const free = await prisma.plan.create({ data: { name: "Free", maxPromos: 1, maxMenuItems: 10, maxBranches: 1 } });
+  const general = await prisma.user.create({
+    data: { email: "general@demo.cl", name: "General", role: "admin_general", passwordHash: await hashPassword("clave1234") },
+  });
+  const sucursal = await prisma.user.create({
+    data: { email: "sucursal@demo.cl", name: "Sucursal", role: "admin_sucursal", passwordHash: await hashPassword("clave1234") },
+  });
+  const otro = await prisma.user.create({
+    data: { email: "otro@demo.cl", name: "Otro", role: "admin_general", passwordHash: await hashPassword("clave1234") },
+  });
+  const biz = await prisma.business.create({ data: { name: "Mi Empresa", ownerUserId: general.id } });
+  const otroBiz = await prisma.business.create({ data: { name: "Empresa Ajena", ownerUserId: otro.id } });
+  const branch = await prisma.branch.create({
+    data: { name: "Mi Local", category: "cafe", address: "x", lat: -33.43, lng: -70.65, businessId: biz.id, planId: free.id },
+  });
+  const otherBranch = await prisma.branch.create({
+    data: { name: "Local Ajeno", category: "bar", address: "y", lat: -33.44, lng: -70.66, businessId: otroBiz.id, planId: free.id },
+  });
+  await prisma.branchAdmin.create({ data: { userId: sucursal.id, branchId: branch.id } });
+  return { general, sucursal, otro, biz, otroBiz, branch, otherBranch, free };
+}
+
+// Devuelve un access token válido para el email dado.
+export async function tokenFor(email: string) {
+  const u = await prisma.user.findUniqueOrThrow({ where: { email } });
+  return signAccessToken({ sub: u.id, role: u.role });
 }

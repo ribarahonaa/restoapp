@@ -47,5 +47,9 @@
   "errors": {
     "loadFailed": "No se pudieron cargar los locales"
   },
-  "weekdays": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+  "weekdays": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+  "admin": {
+    "login": { "title": "Panel · Ingreso", "email": "Correo", "password": "Contraseña", "submit": "Entrar", "error": "Credenciales inválidas" },
+    "home": { "title": "Panel de administración", "logout": "Cerrar sesión" }
+  }
 }

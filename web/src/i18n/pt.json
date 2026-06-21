@@ -47,5 +47,9 @@
   "errors": {
     "loadFailed": "Não foi possível carregar os lugares"
   },
-  "weekdays": ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"]
+  "weekdays": ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
+  "admin": {
+    "login": { "title": "Painel · Entrar", "email": "E-mail", "password": "Senha", "submit": "Entrar", "error": "Credenciais inválidas" },
+    "home": { "title": "Painel de administração", "logout": "Sair" }
+  }
 }

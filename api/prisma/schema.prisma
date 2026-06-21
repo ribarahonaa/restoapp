@@ -57,6 +57,10 @@ model Business {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   branches    Branch[]
+  discountCodes  DiscountCode[]
+  upgradeRequests PlanUpgradeRequest[]
+  adRequests     AdRequest[]
+  ads            Ad[]
 
   @@index([ownerUserId])
 }
@@ -75,6 +79,7 @@ model Branch {
   phone       String?
   description String?
   imageUrl    String?
+  closedUntil DateTime?
   planId      String?
   plan        Plan?    @relation(fields: [planId], references: [id])
   active      Boolean  @default(true)
@@ -87,6 +92,8 @@ model Branch {
   menuItems   MenuItem[]
   purposes    BranchPurpose[]
   reviews     Review[]
+  discountCodes DiscountCode[]
+  ads           Ad[]
 
   @@index([businessId])
   @@index([planId])
@@ -177,7 +184,9 @@ model Plan {
   features     Json     @default("{}")
   maxPromos    Int      @default(1)
   maxMenuItems Int      @default(10)
+  maxBranches  Int      @default(1)
   branches     Branch[]
+  upgradeRequests PlanUpgradeRequest[]
 }
 
 model PlaceSuggestion {
@@ -200,4 +209,98 @@ model PlaceSuggestion {
   @@index([suggestedBy])
   @@index([reviewedBy])
   @@index([status])
+}
+
+enum DiscountType {
+  percent
+  amount
+}
+
+enum RequestStatus {
+  pending
+  approved
+  rejected
+}
+
+enum AdPlacement {
+  section
+  popup
+}
+
+model DiscountCode {
+  id         String       @id @default(uuid())
+  businessId String
+  business   Business     @relation(fields: [businessId], references: [id])
+  branchId   String? // null = toda la cadena del business
+  branch     Branch?      @relation(fields: [branchId], references: [id])
+  code       String
+  type       DiscountType
+  value      Decimal      @db.Decimal(10, 2)
+  startsAt   DateTime
+  endsAt     DateTime
+  active     Boolean      @default(true)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@index([businessId])
+  @@index([branchId])
+}
+
+model PlanUpgradeRequest {
+  id              String        @id @default(uuid())
+  businessId      String
+  business        Business      @relation(fields: [businessId], references: [id])
+  requestedPlanId String
+  requestedPlan   Plan          @relation(fields: [requestedPlanId], references: [id])
+  note            String?
+  status          RequestStatus @default(pending)
+  createdBy       String
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([businessId])
+  @@index([status])
+}
+
+model AdRequest {
+  id              String        @id @default(uuid())
+  businessId      String
+  business        Business      @relation(fields: [businessId], references: [id])
+  branchId        String? // null = cadena
+  desiredStartsAt DateTime
+  desiredEndsAt   DateTime
+  wantsPopup      Boolean       @default(false)
+  note            String?
+  status          RequestStatus @default(pending)
+  createdBy       String
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([businessId])
+  @@index([status])
+}
+
+model Ad {
+  id          String      @id @default(uuid())
+  businessId  String
+  business    Business    @relation(fields: [businessId], references: [id])
+  branchId    String? // null = cadena
+  branch      Branch?     @relation(fields: [branchId], references: [id])
+  title       String
+  description String?
+  imageUrl    String?
+  placement   AdPlacement @default(section)
+  startsAt    DateTime
+  endsAt      DateTime
+  active      Boolean     @default(true)
+  createdBy   String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([businessId])
+  @@index([active, startsAt, endsAt])
 }

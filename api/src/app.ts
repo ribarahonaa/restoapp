@@ -3,6 +3,7 @@ import cors from "cors";
 import { authRouter } from "./auth/auth.routes.js";
 import { branchesRouter } from "./branches/branches.routes.js";
 import { purposesRouter } from "./purposes/purposes.routes.js";
+import { adminRouter } from "./admin/admin.routes.js";
 import { errorHandler } from "./middleware/error.js";
 
 export function createApp() {
@@ -13,6 +14,7 @@ export function createApp() {
   app.use("/auth", authRouter);
   app.use("/branches", branchesRouter);
   app.use("/purposes", purposesRouter);
+  app.use("/admin", adminRouter);
   app.use(errorHandler);
   return app;
 }
