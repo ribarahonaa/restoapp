@@ -1,11 +1,52 @@
 import { Router } from "express";
 import { z } from "zod";
-import { requireBranchAccess } from "../middleware/ownership.js";
+import { requireBranchAccess, requireBusinessAccess } from "../middleware/ownership.js";
 import { listManagedBranches, getManagedBranch } from "./owner.service.js";
 import { prisma } from "../prisma.js";
 import { HttpError } from "../middleware/error.js";
 
 export const ownerBranchesRouter = Router();
+
+const createBranchSchema = z.object({
+  businessId: z.string().min(1),
+  name: z.string().min(1).max(120),
+  category: z.enum(["bar", "pub", "restaurant", "cafe"]),
+  address: z.string().min(1).max(200),
+  lat: z.number(),
+  lng: z.number(),
+  phone: z.string().max(40).nullable().optional(),
+  description: z.string().max(2000).nullable().optional(),
+  imageUrl: z.string().url().nullable().optional(),
+});
+
+ownerBranchesRouter.post("/", requireBusinessAccess(), async (req, res, next) => {
+  try {
+    const d = createBranchSchema.parse(req.body);
+    const business = await prisma.business.findUniqueOrThrow({
+      where: { id: d.businessId },
+      include: { plan: true, _count: { select: { branches: true } } },
+    });
+    const max = business.plan?.maxBranches ?? null;
+    if (max != null && business._count.branches >= max) throw new HttpError(403, "plan_limit_branches");
+    const branch = await prisma.branch.create({
+      data: {
+        businessId: d.businessId,
+        name: d.name,
+        category: d.category,
+        address: d.address,
+        lat: d.lat,
+        lng: d.lng,
+        phone: d.phone ?? null,
+        description: d.description ?? null,
+        imageUrl: d.imageUrl ?? null,
+        planId: business.planId,
+      },
+    });
+    res.status(201).json(branch);
+  } catch (e) {
+    next(e);
+  }
+});
 
 ownerBranchesRouter.get("/", async (req, res, next) => {
   try {

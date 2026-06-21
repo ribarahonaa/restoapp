@@ -29,3 +29,22 @@ export function requireBranchAccess(param = "branchId") {
     }
   };
 }
+
+// Permite continuar solo si el usuario puede gestionar el business indicado (params o body).
+export function requireBusinessAccess(param = "businessId") {
+  return async (req: Request, _res: Response, next: NextFunction) => {
+    try {
+      const user = req.user;
+      if (!user) throw new HttpError(401, "unauthenticated");
+      const businessId = req.params[param] ?? (req.body as Record<string, string>)?.[param];
+      if (!businessId) throw new HttpError(400, "business_required");
+      const business = await prisma.business.findUnique({ where: { id: businessId }, select: { ownerUserId: true } });
+      if (!business) throw new HttpError(404, "business_not_found");
+      if (user.role === "superadmin") return next();
+      if (user.role === "admin_general" && business.ownerUserId === user.sub) return next();
+      throw new HttpError(403, "forbidden");
+    } catch (e) {
+      next(e);
+    }
+  };
+}
