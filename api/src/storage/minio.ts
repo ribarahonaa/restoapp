@@ -51,3 +51,15 @@ export async function uploadFromUrl(sourceUrl: string, key: string): Promise<str
   });
   return publicUrl(key);
 }
+
+// Sube un buffer ya en memoria (ej. archivo subido por el dueño) al bucket.
+export async function uploadBuffer(
+  buffer: Buffer,
+  contentType: string,
+  key: string
+): Promise<string> {
+  await minio.putObject(BUCKET, key, buffer, buffer.length, {
+    "Content-Type": contentType,
+  });
+  return publicUrl(key);
+}
