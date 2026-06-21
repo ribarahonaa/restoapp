@@ -70,6 +70,8 @@ model Branch {
   address     String
   lat         Float
   lng         Float
+  // geog: geography(Point,4326) generada desde lng/lat (ver migración branch_geography).
+  //       No mapeada por Prisma; usada solo en SQL crudo para ST_DWithin/ST_Distance.
   phone       String?
   description String?
   planId      String?
