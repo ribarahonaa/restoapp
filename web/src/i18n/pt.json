@@ -1,6 +1,19 @@
 {
   "appName": "RestoApp",
   "nearbyTitle": "Lugares perto de você",
+  "nearYou": "Perto da sua localização",
+  "results_one": "{{count}} lugar",
+  "results_other": "{{count}} lugares",
+  "view": { "list": "Lista", "map": "Mapa" },
+  "tabs": { "menu": "Cardápio", "hours": "Horários" },
+  "item": { "close": "Fechar" },
+  "review": {
+    "add": "Deixe sua avaliação",
+    "name": "Seu nome",
+    "comment": "Comentário (opcional)",
+    "submit": "Publicar avaliação",
+    "empty": "Seja o primeiro a avaliar."
+  },
   "filters": {
     "category": "Categoria",
     "purpose": "Propósito",
@@ -19,7 +32,10 @@
     "hours": "Horários",
     "menu": "Cardápio",
     "promos": "Promoções",
+    "featured": "Promoções em destaque",
+    "reviews": "Avaliações",
     "distance": "{{km}} km",
+    "eta": "{{min}} min",
     "noResults": "Nenhum lugar corresponde",
     "back": "Voltar"
   },

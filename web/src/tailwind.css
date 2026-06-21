@@ -1,1 +1,132 @@
 @import "tailwindcss";
+
+@theme {
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+
+  /* Superficies — app de delivery: blanco limpio con gris muy suave */
+  --color-bg: #f6f6f7;
+  --color-surface: #ffffff;
+  --color-line: #ededf0;
+
+  /* Texto */
+  --color-ink: #1b1b1f;
+  --color-mute: #6b6b74;
+
+  /* Marca — coral vivo tipo PedidosYa */
+  --color-brand: #ff4d2e;
+  --color-brand-dark: #e63916;
+  --color-brand-soft: #ffece7;
+
+  /* Estados */
+  --color-open: #1aa251;
+  --color-open-soft: #e6f6ec;
+  --color-promo: #ff8a00;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+  }
+}
+
+/* Scroll discreto en filas de chips/categorías */
+.scrollbar-soft::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Entrada de cards del feed — fade + subida sutil */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-card-in {
+  animation: card-in 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Shimmer de skeletons de carga */
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-line);
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  animation: shimmer 1.4s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-card-in,
+  .skeleton::after {
+    animation: none;
+  }
+}
+
+/* Bottom-sheet: backdrop + panel que sube */
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.animate-backdrop-in {
+  animation: backdrop-in 0.2s ease both;
+}
+.animate-sheet-up {
+  animation: sheet-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sheet-up,
+  .animate-backdrop-in {
+    animation: none;
+  }
+}
+
+/* Leaflet limpio */
+.leaflet-container {
+  background: var(--color-bg);
+  font-family: var(--font-sans);
+}

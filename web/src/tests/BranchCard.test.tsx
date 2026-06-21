@@ -22,6 +22,9 @@ const branch: NearbyBranch = {
   lng: -70.6,
   phone: null,
   description: null,
+  imageUrl: null,
+  ratingAvg: 4.5,
+  ratingCount: 12,
   distance: 1500,
 };
 

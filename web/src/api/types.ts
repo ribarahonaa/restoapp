@@ -9,6 +9,9 @@ export interface NearbyBranch {
   lng: number;
   phone: string | null;
   description: string | null;
+  imageUrl: string | null;
+  ratingAvg: number;
+  ratingCount: number;
   distance: number; // metros
 }
 
@@ -32,6 +35,7 @@ export interface MenuItem {
   description: string | null;
   price: string;
   category: string | null;
+  imageUrl: string | null;
 }
 
 export interface Promotion {
@@ -39,6 +43,14 @@ export interface Promotion {
   title: string;
   description: string | null;
   imageUrl: string | null;
+}
+
+export interface Review {
+  id: string;
+  authorName: string;
+  rating: number;
+  comment: string | null;
+  createdAt: string;
 }
 
 export interface BranchPurposeTag {
@@ -54,18 +66,28 @@ export interface BranchDetail {
   lng: number;
   phone: string | null;
   description: string | null;
+  imageUrl: string | null;
+  ratingAvg: number;
+  ratingCount: number;
   hours: ServiceHour[];
   menuItems: MenuItem[];
   promotions: Promotion[];
   purposes: BranchPurposeTag[];
+  reviews: Review[];
 }
 
 export interface NearbyFilters {
   lat: number;
   lng: number;
-  radius: number;
+  radius?: number;
   category?: Category;
   purpose?: string;
   promo?: boolean;
   open?: boolean;
+}
+
+export interface ReviewInput {
+  authorName: string;
+  rating: number;
+  comment?: string;
 }

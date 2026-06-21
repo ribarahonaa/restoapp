@@ -1,6 +1,19 @@
 {
   "appName": "RestoApp",
   "nearbyTitle": "Places near you",
+  "nearYou": "Near your location",
+  "results_one": "{{count}} place",
+  "results_other": "{{count}} places",
+  "view": { "list": "List", "map": "Map" },
+  "tabs": { "menu": "Menu", "hours": "Hours" },
+  "item": { "close": "Close" },
+  "review": {
+    "add": "Leave your review",
+    "name": "Your name",
+    "comment": "Comment (optional)",
+    "submit": "Post review",
+    "empty": "Be the first to leave a review."
+  },
   "filters": {
     "category": "Category",
     "purpose": "Purpose",
@@ -19,7 +32,10 @@
     "hours": "Hours",
     "menu": "Menu",
     "promos": "Promotions",
+    "featured": "Featured promotions",
+    "reviews": "Reviews",
     "distance": "{{km}} km",
+    "eta": "{{min}} min",
     "noResults": "No matching places",
     "back": "Back"
   },
