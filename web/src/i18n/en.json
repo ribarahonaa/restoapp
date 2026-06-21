@@ -83,7 +83,8 @@
       "hours": "Hours",
       "openTime": "open",
       "closeTime": "close",
-      "saveHours": "Save hours"
+      "saveHours": "Save hours",
+      "saveError": "Could not save, try again"
     }
   }
 }

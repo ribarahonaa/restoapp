@@ -83,7 +83,8 @@
       "hours": "Horarios",
       "openTime": "apertura",
       "closeTime": "cierre",
-      "saveHours": "Guardar horarios"
+      "saveHours": "Guardar horarios",
+      "saveError": "No se pudo guardar, intenta de nuevo"
     }
   }
 }

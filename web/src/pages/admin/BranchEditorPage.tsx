@@ -26,6 +26,7 @@ export function BranchEditorPage() {
   const [form, setForm] = useState<Partial<OwnerBranchDetail>>({});
   const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(false);
 
   const load = () => {
     if (!id) return;
@@ -44,6 +45,7 @@ export function BranchEditorPage() {
   async function save() {
     setBusy(true);
     setSaved(false);
+    setError(false);
     try {
       await updateBranch(id!, {
         name: form.name,
@@ -56,6 +58,8 @@ export function BranchEditorPage() {
         imageUrl: form.imageUrl ?? null,
       });
       setSaved(true);
+    } catch {
+      setError(true);
     } finally {
       setBusy(false);
     }
@@ -119,6 +123,7 @@ export function BranchEditorPage() {
               {t("admin.owner.save")}
             </button>
             {saved && <span className="text-sm font-semibold text-open">{t("admin.owner.saved")}</span>}
+            {error && <span className="rounded-xl bg-brand-soft px-3 py-2 text-sm text-brand-dark">{t("admin.owner.saveError")}</span>}
           </div>
         </div>
       </section>
@@ -133,18 +138,18 @@ export function BranchEditorPage() {
               <span className="text-sm text-brand-dark">
                 {t("admin.owner.closedUntil", { date: new Date(branch.closedUntil!).toLocaleString() })}
               </span>
-              <button onClick={() => reopenBranch(id).then(load)} className="rounded-xl bg-ink px-3 py-2 text-sm font-bold text-white">
+              <button onClick={() => { setError(false); reopenBranch(id).then(load).catch(() => setError(true)); }} className="rounded-xl bg-ink px-3 py-2 text-sm font-bold text-white">
                 {t("admin.owner.reopen")}
               </button>
             </div>
           ) : (
-            <CloseControl branchId={id} onDone={load} />
+            <CloseControl branchId={id} onDone={load} onError={() => setError(true)} />
           )}
         </div>
 
         {canToggleActive && (
           <button
-            onClick={() => setBranchActive(id, !branch.active).then(load)}
+            onClick={() => { setError(false); setBranchActive(id, !branch.active).then(load).catch(() => setError(true)); }}
             className="rounded-xl bg-bg px-3 py-2 text-sm font-bold text-ink ring-1 ring-line"
           >
             {branch.active ? t("admin.owner.deactivate") : t("admin.owner.activate")}
@@ -158,7 +163,7 @@ export function BranchEditorPage() {
   );
 }
 
-function CloseControl({ branchId, onDone }: { branchId: string; onDone: () => void }) {
+function CloseControl({ branchId, onDone, onError }: { branchId: string; onDone: () => void; onError: () => void }) {
   const { t } = useTranslation();
   const [until, setUntil] = useState("");
   return (
@@ -175,7 +180,7 @@ function CloseControl({ branchId, onDone }: { branchId: string; onDone: () => vo
       </div>
       <button
         disabled={!until}
-        onClick={() => closeBranch(branchId, new Date(until).toISOString()).then(onDone)}
+        onClick={() => closeBranch(branchId, new Date(until).toISOString()).then(onDone).catch(onError)}
         className="rounded-xl bg-brand px-3 py-2 text-sm font-bold text-white disabled:opacity-40"
       >
         {t("admin.owner.closeNow")}

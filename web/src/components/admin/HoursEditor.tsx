@@ -24,6 +24,7 @@ export function HoursEditor({ branchId, initial }: { branchId: string; initial: 
   const [rows, setRows] = useState<DayRow[]>(() => buildRows(initial));
   const [busy, setBusy] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState(false);
 
   const setRow = (i: number, patch: Partial<DayRow>) =>
     setRows((rs) => rs.map((r, idx) => (idx === i ? { ...r, ...patch } : r)));
@@ -31,6 +32,7 @@ export function HoursEditor({ branchId, initial }: { branchId: string; initial: 
   async function save() {
     setBusy(true);
     setSaved(false);
+    setError(false);
     const hours: HourInput[] = rows
       .map((r, weekday) => ({ ...r, weekday }))
       .filter((r) => r.open)
@@ -38,6 +40,8 @@ export function HoursEditor({ branchId, initial }: { branchId: string; initial: 
     try {
       await replaceHours(branchId, hours);
       setSaved(true);
+    } catch {
+      setError(true);
     } finally {
       setBusy(false);
     }
@@ -71,6 +75,7 @@ export function HoursEditor({ branchId, initial }: { branchId: string; initial: 
           {t("admin.owner.saveHours")}
         </button>
         {saved && <span className="text-sm font-semibold text-open">{t("admin.owner.saved")}</span>}
+        {error && <span className="rounded-xl bg-brand-soft px-3 py-2 text-sm text-brand-dark">{t("admin.owner.saveError")}</span>}
       </div>
     </section>
   );
