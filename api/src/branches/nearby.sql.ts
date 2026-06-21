@@ -40,7 +40,11 @@ export function buildNearbyQuery(p: NearbyParams): Prisma.Sql {
     filters.push(Prisma.sql`EXISTS (
       SELECT 1 FROM "ServiceHours" sh
       WHERE sh."branchId" = b."id" AND sh."weekday" = ${p.weekday}
-        AND ${p.hhmm} >= sh."openTime" AND ${p.hhmm} <= sh."closeTime"
+        AND (
+          (sh."closeTime" >= sh."openTime" AND ${p.hhmm} >= sh."openTime" AND ${p.hhmm} <= sh."closeTime")
+          OR
+          (sh."closeTime" < sh."openTime" AND (${p.hhmm} >= sh."openTime" OR ${p.hhmm} <= sh."closeTime"))
+        )
     )`);
   }
 

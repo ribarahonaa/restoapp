@@ -4,14 +4,19 @@ import { findNearby, getBranchDetail } from "./branches.service.js";
 
 export const branchesRouter = Router();
 
+const boolParam = z
+  .enum(["true", "false", "1", "0"])
+  .optional()
+  .transform((v) => v === "true" || v === "1");
+
 const nearbySchema = z.object({
   lat: z.coerce.number().min(-90).max(90),
   lng: z.coerce.number().min(-180).max(180),
   radius: z.coerce.number().positive().max(50000).default(5000),
   category: z.enum(["bar", "pub", "restaurant", "cafe"]).optional(),
   purpose: z.string().min(1).optional(),
-  promo: z.coerce.boolean().optional(),
-  open: z.coerce.boolean().optional(),
+  promo: boolParam,
+  open: boolParam,
 });
 
 branchesRouter.get("/nearby", async (req, res, next) => {

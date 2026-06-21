@@ -41,4 +41,9 @@ describe("buildNearbyQuery", () => {
     const q = buildNearbyQuery({ ...base, open: true });
     expect(q.sql).toContain("ServiceHours");
   });
+
+  it("el filtro abierto-ahora soporta horario nocturno (cierre < apertura)", () => {
+    const q = buildNearbyQuery({ ...base, open: true });
+    expect(q.sql).toContain('"closeTime" <');
+  });
 });
