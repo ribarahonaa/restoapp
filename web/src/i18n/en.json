@@ -100,7 +100,12 @@
       "plan": "Plan",
       "note": "Note (optional)",
       "send": "Send",
-      "requestSent": "Request sent"
+      "requestSent": "Request sent",
+      "addPromo": "Add promo",
+      "promoTitle": "Title",
+      "promoImage": "Promo image",
+      "from": "From",
+      "to": "To"
     }
   }
 }
