@@ -39,4 +39,14 @@ describe("POST /admin/uploads", () => {
     expect(res.status).toBe(201);
     expect(res.body.url).toContain("/restoapp/");
   });
+
+  it("400 si el archivo supera 5MB", async () => {
+    const token = await tokenFor("general@demo.cl");
+    const res = await request(app)
+      .post("/admin/uploads")
+      .set("Authorization", `Bearer ${token}`)
+      .attach("file", Buffer.alloc(6 * 1024 * 1024), { filename: "big.jpg", contentType: "image/jpeg" });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("file_too_large");
+  });
 });
