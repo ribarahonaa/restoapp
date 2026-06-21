@@ -1,0 +1,32 @@
+{
+  "appName": "RestoApp",
+  "nearbyTitle": "Locales cerca de ti",
+  "filters": {
+    "category": "Categoría",
+    "purpose": "Propósito",
+    "promo": "Con promoción",
+    "open": "Abierto ahora",
+    "radius": "Radio",
+    "all": "Todos"
+  },
+  "categories": {
+    "bar": "Bar",
+    "pub": "Pub",
+    "restaurant": "Restaurante",
+    "cafe": "Cafetería"
+  },
+  "branch": {
+    "hours": "Horarios",
+    "menu": "Carta",
+    "promos": "Promociones",
+    "distance": "{{km}} km",
+    "noResults": "No hay locales que coincidan",
+    "back": "Volver"
+  },
+  "geo": {
+    "requesting": "Obteniendo tu ubicación…",
+    "denied": "Activa la ubicación para ver locales cercanos",
+    "unavailable": "Ubicación no disponible"
+  },
+  "weekdays": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+}
