@@ -68,7 +68,7 @@ ownerBranchesRouter.post("/:branchId/active", requireBranchAccess(), async (req,
 // POST /:branchId/close — set closedUntil (both roles)
 ownerBranchesRouter.post("/:branchId/close", requireBranchAccess(), async (req, res, next) => {
   try {
-    const { until } = z.object({ until: z.string() }).parse(req.body);
+    const { until } = z.object({ until: z.string().datetime() }).parse(req.body);
     const updated = await prisma.branch.update({
       where: { id: req.params.branchId },
       data: { closedUntil: new Date(until) },

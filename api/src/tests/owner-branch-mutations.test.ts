@@ -89,12 +89,12 @@ describe("POST /admin/branches/:branchId/active — toggle active", () => {
 });
 
 describe("POST /admin/branches/:branchId/close — set closedUntil", () => {
-  it("8. admin_general sets until=2099-12-31 → 200, closedUntil not null", async () => {
+  it("8. admin_general sets until=2099-12-31T00:00:00.000Z → 200, closedUntil not null", async () => {
     const token = await tokenFor("general@demo.cl");
     const res = await request(app)
       .post(`/admin/branches/${ctx.branch.id}/close`)
       .set("Authorization", `Bearer ${token}`)
-      .send({ until: "2099-12-31" });
+      .send({ until: "2099-12-31T00:00:00.000Z" });
     expect(res.status).toBe(200);
     expect(res.body.id).toBe(ctx.branch.id);
     expect(res.body.closedUntil).not.toBeNull();
@@ -105,9 +105,19 @@ describe("POST /admin/branches/:branchId/close — set closedUntil", () => {
     const res = await request(app)
       .post(`/admin/branches/${ctx.branch.id}/close`)
       .set("Authorization", `Bearer ${token}`)
-      .send({ until: "2099-06-15" });
+      .send({ until: "2099-06-15T00:00:00.000Z" });
     expect(res.status).toBe(200);
     expect(res.body.closedUntil).not.toBeNull();
+  });
+
+  it("11. invalid until (not-a-date) → 400 validation_error", async () => {
+    const token = await tokenFor("general@demo.cl");
+    const res = await request(app)
+      .post(`/admin/branches/${ctx.branch.id}/close`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({ until: "not-a-date" });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("validation_error");
   });
 });
 
@@ -118,7 +128,7 @@ describe("POST /admin/branches/:branchId/reopen — clear closedUntil", () => {
     await request(app)
       .post(`/admin/branches/${ctx.branch.id}/close`)
       .set("Authorization", `Bearer ${token}`)
-      .send({ until: "2099-12-31" });
+      .send({ until: "2099-12-31T00:00:00.000Z" });
 
     // Then reopen
     const res = await request(app)
