@@ -9,6 +9,7 @@ import {
   closeBranch,
   reopenBranch,
 } from "../../api/ownerClient.js";
+import { AdRequestModal } from "../../components/admin/AdRequestModal.js";
 import type { OwnerBranchDetail, Category } from "../../api/ownerTypes.js";
 import { ImageUploader } from "../../components/admin/ImageUploader.js";
 import { MapPicker } from "../../components/admin/MapPicker.js";
@@ -32,6 +33,7 @@ export function BranchEditorPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
   const [tab, setTab] = useState("data");
+  const [showAd, setShowAd] = useState(false);
 
   const load = () => {
     if (!id) return;
@@ -177,6 +179,11 @@ export function BranchEditorPage() {
 
           {/* Horarios */}
           <HoursEditor branchId={id} initial={branch.hours} />
+
+          <button onClick={() => setShowAd(true)} className="mt-2 rounded-xl bg-bg px-3 py-2 text-sm font-bold text-ink ring-1 ring-line">
+            {t("admin.owner.requestAd")}
+          </button>
+          {showAd && <AdRequestModal businessId={branch.businessId} branchId={branch.id} onClose={() => setShowAd(false)} />}
         </>
       )}
 

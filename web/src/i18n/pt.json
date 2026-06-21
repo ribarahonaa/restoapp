@@ -112,7 +112,11 @@
       "scope": "Alcance",
       "scopeBranch": "Este local",
       "scopeChain": "Toda a rede",
-      "createCode": "Criar código"
+      "createCode": "Criar código",
+      "newBranch": "Nova filial",
+      "createBranch": "Criar filial",
+      "requestAd": "Solicitar anúncio",
+      "wantsPopup": "Quero popup (custo adicional)"
     }
   }
 }

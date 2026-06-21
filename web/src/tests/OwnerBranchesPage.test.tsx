@@ -5,10 +5,15 @@ import "../i18n/index.js";
 import i18n from "../i18n/index.js";
 import { OwnerBranchesPage } from "../pages/admin/OwnerBranchesPage.js";
 import * as owner from "../api/ownerClient.js";
+import * as authCtx from "../auth/AuthContext.js";
 
 beforeEach(async () => {
   await i18n.changeLanguage("es");
   vi.restoreAllMocks();
+  vi.spyOn(authCtx, "useAuth").mockReturnValue({
+    user: { id: "u1", email: "o@d.cl", name: "Dueño", role: "admin_general", preferredLang: "es" },
+    status: "authed", signIn: vi.fn(), signOut: vi.fn(),
+  } as never);
 });
 
 const sample = [

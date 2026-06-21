@@ -4,6 +4,7 @@ import { BranchDetailPage } from "./pages/BranchDetailPage.js";
 import { LoginPage } from "./pages/admin/LoginPage.js";
 import { OwnerBranchesPage } from "./pages/admin/OwnerBranchesPage.js";
 import { BranchEditorPage } from "./pages/admin/BranchEditorPage.js";
+import { CreateBranchPage } from "./pages/admin/CreateBranchPage.js";
 import { AdminLayout } from "./components/admin/AdminLayout.js";
 import { RequireRole } from "./components/RequireRole.js";
 
@@ -23,6 +24,7 @@ export default function App() {
               <Routes>
                 <Route path="" element={<Navigate to="/admin/branches" replace />} />
                 <Route path="branches" element={<OwnerBranchesPage />} />
+                <Route path="branches/new" element={<CreateBranchPage />} />
                 <Route path="branches/:id" element={<BranchEditorPage />} />
               </Routes>
             </AdminLayout>

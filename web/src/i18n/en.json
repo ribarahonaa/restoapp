@@ -112,7 +112,11 @@
       "scope": "Scope",
       "scopeBranch": "This branch",
       "scopeChain": "Whole chain",
-      "createCode": "Create code"
+      "createCode": "Create code",
+      "newBranch": "New branch",
+      "createBranch": "Create branch",
+      "requestAd": "Request ad",
+      "wantsPopup": "I want a popup (extra cost)"
     }
   }
 }
