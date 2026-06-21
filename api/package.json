@@ -11,7 +11,9 @@
     "test:watch": "vitest",
     "prisma:migrate": "prisma migrate dev",
     "prisma:generate": "prisma generate",
-    "seed": "tsx src/seed/seed.ts"
+    "seed": "tsx src/seed/seed.ts",
+    "seed:sample": "tsx src/seed/seed-sample.ts",
+    "seed:all": "tsx src/seed/seed.ts && tsx src/seed/seed-sample.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
