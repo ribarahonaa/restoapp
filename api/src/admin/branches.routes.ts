@@ -93,3 +93,30 @@ ownerBranchesRouter.post("/:branchId/reopen", requireBranchAccess(), async (req,
     next(e);
   }
 });
+
+const hoursSchema = z.object({
+  hours: z
+    .array(
+      z.object({
+        weekday: z.number().int().min(0).max(6),
+        openTime: z.string().regex(/^\d{2}:\d{2}$/),
+        closeTime: z.string().regex(/^\d{2}:\d{2}$/),
+      })
+    )
+    .max(21),
+});
+
+ownerBranchesRouter.put("/:branchId/hours", requireBranchAccess(), async (req, res, next) => {
+  try {
+    const { hours } = hoursSchema.parse(req.body);
+    const branchId = req.params.branchId;
+    await prisma.$transaction([
+      prisma.serviceHours.deleteMany({ where: { branchId } }),
+      prisma.serviceHours.createMany({ data: hours.map((h) => ({ ...h, branchId })) }),
+    ]);
+    const fresh = await prisma.serviceHours.findMany({ where: { branchId }, orderBy: { weekday: "asc" } });
+    res.json(fresh);
+  } catch (e) {
+    next(e);
+  }
+});
