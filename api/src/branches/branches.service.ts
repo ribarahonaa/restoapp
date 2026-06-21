@@ -5,7 +5,7 @@ import { HttpError } from "../middleware/error.js";
 export interface NearbyFilters {
   lat: number;
   lng: number;
-  radius: number;
+  radius?: number;
   category?: string;
   purpose?: string;
   promo?: boolean;
@@ -21,7 +21,16 @@ export interface NearbyRow {
   lng: number;
   phone: string | null;
   description: string | null;
+  imageUrl: string | null;
+  ratingAvg: number;
+  ratingCount: number;
   distance: number;
+}
+
+export interface ReviewInput {
+  authorName: string;
+  rating: number;
+  comment?: string;
 }
 
 export async function findNearby(f: NearbyFilters): Promise<NearbyRow[]> {
@@ -56,8 +65,32 @@ export async function getBranchDetail(id: string) {
         where: { active: true, startsAt: { lte: now }, endsAt: { gte: now } },
       },
       purposes: { include: { tag: true } },
+      reviews: { orderBy: { createdAt: "desc" } },
     },
   });
   if (!branch) throw new HttpError(404, "branch_not_found");
-  return branch;
+  const ratingCount = branch.reviews.length;
+  const ratingAvg = ratingCount
+    ? branch.reviews.reduce((s, r) => s + r.rating, 0) / ratingCount
+    : 0;
+  return { ...branch, ratingAvg, ratingCount };
+}
+
+export async function addReview(branchId: string, input: ReviewInput) {
+  const branch = await prisma.branch.findFirst({ where: { id: branchId, active: true } });
+  if (!branch) throw new HttpError(404, "branch_not_found");
+  const review = await prisma.review.create({
+    data: {
+      branchId,
+      authorName: input.authorName,
+      rating: input.rating,
+      comment: input.comment ?? null,
+    },
+  });
+  const agg = await prisma.review.aggregate({
+    where: { branchId },
+    _avg: { rating: true },
+    _count: true,
+  });
+  return { review, ratingAvg: agg._avg.rating ?? 0, ratingCount: agg._count };
 }
