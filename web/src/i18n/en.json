@@ -105,7 +105,14 @@
       "promoTitle": "Title",
       "promoImage": "Promo image",
       "from": "From",
-      "to": "To"
+      "to": "To",
+      "code": "Code",
+      "type": "Type",
+      "value": "Value",
+      "scope": "Scope",
+      "scopeBranch": "This branch",
+      "scopeChain": "Whole chain",
+      "createCode": "Create code"
     }
   }
 }

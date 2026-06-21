@@ -105,7 +105,14 @@
       "promoTitle": "Título",
       "promoImage": "Imagem da promo",
       "from": "De",
-      "to": "Até"
+      "to": "Até",
+      "code": "Código",
+      "type": "Tipo",
+      "value": "Valor",
+      "scope": "Alcance",
+      "scopeBranch": "Este local",
+      "scopeChain": "Toda a rede",
+      "createCode": "Criar código"
     }
   }
 }
