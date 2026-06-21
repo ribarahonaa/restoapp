@@ -54,6 +54,8 @@ model Business {
   name        String
   ownerUserId String
   owner       User     @relation("BusinessOwner", fields: [ownerUserId], references: [id])
+  planId      String?
+  plan        Plan?    @relation(fields: [planId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   branches    Branch[]
@@ -63,6 +65,7 @@ model Business {
   ads            Ad[]
 
   @@index([ownerUserId])
+  @@index([planId])
 }
 
 model Branch {
@@ -186,6 +189,7 @@ model Plan {
   maxMenuItems Int      @default(10)
   maxBranches  Int      @default(1)
   branches     Branch[]
+  businesses   Business[]
   upgradeRequests PlanUpgradeRequest[]
 }
 

@@ -74,6 +74,7 @@ export async function seedDiscoveryFixture() {
 // y un segundo business "ajeno" para probar ownership.
 export async function seedAdminFixture() {
   const free = await prisma.plan.create({ data: { name: "Free", maxPromos: 1, maxMenuItems: 10, maxBranches: 1 } });
+  const pro = await prisma.plan.create({ data: { name: "Pro", maxPromos: 100, maxMenuItems: 500, maxBranches: 5 } });
   const general = await prisma.user.create({
     data: { email: "general@demo.cl", name: "General", role: "admin_general", passwordHash: await hashPassword("clave1234") },
   });
@@ -83,7 +84,7 @@ export async function seedAdminFixture() {
   const otro = await prisma.user.create({
     data: { email: "otro@demo.cl", name: "Otro", role: "admin_general", passwordHash: await hashPassword("clave1234") },
   });
-  const biz = await prisma.business.create({ data: { name: "Mi Empresa", ownerUserId: general.id } });
+  const biz = await prisma.business.create({ data: { name: "Mi Empresa", ownerUserId: general.id, planId: free.id } });
   const otroBiz = await prisma.business.create({ data: { name: "Empresa Ajena", ownerUserId: otro.id } });
   const branch = await prisma.branch.create({
     data: { name: "Mi Local", category: "cafe", address: "x", lat: -33.43, lng: -70.65, businessId: biz.id, planId: free.id },
@@ -92,7 +93,7 @@ export async function seedAdminFixture() {
     data: { name: "Local Ajeno", category: "bar", address: "y", lat: -33.44, lng: -70.66, businessId: otroBiz.id, planId: free.id },
   });
   await prisma.branchAdmin.create({ data: { userId: sucursal.id, branchId: branch.id } });
-  return { general, sucursal, otro, biz, otroBiz, branch, otherBranch, free };
+  return { general, sucursal, otro, biz, otroBiz, branch, otherBranch, free, pro };
 }
 
 // Devuelve un access token válido para el email dado.

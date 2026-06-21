@@ -49,6 +49,7 @@ async function main() {
   const img = await uploadAssets();
 
   const free = await prisma.plan.findUniqueOrThrow({ where: { name: "Free" } });
+  const proPlan = await prisma.plan.findUnique({ where: { name: "Pro" } });
 
   const owner = await prisma.user.upsert({
     where: { email: "owner@demo.cl" },
@@ -63,8 +64,8 @@ async function main() {
 
   const business = await prisma.business.upsert({
     where: { id: "demo-business" },
-    update: {},
-    create: { id: "demo-business", name: "Grupo Gastronómico Demo", ownerUserId: owner.id },
+    update: { planId: proPlan?.id ?? null },
+    create: { id: "demo-business", name: "Grupo Gastronómico Demo", ownerUserId: owner.id, planId: proPlan?.id ?? null },
   });
 
   const tags = await prisma.purposeTag.findMany();
