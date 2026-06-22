@@ -34,7 +34,7 @@ export function UpgradeRequestModal({ businessId, onClose }: { businessId: strin
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/40 sm:items-center" onClick={onClose}>
+    <div className="fixed inset-0 z-[1000] flex items-end justify-center bg-ink/40 sm:items-center" onClick={onClose}>
       <div className="w-full max-w-sm rounded-t-3xl bg-surface p-5 shadow-xl sm:rounded-3xl" onClick={(e) => e.stopPropagation()}>
         <div className="mb-3 flex items-center justify-between">
           <h3 className="font-display text-lg font-bold text-ink">{t("admin.owner.requestUpgrade")}</h3>

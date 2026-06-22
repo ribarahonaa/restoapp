@@ -23,7 +23,7 @@ export function MapPicker({
   onChange: (lat: number, lng: number) => void;
 }) {
   return (
-    <div className="h-56 w-full overflow-hidden rounded-xl ring-1 ring-line">
+    <div className="relative isolate z-0 h-56 w-full overflow-hidden rounded-xl ring-1 ring-line">
       <MapContainer center={[lat, lng]} zoom={15} style={{ height: "100%", width: "100%" }}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
