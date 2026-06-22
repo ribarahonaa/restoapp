@@ -23,6 +23,11 @@ adsRouter.post("/ads", async (req, res, next) => {
     const d = createSchema.parse(req.body);
     const startsAt = new Date(d.startsAt);
     const endsAt = new Date(d.endsAt);
+    // Si el anuncio es de una sucursal puntual, debe pertenecer al business indicado.
+    if (d.branchId) {
+      const branch = await prisma.branch.findUnique({ where: { id: d.branchId }, select: { businessId: true } });
+      if (!branch || branch.businessId !== d.businessId) throw new HttpError(400, "branch_business_mismatch");
+    }
     if (d.placement === "popup") {
       // Cuenta popups activos cuyo rango se solapa con [startsAt, endsAt].
       const overlapping = await prisma.ad.count({

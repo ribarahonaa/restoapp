@@ -23,6 +23,13 @@ describe("superadmin · anuncios", () => {
     expect(res.body.placement).toBe("section");
   });
 
+  it("rechaza un Ad con branchId de otra empresa (400)", async () => {
+    const res = await request(app).post("/admin/superadmin/ads").set("Authorization", await sa())
+      .send({ businessId: ctx.biz.id, branchId: ctx.otherBranch.id, title: "X", placement: "section", ...win });
+    expect(res.status).toBe(400);
+    expect(res.body.error).toBe("branch_business_mismatch");
+  });
+
   it("bloquea el 4º popup solapado (cupo 3) → 403 popup_quota_full", async () => {
     for (let i = 0; i < 3; i++) {
       await prisma.ad.create({ data: { businessId: ctx.biz.id, title: `p${i}`, placement: "popup", startsAt: new Date(win.startsAt), endsAt: new Date(win.endsAt), active: true, createdBy: ctx.superadmin.id } });
