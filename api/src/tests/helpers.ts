@@ -84,6 +84,9 @@ export async function seedAdminFixture() {
   const otro = await prisma.user.create({
     data: { email: "otro@demo.cl", name: "Otro", role: "admin_general", passwordHash: await hashPassword("clave1234") },
   });
+  const superadmin = await prisma.user.create({
+    data: { email: "super@demo.cl", name: "Super", role: "superadmin", passwordHash: await hashPassword("clave1234") },
+  });
   const biz = await prisma.business.create({ data: { name: "Mi Empresa", ownerUserId: general.id, planId: free.id } });
   const otroBiz = await prisma.business.create({ data: { name: "Empresa Ajena", ownerUserId: otro.id } });
   const branch = await prisma.branch.create({
@@ -93,7 +96,7 @@ export async function seedAdminFixture() {
     data: { name: "Local Ajeno", category: "bar", address: "y", lat: -33.44, lng: -70.66, businessId: otroBiz.id, planId: free.id },
   });
   await prisma.branchAdmin.create({ data: { userId: sucursal.id, branchId: branch.id } });
-  return { general, sucursal, otro, biz, otroBiz, branch, otherBranch, free, pro };
+  return { general, sucursal, otro, superadmin, biz, otroBiz, branch, otherBranch, free, pro };
 }
 
 // Devuelve un access token válido para el email dado.

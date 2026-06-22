@@ -15,6 +15,7 @@ const schema = z.object({
   MINIO_BUCKET: z.string().default("restoapp"),
   // Base alcanzable desde el navegador para servir imágenes (host, no red interna)
   MINIO_PUBLIC_URL: z.string().default("http://localhost:9000"),
+  MAX_POPUPS_PER_DAY: z.coerce.number().default(3),
 });
 
 export const env = schema.parse(process.env);
