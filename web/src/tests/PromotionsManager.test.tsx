@@ -35,6 +35,17 @@ describe("PromotionsManager", () => {
     expect(onChange).toHaveBeenCalled();
   });
 
+  it("edita una promo existente", async () => {
+    const update = vi.spyOn(owner, "updatePromotion").mockResolvedValue({ id: "p0" } as never);
+    const onChange = vi.fn();
+    render(<PromotionsManager branch={branchWith(1, 5)} onChange={onChange} />);
+    fireEvent.click(screen.getByRole("button", { name: /editar/i }));
+    fireEvent.change(screen.getByLabelText(/título/i), { target: { value: "Nuevo Título" } });
+    fireEvent.click(screen.getByRole("button", { name: /guardar cambios/i }));
+    await waitFor(() => expect(update).toHaveBeenCalledWith("b1", "p0", expect.objectContaining({ title: "Nuevo Título" })));
+    expect(onChange).toHaveBeenCalled();
+  });
+
   it("al topar el límite muestra solicitar upgrade", () => {
     render(<PromotionsManager branch={branchWith(1, 1)} onChange={vi.fn()} />);
     expect(screen.getByRole("button", { name: /solicitar upgrade/i })).toBeInTheDocument();

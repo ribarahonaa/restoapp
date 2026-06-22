@@ -119,7 +119,10 @@
       "newBranch": "Nova filial",
       "createBranch": "Criar filial",
       "requestAd": "Solicitar anúncio",
-      "wantsPopup": "Quero popup (custo adicional)"
+      "wantsPopup": "Quero popup (custo adicional)",
+      "edit": "Editar",
+      "saveChanges": "Salvar alterações",
+      "cancel": "Cancelar"
     }
   }
 }

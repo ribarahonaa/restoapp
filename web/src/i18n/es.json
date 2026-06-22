@@ -119,7 +119,10 @@
       "newBranch": "Crear sucursal",
       "createBranch": "Crear sucursal",
       "requestAd": "Solicitar anuncio",
-      "wantsPopup": "Quiero popup (costo adicional)"
+      "wantsPopup": "Quiero popup (costo adicional)",
+      "edit": "Editar",
+      "saveChanges": "Guardar cambios",
+      "cancel": "Cancelar"
     }
   }
 }

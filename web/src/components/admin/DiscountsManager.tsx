@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Trash2 } from "lucide-react";
-import { createDiscount, deleteDiscount } from "../../api/ownerClient.js";
+import { Trash2, Pencil } from "lucide-react";
+import { createDiscount, updateDiscount, deleteDiscount } from "../../api/ownerClient.js";
 import { useAuth } from "../../auth/AuthContext.js";
 import type { OwnerBranchDetail, DiscountInput } from "../../api/ownerTypes.js";
 
@@ -19,22 +19,52 @@ export function DiscountsManager({ branch, onChange }: { branch: OwnerBranchDeta
   const [scope, setScope] = useState<"branch" | "chain">("branch");
   const [startsAt, setStartsAt] = useState("");
   const [endsAt, setEndsAt] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  async function create() {
+  function resetForm() {
+    setCode("");
+    setValue("");
+    setStartsAt("");
+    setEndsAt("");
+    setEditingId(null);
+  }
+
+  function startEdit(c: typeof branch.discountCodes[number]) {
+    setCode(c.code);
+    setType(c.type);
+    setValue(c.value);
+    setStartsAt(c.startsAt.slice(0, 16));
+    setEndsAt(c.endsAt.slice(0, 16));
+    setEditingId(c.id);
+  }
+
+  async function submit() {
     setBusy(true);
     setError(false);
-    const input: DiscountInput = {
-      code,
-      type,
-      value: Number(value),
-      scope: canChain ? scope : "branch",
-      startsAt: new Date(startsAt).toISOString(),
-      endsAt: new Date(endsAt).toISOString(),
-    };
     try {
-      await createDiscount(branch.id, input);
-      setCode(""); setValue(""); setStartsAt(""); setEndsAt("");
-      onChange();
+      if (editingId) {
+        await updateDiscount(branch.id, editingId, {
+          code,
+          type,
+          value: Number(value),
+          startsAt: new Date(startsAt).toISOString(),
+          endsAt: new Date(endsAt).toISOString(),
+        });
+        resetForm();
+        onChange();
+      } else {
+        const input: DiscountInput = {
+          code,
+          type,
+          value: Number(value),
+          scope: canChain ? scope : "branch",
+          startsAt: new Date(startsAt).toISOString(),
+          endsAt: new Date(endsAt).toISOString(),
+        };
+        await createDiscount(branch.id, input);
+        setCode(""); setValue(""); setStartsAt(""); setEndsAt("");
+        onChange();
+      }
     } catch {
       setError(true);
     } finally {
@@ -63,7 +93,10 @@ export function DiscountsManager({ branch, onChange }: { branch: OwnerBranchDeta
             <span className="text-xs text-mute">
               {c.type === "percent" ? `${c.value}%` : `$${c.value}`} · {c.branchId ? t("admin.owner.scopeBranch") : t("admin.owner.scopeChain")}
             </span>
-            <button aria-label={t("admin.owner.delete")} onClick={() => remove(c.id)} className="ml-auto grid h-9 w-9 place-items-center rounded-lg text-mute hover:text-brand-dark">
+            <button aria-label={t("admin.owner.edit")} onClick={() => startEdit(c)} className="ml-auto grid h-9 w-9 place-items-center rounded-lg text-mute hover:text-brand-dark">
+              <Pencil size={16} />
+            </button>
+            <button aria-label={t("admin.owner.delete")} onClick={() => remove(c.id)} className="grid h-9 w-9 place-items-center rounded-lg text-mute hover:text-brand-dark">
               <Trash2 size={16} />
             </button>
           </li>
@@ -81,7 +114,7 @@ export function DiscountsManager({ branch, onChange }: { branch: OwnerBranchDeta
           </select>
           <input aria-label={t("admin.owner.value")} placeholder={t("admin.owner.value")} type="number" className={inputCls} value={value} onChange={(e) => setValue(e.target.value)} />
         </div>
-        {canChain && (
+        {canChain && !editingId && (
           <select aria-label={t("admin.owner.scope")} className={inputCls} value={scope} onChange={(e) => setScope(e.target.value as "branch" | "chain")}>
             <option value="branch">{t("admin.owner.scopeBranch")}</option>
             <option value="chain">{t("admin.owner.scopeChain")}</option>
@@ -95,9 +128,14 @@ export function DiscountsManager({ branch, onChange }: { branch: OwnerBranchDeta
             <input aria-label={t("admin.owner.to")} type="datetime-local" className={inputCls} value={endsAt} onChange={(e) => setEndsAt(e.target.value)} />
           </label>
         </div>
-        <button onClick={create} disabled={busy || !code || !value || !startsAt || !endsAt} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">
-          {t("admin.owner.createCode")}
+        <button onClick={submit} disabled={busy || !code || !value || !startsAt || !endsAt} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">
+          {editingId ? t("admin.owner.saveChanges") : t("admin.owner.createCode")}
         </button>
+        {editingId && (
+          <button onClick={resetForm} className="w-full rounded-xl bg-bg py-2.5 text-sm font-bold text-mute ring-1 ring-line">
+            {t("admin.owner.cancel")}
+          </button>
+        )}
       </div>
     </section>
   );

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Trash2 } from "lucide-react";
-import { createMenuItem, deleteMenuItem, LimitError } from "../../api/ownerClient.js";
+import { Trash2, Pencil } from "lucide-react";
+import { createMenuItem, updateMenuItem, deleteMenuItem, LimitError } from "../../api/ownerClient.js";
 import { ImageUploader } from "./ImageUploader.js";
 import { UpgradeRequestModal } from "./UpgradeRequestModal.js";
 import type { OwnerBranchDetail, MenuItemInput } from "../../api/ownerTypes.js";
@@ -17,20 +17,43 @@ export function MenuManager({ branch, onChange }: { branch: OwnerBranchDetail; o
   const [error, setError] = useState(false);
   const [busy, setBusy] = useState(false);
   const [form, setForm] = useState<MenuItemInput>({ name: "", price: 0, category: "", description: "", imageUrl: null });
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  async function add() {
+  function resetForm() {
+    setForm({ name: "", price: 0, category: "", description: "", imageUrl: null });
+    setEditingId(null);
+  }
+
+  function startEdit(m: typeof branch.menuItems[number]) {
+    setForm({ name: m.name, price: Number(m.price), category: m.category ?? "", description: m.description ?? "", imageUrl: m.imageUrl });
+    setEditingId(m.id);
+  }
+
+  async function submit() {
     setBusy(true);
     setError(false);
     try {
-      await createMenuItem(branch.id, {
-        name: form.name,
-        price: Number(form.price),
-        category: form.category || null,
-        description: form.description || null,
-        imageUrl: form.imageUrl ?? null,
-      });
-      setForm({ name: "", price: 0, category: "", description: "", imageUrl: null });
-      onChange();
+      if (editingId) {
+        await updateMenuItem(branch.id, editingId, {
+          name: form.name,
+          price: Number(form.price),
+          category: form.category || null,
+          description: form.description || null,
+          imageUrl: form.imageUrl ?? null,
+        });
+        resetForm();
+        onChange();
+      } else {
+        await createMenuItem(branch.id, {
+          name: form.name,
+          price: Number(form.price),
+          category: form.category || null,
+          description: form.description || null,
+          imageUrl: form.imageUrl ?? null,
+        });
+        setForm({ name: "", price: 0, category: "", description: "", imageUrl: null });
+        onChange();
+      }
     } catch (e) {
       if (e instanceof LimitError) setShowUpgrade(true);
       else setError(true);
@@ -66,6 +89,9 @@ export function MenuManager({ branch, onChange }: { branch: OwnerBranchDetail; o
               <p className="truncate font-semibold text-ink">{m.name}</p>
               <p className="text-xs text-mute">{m.category ?? ""}</p>
             </div>
+            <button aria-label={t("admin.owner.edit")} onClick={() => startEdit(m)} className="grid h-9 w-9 place-items-center rounded-lg text-mute hover:text-brand-dark">
+              <Pencil size={16} />
+            </button>
             <button aria-label={t("admin.owner.delete")} onClick={() => remove(m.id)} className="grid h-9 w-9 place-items-center rounded-lg text-mute hover:text-brand-dark">
               <Trash2 size={16} />
             </button>
@@ -75,7 +101,7 @@ export function MenuManager({ branch, onChange }: { branch: OwnerBranchDetail; o
 
       {error && <p className="mb-2 text-xs text-brand-dark">{t("admin.owner.saveError")}</p>}
 
-      {atLimit ? (
+      {atLimit && !editingId ? (
         <div className="rounded-xl bg-brand-soft p-3 text-center">
           <p className="mb-2 text-sm font-semibold text-brand-dark">{t("admin.owner.limitReached")}</p>
           <button onClick={() => setShowUpgrade(true)} className="rounded-xl bg-brand px-4 py-2 text-sm font-bold text-white">
@@ -91,9 +117,14 @@ export function MenuManager({ branch, onChange }: { branch: OwnerBranchDetail; o
           </div>
           <textarea aria-label={t("admin.owner.itemDescription")} placeholder={t("admin.owner.itemDescription")} className={`${inputCls} resize-none`} rows={2} value={form.description ?? ""} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           <ImageUploader value={form.imageUrl ?? null} onChange={(url) => setForm({ ...form, imageUrl: url })} label={t("admin.owner.itemImage")} />
-          <button onClick={add} disabled={busy || !form.name || !form.price} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">
-            {t("admin.owner.addItem")}
+          <button onClick={submit} disabled={busy || !form.name || !form.price} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">
+            {editingId ? t("admin.owner.saveChanges") : t("admin.owner.addItem")}
           </button>
+          {editingId && (
+            <button onClick={resetForm} className="w-full rounded-xl bg-bg py-2.5 text-sm font-bold text-mute ring-1 ring-line">
+              {t("admin.owner.cancel")}
+            </button>
+          )}
         </div>
       )}
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Trash2 } from "lucide-react";
-import { createPromotion, deletePromotion, LimitError } from "../../api/ownerClient.js";
+import { Trash2, Pencil } from "lucide-react";
+import { createPromotion, updatePromotion, deletePromotion, LimitError } from "../../api/ownerClient.js";
 import { ImageUploader } from "./ImageUploader.js";
 import { UpgradeRequestModal } from "./UpgradeRequestModal.js";
 import type { OwnerBranchDetail } from "../../api/ownerTypes.js";
@@ -21,20 +21,51 @@ export function PromotionsManager({ branch, onChange }: { branch: OwnerBranchDet
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [startsAt, setStartsAt] = useState("");
   const [endsAt, setEndsAt] = useState("");
+  const [editingId, setEditingId] = useState<string | null>(null);
 
-  async function add() {
+  function resetForm() {
+    setTitle("");
+    setDescription("");
+    setImageUrl(null);
+    setStartsAt("");
+    setEndsAt("");
+    setEditingId(null);
+  }
+
+  function startEdit(p: typeof branch.promotions[number]) {
+    setTitle(p.title);
+    setDescription(p.description ?? "");
+    setImageUrl(p.imageUrl);
+    setStartsAt(p.startsAt.slice(0, 16));
+    setEndsAt(p.endsAt.slice(0, 16));
+    setEditingId(p.id);
+  }
+
+  async function submit() {
     setBusy(true);
     setError(false);
     try {
-      await createPromotion(branch.id, {
-        title,
-        description: description || null,
-        imageUrl,
-        startsAt: new Date(startsAt).toISOString(),
-        endsAt: new Date(endsAt).toISOString(),
-      });
-      setTitle(""); setDescription(""); setImageUrl(null); setStartsAt(""); setEndsAt("");
-      onChange();
+      if (editingId) {
+        await updatePromotion(branch.id, editingId, {
+          title,
+          description: description || null,
+          imageUrl,
+          startsAt: new Date(startsAt).toISOString(),
+          endsAt: new Date(endsAt).toISOString(),
+        });
+        resetForm();
+        onChange();
+      } else {
+        await createPromotion(branch.id, {
+          title,
+          description: description || null,
+          imageUrl,
+          startsAt: new Date(startsAt).toISOString(),
+          endsAt: new Date(endsAt).toISOString(),
+        });
+        setTitle(""); setDescription(""); setImageUrl(null); setStartsAt(""); setEndsAt("");
+        onChange();
+      }
     } catch (e) {
       if (e instanceof LimitError) setShowUpgrade(true);
       else setError(true);
@@ -67,6 +98,9 @@ export function PromotionsManager({ branch, onChange }: { branch: OwnerBranchDet
               {p.imageUrl && <img src={p.imageUrl} alt={p.title} className="h-full w-full object-cover" />}
             </span>
             <p className="min-w-0 flex-1 truncate font-semibold text-ink">{p.title}</p>
+            <button aria-label={t("admin.owner.edit")} onClick={() => startEdit(p)} className="grid h-9 w-9 place-items-center rounded-lg text-mute hover:text-brand-dark">
+              <Pencil size={16} />
+            </button>
             <button aria-label={t("admin.owner.delete")} onClick={() => remove(p.id)} className="grid h-9 w-9 place-items-center rounded-lg text-mute hover:text-brand-dark">
               <Trash2 size={16} />
             </button>
@@ -76,7 +110,7 @@ export function PromotionsManager({ branch, onChange }: { branch: OwnerBranchDet
 
       {error && <p className="mb-2 text-xs text-brand-dark">{t("admin.owner.saveError")}</p>}
 
-      {atLimit ? (
+      {atLimit && !editingId ? (
         <div className="rounded-xl bg-brand-soft p-3 text-center">
           <p className="mb-2 text-sm font-semibold text-brand-dark">{t("admin.owner.limitReached")}</p>
           <button onClick={() => setShowUpgrade(true)} className="rounded-xl bg-brand px-4 py-2 text-sm font-bold text-white">
@@ -96,9 +130,14 @@ export function PromotionsManager({ branch, onChange }: { branch: OwnerBranchDet
             </label>
           </div>
           <ImageUploader value={imageUrl} onChange={setImageUrl} label={t("admin.owner.promoImage")} />
-          <button onClick={add} disabled={busy || !title || !startsAt || !endsAt} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">
-            {t("admin.owner.addPromo")}
+          <button onClick={submit} disabled={busy || !title || !startsAt || !endsAt} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">
+            {editingId ? t("admin.owner.saveChanges") : t("admin.owner.addPromo")}
           </button>
+          {editingId && (
+            <button onClick={resetForm} className="w-full rounded-xl bg-bg py-2.5 text-sm font-bold text-mute ring-1 ring-line">
+              {t("admin.owner.cancel")}
+            </button>
+          )}
         </div>
       )}
 
