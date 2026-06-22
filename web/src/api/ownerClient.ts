@@ -11,6 +11,7 @@ import type {
   MenuItemInput,
   PromotionInput,
   DiscountInput,
+  DiscountUpdate,
   CreateBranchInput,
   AdRequestInput,
 } from "./ownerTypes.js";
@@ -111,6 +112,9 @@ export async function listDiscounts(branchId: string): Promise<OwnerDiscountCode
 }
 export async function createDiscount(branchId: string, input: DiscountInput): Promise<OwnerDiscountCode> {
   return jsonOrThrow(await authedFetch(`/admin/branches/${branchId}/discounts`, jsonInit("POST", input)));
+}
+export async function updateDiscount(branchId: string, codeId: string, input: DiscountUpdate): Promise<OwnerDiscountCode> {
+  return jsonOrThrow(await authedFetch(`/admin/branches/${branchId}/discounts/${codeId}`, jsonInit("PATCH", input)));
 }
 export async function deleteDiscount(branchId: string, codeId: string): Promise<void> {
   const res = await authedFetch(`/admin/branches/${branchId}/discounts/${codeId}`, { method: "DELETE" });

@@ -119,7 +119,10 @@
       "newBranch": "New branch",
       "createBranch": "Create branch",
       "requestAd": "Request ad",
-      "wantsPopup": "I want a popup (extra cost)"
+      "wantsPopup": "I want a popup (extra cost)",
+      "edit": "Edit",
+      "saveChanges": "Save changes",
+      "cancel": "Cancel"
     }
   }
 }

@@ -40,6 +40,18 @@ describe("DiscountsManager", () => {
     expect(onChange).toHaveBeenCalled();
   });
 
+  it("edita un código de descuento existente", async () => {
+    mockAuth("admin_general");
+    const update = vi.spyOn(owner, "updateDiscount").mockResolvedValue({ id: "d0" } as never);
+    const onChange = vi.fn();
+    render(<DiscountsManager branch={branch()} onChange={onChange} />);
+    fireEvent.click(screen.getByRole("button", { name: /editar/i }));
+    fireEvent.change(screen.getByLabelText(/código/i), { target: { value: "NUEVO" } });
+    fireEvent.click(screen.getByRole("button", { name: /guardar cambios/i }));
+    await waitFor(() => expect(update).toHaveBeenCalledWith("b1", "d0", expect.objectContaining({ code: "NUEVO" })));
+    expect(onChange).toHaveBeenCalled();
+  });
+
   it("admin_sucursal NO ve la opción de alcance cadena", () => {
     mockAuth("admin_sucursal");
     render(<DiscountsManager branch={branch()} onChange={vi.fn()} />);

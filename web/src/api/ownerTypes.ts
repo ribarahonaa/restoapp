@@ -122,6 +122,8 @@ export interface DiscountInput {
   scope: "branch" | "chain";
 }
 
+export type DiscountUpdate = Omit<Partial<DiscountInput>, "scope">;
+
 export interface CreateBranchInput {
   businessId: string;
   name: string;

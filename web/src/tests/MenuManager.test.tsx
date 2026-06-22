@@ -41,6 +41,20 @@ describe("MenuManager", () => {
     expect(screen.queryByLabelText(/nombre del ítem/i)).not.toBeInTheDocument();
   });
 
+  it("edita un ítem existente", async () => {
+    const update = vi.spyOn(owner, "updateMenuItem").mockResolvedValue({ id: "m0" } as never);
+    const onChange = vi.fn();
+    render(<MenuManager branch={branchWith(1, 10)} onChange={onChange} />);
+    // click edit on the first item
+    fireEvent.click(screen.getByRole("button", { name: /editar/i }));
+    // change the name
+    fireEvent.change(screen.getByLabelText(/nombre del ítem/i), { target: { value: "Nuevo Nombre" } });
+    // submit
+    fireEvent.click(screen.getByRole("button", { name: /guardar cambios/i }));
+    await waitFor(() => expect(update).toHaveBeenCalledWith("b1", "m0", expect.objectContaining({ name: "Nuevo Nombre" })));
+    expect(onChange).toHaveBeenCalled();
+  });
+
   it("elimina un ítem", async () => {
     const del = vi.spyOn(owner, "deleteMenuItem").mockResolvedValue(undefined as never);
     const onChange = vi.fn();
