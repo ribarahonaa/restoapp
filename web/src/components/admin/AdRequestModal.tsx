@@ -11,12 +11,16 @@ export function AdRequestModal({ businessId, branchId, onClose }: { businessId: 
   const [note, setNote] = useState("");
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(false);
 
   async function submit() {
+    setError(false);
     setBusy(true);
     try {
       await requestAd({ businessId, branchId, desiredStartsAt: new Date(startsAt).toISOString(), desiredEndsAt: new Date(endsAt).toISOString(), wantsPopup, note: note || null });
       setDone(true);
+    } catch {
+      setError(true);
     } finally {
       setBusy(false);
     }
@@ -46,6 +50,7 @@ export function AdRequestModal({ businessId, branchId, onClose }: { businessId: 
               {t("admin.owner.wantsPopup")}
             </label>
             <textarea aria-label={t("admin.owner.note")} placeholder={t("admin.owner.note")} className={`${inputCls} resize-none`} rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
+            {error && <p className="text-xs text-brand-dark">{t("admin.owner.saveError")}</p>}
             <button onClick={submit} disabled={busy || !startsAt || !endsAt} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">{t("admin.owner.send")}</button>
           </div>
         )}

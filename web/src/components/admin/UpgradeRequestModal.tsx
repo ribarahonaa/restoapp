@@ -11,19 +11,23 @@ export function UpgradeRequestModal({ businessId, onClose }: { businessId: strin
   const [note, setNote] = useState("");
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     listPlans().then((p) => {
       setPlans(p);
       if (p[0]) setPlanId(p[0].id);
-    });
+    }).catch(() => setError(true));
   }, []);
 
   async function submit() {
+    setError(false);
     setBusy(true);
     try {
       await requestUpgrade(businessId, planId, note || undefined);
       setDone(true);
+    } catch {
+      setError(true);
     } finally {
       setBusy(false);
     }
@@ -48,6 +52,7 @@ export function UpgradeRequestModal({ businessId, onClose }: { businessId: strin
               ))}
             </select>
             <textarea aria-label={t("admin.owner.note")} placeholder={t("admin.owner.note")} className="w-full resize-none rounded-xl bg-bg px-3 py-2 text-sm text-ink ring-1 ring-line" rows={2} value={note} onChange={(e) => setNote(e.target.value)} />
+            {error && <p className="text-xs text-brand-dark">{t("admin.owner.saveError")}</p>}
             <button onClick={submit} disabled={busy || !planId} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">
               {t("admin.owner.send")}
             </button>
