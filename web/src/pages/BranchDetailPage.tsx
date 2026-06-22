@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, MapPin, ChevronRight } from "lucide-react";
 import { getBranch } from "../api/client.js";
-import type { BranchDetail, MenuItem, Promotion } from "../api/types.js";
+import type { BranchDetail, MenuItem, Promotion, PublicDiscountCode } from "../api/types.js";
 import { CATEGORY_ICON, CATEGORY_GRADIENT, categoryPinHtml } from "../lib/categories.js";
 import { formatPrice } from "../lib/format.js";
 import { MapView } from "../components/map/MapView.js";
@@ -96,6 +96,12 @@ export function BranchDetailPage() {
         </div>
       </div>
 
+      {branch.closedUntil && new Date(branch.closedUntil) > new Date() && (
+        <div className="bg-brand-soft px-4 py-2 text-center text-sm font-semibold text-brand-dark">
+          {t("branch.closedTemporarily")}
+        </div>
+      )}
+
       {/* Sheet de contenido */}
       <div className="relative -mt-5 rounded-t-3xl bg-bg">
         <div className="mx-auto max-w-2xl">
@@ -139,6 +145,23 @@ export function BranchDetailPage() {
                       </button>
                     ))}
                   </div>
+                </section>
+              )}
+
+              {/* Cupones */}
+              {branch.discountCodes.length > 0 && (
+                <section className="mb-6">
+                  <h2 className="mb-2 font-display text-base font-bold text-ink">{t("branch.coupons")}</h2>
+                  <ul className="space-y-2">
+                    {branch.discountCodes.map((c: PublicDiscountCode) => (
+                      <li key={c.id} className="flex items-center justify-between rounded-2xl border border-dashed border-brand/40 bg-brand-soft px-3 py-2">
+                        <span className="font-mono font-extrabold tracking-wide text-brand-dark">{c.code}</span>
+                        <span className="text-sm font-semibold text-ink">
+                          {c.type === "percent" ? `${c.value}% ` : `$${c.value} `}{t("branch.couponOff")}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
                 </section>
               )}
 

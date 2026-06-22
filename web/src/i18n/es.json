@@ -37,7 +37,10 @@
     "distance": "{{km}} km",
     "eta": "{{min}} min",
     "noResults": "No hay locales que coincidan",
-    "back": "Volver"
+    "back": "Volver",
+    "closedTemporarily": "Cerrado temporalmente",
+    "coupons": "Cupones",
+    "couponOff": "de descuento"
   },
   "geo": {
     "requesting": "Obteniendo tu ubicación…",
@@ -84,7 +87,39 @@
       "openTime": "apertura",
       "closeTime": "cierre",
       "saveHours": "Guardar horarios",
-      "saveError": "No se pudo guardar, intenta de nuevo"
+      "saveError": "No se pudo guardar, intenta de nuevo",
+      "menuTab": "Menú",
+      "promosTab": "Promos",
+      "discountsTab": "Descuentos",
+      "addItem": "Agregar ítem",
+      "itemName": "Nombre del ítem",
+      "price": "Precio",
+      "itemCategory": "Categoría",
+      "itemDescription": "Descripción",
+      "itemImage": "Imagen del ítem",
+      "delete": "Eliminar",
+      "limitReached": "Llegaste al límite de tu plan",
+      "requestUpgrade": "Solicitar upgrade",
+      "plan": "Plan",
+      "note": "Nota (opcional)",
+      "send": "Enviar",
+      "requestSent": "Solicitud enviada",
+      "addPromo": "Agregar promo",
+      "promoTitle": "Título",
+      "promoImage": "Imagen de la promo",
+      "from": "Desde",
+      "to": "Hasta",
+      "code": "Código",
+      "type": "Tipo",
+      "value": "Valor",
+      "scope": "Alcance",
+      "scopeBranch": "Este local",
+      "scopeChain": "Toda la cadena",
+      "createCode": "Crear código",
+      "newBranch": "Crear sucursal",
+      "createBranch": "Crear sucursal",
+      "requestAd": "Solicitar anuncio",
+      "wantsPopup": "Quiero popup (costo adicional)"
     }
   }
 }

@@ -37,7 +37,10 @@
     "distance": "{{km}} km",
     "eta": "{{min}} min",
     "noResults": "No matching places",
-    "back": "Back"
+    "back": "Back",
+    "closedTemporarily": "Temporarily closed",
+    "coupons": "Coupons",
+    "couponOff": "off"
   },
   "geo": {
     "requesting": "Getting your location…",
@@ -84,7 +87,39 @@
       "openTime": "open",
       "closeTime": "close",
       "saveHours": "Save hours",
-      "saveError": "Could not save, try again"
+      "saveError": "Could not save, try again",
+      "menuTab": "Menu",
+      "promosTab": "Promos",
+      "discountsTab": "Discounts",
+      "addItem": "Add item",
+      "itemName": "Item name",
+      "price": "Price",
+      "itemCategory": "Category",
+      "itemDescription": "Description",
+      "itemImage": "Item image",
+      "delete": "Delete",
+      "limitReached": "You've reached your plan limit",
+      "requestUpgrade": "Request upgrade",
+      "plan": "Plan",
+      "note": "Note (optional)",
+      "send": "Send",
+      "requestSent": "Request sent",
+      "addPromo": "Add promo",
+      "promoTitle": "Title",
+      "promoImage": "Promo image",
+      "from": "From",
+      "to": "To",
+      "code": "Code",
+      "type": "Type",
+      "value": "Value",
+      "scope": "Scope",
+      "scopeBranch": "This branch",
+      "scopeChain": "Whole chain",
+      "createCode": "Create code",
+      "newBranch": "New branch",
+      "createBranch": "Create branch",
+      "requestAd": "Request ad",
+      "wantsPopup": "I want a popup (extra cost)"
     }
   }
 }

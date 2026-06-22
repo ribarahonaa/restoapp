@@ -57,6 +57,16 @@ export interface BranchPurposeTag {
   tag: Purpose;
 }
 
+export interface PublicDiscountCode {
+  id: string;
+  code: string;
+  type: "percent" | "amount";
+  value: string;
+  startsAt: string;
+  endsAt: string;
+  branchId: string | null;
+}
+
 export interface BranchDetail {
   id: string;
   name: string;
@@ -74,6 +84,8 @@ export interface BranchDetail {
   promotions: Promotion[];
   purposes: BranchPurposeTag[];
   reviews: Review[];
+  closedUntil: string | null;
+  discountCodes: PublicDiscountCode[];
 }
 
 export interface NearbyFilters {

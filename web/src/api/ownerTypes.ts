@@ -95,3 +95,50 @@ export interface HourInput {
   openTime: string;
   closeTime: string;
 }
+
+export interface MenuItemInput {
+  name: string;
+  description?: string | null;
+  price: number;
+  category?: string | null;
+  imageUrl?: string | null;
+}
+
+export interface PromotionInput {
+  title: string;
+  description?: string | null;
+  imageUrl?: string | null;
+  startsAt: string;
+  endsAt: string;
+  active?: boolean;
+}
+
+export interface DiscountInput {
+  code: string;
+  type: "percent" | "amount";
+  value: number;
+  startsAt: string;
+  endsAt: string;
+  scope: "branch" | "chain";
+}
+
+export interface CreateBranchInput {
+  businessId: string;
+  name: string;
+  category: Category;
+  address: string;
+  lat: number;
+  lng: number;
+  phone?: string | null;
+  description?: string | null;
+  imageUrl?: string | null;
+}
+
+export interface AdRequestInput {
+  businessId: string;
+  branchId?: string | null;
+  desiredStartsAt: string;
+  desiredEndsAt: string;
+  wantsPopup?: boolean;
+  note?: string | null;
+}

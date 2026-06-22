@@ -4,9 +4,11 @@ import { useTranslation } from "react-i18next";
 import { ChevronRight, MapPin } from "lucide-react";
 import { listBranches } from "../../api/ownerClient.js";
 import type { OwnerBranchSummary } from "../../api/ownerTypes.js";
+import { useAuth } from "../../auth/AuthContext.js";
 
 export function OwnerBranchesPage() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [branches, setBranches] = useState<OwnerBranchSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -21,6 +23,11 @@ export function OwnerBranchesPage() {
   return (
     <div>
       <h1 className="mb-4 font-display text-xl font-extrabold text-ink">{t("admin.owner.myBranches")}</h1>
+      {user?.role !== "admin_sucursal" && (
+        <Link to="/admin/branches/new" className="mb-3 inline-flex items-center gap-1.5 rounded-xl bg-brand px-4 py-2 text-sm font-bold text-white">
+          + {t("admin.owner.newBranch")}
+        </Link>
+      )}
       {error && <p className="rounded-xl bg-brand-soft px-3 py-2 text-sm text-brand-dark">{t("errors.loadFailed")}</p>}
       {loading ? (
         <p className="text-mute">…</p>
