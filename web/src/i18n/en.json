@@ -37,7 +37,10 @@
     "distance": "{{km}} km",
     "eta": "{{min}} min",
     "noResults": "No matching places",
-    "back": "Back"
+    "back": "Back",
+    "closedTemporarily": "Temporarily closed",
+    "coupons": "Coupons",
+    "couponOff": "off"
   },
   "geo": {
     "requesting": "Getting your location…",
