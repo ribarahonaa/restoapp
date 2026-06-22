@@ -110,27 +110,7 @@ export function PromotionsManager({ branch, onChange }: { branch: OwnerBranchDet
 
       {error && <p className="mb-2 text-xs text-brand-dark">{t("admin.owner.saveError")}</p>}
 
-      {editingId ? (
-        <div className="space-y-2 rounded-xl bg-bg p-3">
-          <input aria-label={t("admin.owner.promoTitle")} placeholder={t("admin.owner.promoTitle")} className={inputCls} value={title} onChange={(e) => setTitle(e.target.value)} />
-          <textarea aria-label={t("admin.owner.itemDescription")} placeholder={t("admin.owner.itemDescription")} className={`${inputCls} resize-none`} rows={2} value={description} onChange={(e) => setDescription(e.target.value)} />
-          <div className="flex gap-2">
-            <label className="flex-1 text-xs font-semibold text-mute">{t("admin.owner.from")}
-              <input aria-label={t("admin.owner.from")} type="datetime-local" className={inputCls} value={startsAt} onChange={(e) => setStartsAt(e.target.value)} />
-            </label>
-            <label className="flex-1 text-xs font-semibold text-mute">{t("admin.owner.to")}
-              <input aria-label={t("admin.owner.to")} type="datetime-local" className={inputCls} value={endsAt} onChange={(e) => setEndsAt(e.target.value)} />
-            </label>
-          </div>
-          <ImageUploader value={imageUrl} onChange={setImageUrl} label={t("admin.owner.promoImage")} />
-          <button onClick={submit} disabled={busy || !title || !startsAt || !endsAt} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">
-            {t("admin.owner.saveChanges")}
-          </button>
-          <button onClick={resetForm} className="w-full rounded-xl bg-bg py-2.5 text-sm font-bold text-mute ring-1 ring-line">
-            {t("admin.owner.cancel")}
-          </button>
-        </div>
-      ) : atLimit ? (
+      {atLimit && !editingId ? (
         <div className="rounded-xl bg-brand-soft p-3 text-center">
           <p className="mb-2 text-sm font-semibold text-brand-dark">{t("admin.owner.limitReached")}</p>
           <button onClick={() => setShowUpgrade(true)} className="rounded-xl bg-brand px-4 py-2 text-sm font-bold text-white">
@@ -151,8 +131,13 @@ export function PromotionsManager({ branch, onChange }: { branch: OwnerBranchDet
           </div>
           <ImageUploader value={imageUrl} onChange={setImageUrl} label={t("admin.owner.promoImage")} />
           <button onClick={submit} disabled={busy || !title || !startsAt || !endsAt} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">
-            {t("admin.owner.addPromo")}
+            {editingId ? t("admin.owner.saveChanges") : t("admin.owner.addPromo")}
           </button>
+          {editingId && (
+            <button onClick={resetForm} className="w-full rounded-xl bg-bg py-2.5 text-sm font-bold text-mute ring-1 ring-line">
+              {t("admin.owner.cancel")}
+            </button>
+          )}
         </div>
       )}
 

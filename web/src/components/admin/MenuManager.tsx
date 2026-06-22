@@ -101,23 +101,7 @@ export function MenuManager({ branch, onChange }: { branch: OwnerBranchDetail; o
 
       {error && <p className="mb-2 text-xs text-brand-dark">{t("admin.owner.saveError")}</p>}
 
-      {editingId ? (
-        <div className="space-y-2 rounded-xl bg-bg p-3">
-          <input aria-label={t("admin.owner.itemName")} placeholder={t("admin.owner.itemName")} className={inputCls} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-          <div className="flex gap-2">
-            <input aria-label={t("admin.owner.price")} placeholder={t("admin.owner.price")} type="number" className={inputCls} value={form.price || ""} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} />
-            <input aria-label={t("admin.owner.itemCategory")} placeholder={t("admin.owner.itemCategory")} className={inputCls} value={form.category ?? ""} onChange={(e) => setForm({ ...form, category: e.target.value })} />
-          </div>
-          <textarea aria-label={t("admin.owner.itemDescription")} placeholder={t("admin.owner.itemDescription")} className={`${inputCls} resize-none`} rows={2} value={form.description ?? ""} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-          <ImageUploader value={form.imageUrl ?? null} onChange={(url) => setForm({ ...form, imageUrl: url })} label={t("admin.owner.itemImage")} />
-          <button onClick={submit} disabled={busy || !form.name || !form.price} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">
-            {t("admin.owner.saveChanges")}
-          </button>
-          <button onClick={resetForm} className="w-full rounded-xl bg-bg py-2.5 text-sm font-bold text-mute ring-1 ring-line">
-            {t("admin.owner.cancel")}
-          </button>
-        </div>
-      ) : atLimit ? (
+      {atLimit && !editingId ? (
         <div className="rounded-xl bg-brand-soft p-3 text-center">
           <p className="mb-2 text-sm font-semibold text-brand-dark">{t("admin.owner.limitReached")}</p>
           <button onClick={() => setShowUpgrade(true)} className="rounded-xl bg-brand px-4 py-2 text-sm font-bold text-white">
@@ -134,8 +118,13 @@ export function MenuManager({ branch, onChange }: { branch: OwnerBranchDetail; o
           <textarea aria-label={t("admin.owner.itemDescription")} placeholder={t("admin.owner.itemDescription")} className={`${inputCls} resize-none`} rows={2} value={form.description ?? ""} onChange={(e) => setForm({ ...form, description: e.target.value })} />
           <ImageUploader value={form.imageUrl ?? null} onChange={(url) => setForm({ ...form, imageUrl: url })} label={t("admin.owner.itemImage")} />
           <button onClick={submit} disabled={busy || !form.name || !form.price} className="w-full rounded-xl bg-brand py-2.5 text-sm font-bold text-white disabled:opacity-40">
-            {t("admin.owner.addItem")}
+            {editingId ? t("admin.owner.saveChanges") : t("admin.owner.addItem")}
           </button>
+          {editingId && (
+            <button onClick={resetForm} className="w-full rounded-xl bg-bg py-2.5 text-sm font-bold text-mute ring-1 ring-line">
+              {t("admin.owner.cancel")}
+            </button>
+          )}
         </div>
       )}
 
