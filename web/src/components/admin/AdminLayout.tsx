@@ -14,6 +14,17 @@ export function AdminLayout({ children }: { children: ReactNode }) {
           <Store size={20} strokeWidth={2.5} />
           {t("admin.owner.title")}
         </Link>
+        {user?.role === "superadmin" ? (
+          <nav className="flex items-center gap-3 text-sm font-semibold">
+            <Link to="/admin/superadmin/businesses" className="text-ink hover:text-brand">{t("admin.sa.businesses")}</Link>
+            <Link to="/admin/superadmin/ads" className="text-ink hover:text-brand">{t("admin.sa.ads")}</Link>
+            <Link to="/admin/superadmin/requests" className="text-ink hover:text-brand">{t("admin.sa.requests")}</Link>
+          </nav>
+        ) : (
+          <nav className="flex items-center gap-3 text-sm font-semibold">
+            <Link to="/admin/branches" className="text-ink hover:text-brand">{t("admin.owner.myBranches")}</Link>
+          </nav>
+        )}
         <div className="flex items-center gap-3">
           <span className="hidden text-sm text-mute sm:inline">
             {user?.name} · {user?.role}

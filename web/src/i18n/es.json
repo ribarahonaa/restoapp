@@ -123,6 +123,12 @@
       "edit": "Editar",
       "saveChanges": "Guardar cambios",
       "cancel": "Cancelar"
+    },
+    "sa": {
+      "businesses": "Empresas", "ads": "Anuncios", "requests": "Solicitudes",
+      "newBusiness": "Crear empresa", "businessName": "Nombre de la empresa",
+      "ownerName": "Nombre del dueño", "ownerEmail": "Correo del dueño", "ownerPassword": "Contraseña (mín. 8)",
+      "noPlan": "Sin plan", "noBranches": "Sin sucursales", "create": "Crear", "createError": "No se pudo crear"
     }
   }
 }
