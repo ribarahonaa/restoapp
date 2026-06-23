@@ -131,7 +131,12 @@
       "noPlan": "Sem plano", "noBranches": "Sem filiais", "create": "Criar", "createError": "Não foi possível criar",
       "addBranch": "+ Filial", "addAccount": "+ Conta", "branchName": "Nome da filial",
       "createBranch": "Criar filial", "role": "Função", "branch": "Filial", "pickBranch": "Escolher filial",
-      "createAccount": "Criar conta"
+      "createAccount": "Criar conta",
+      "upgradeRequests": "Solicitações de upgrade",
+      "adRequests": "Solicitações de anúncio",
+      "noRequests": "Sem solicitações pendentes",
+      "approve": "Aprovar",
+      "reject": "Rejeitar"
     }
   }
 }

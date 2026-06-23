@@ -131,7 +131,12 @@
       "noPlan": "Sin plan", "noBranches": "Sin sucursales", "create": "Crear", "createError": "No se pudo crear",
       "addBranch": "+ Sucursal", "addAccount": "+ Cuenta", "branchName": "Nombre de la sucursal",
       "createBranch": "Crear sucursal", "role": "Rol", "branch": "Sucursal", "pickBranch": "Elegir sucursal",
-      "createAccount": "Crear cuenta"
+      "createAccount": "Crear cuenta",
+      "upgradeRequests": "Solicitudes de upgrade",
+      "adRequests": "Solicitudes de anuncio",
+      "noRequests": "Sin solicitudes pendientes",
+      "approve": "Aprobar",
+      "reject": "Rechazar"
     }
   }
 }

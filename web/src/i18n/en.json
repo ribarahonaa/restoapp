@@ -131,7 +131,12 @@
       "noPlan": "No plan", "noBranches": "No branches", "create": "Create", "createError": "Could not create",
       "addBranch": "+ Branch", "addAccount": "+ Account", "branchName": "Branch name",
       "createBranch": "Create branch", "role": "Role", "branch": "Branch", "pickBranch": "Pick branch",
-      "createAccount": "Create account"
+      "createAccount": "Create account",
+      "upgradeRequests": "Upgrade requests",
+      "adRequests": "Ad requests",
+      "noRequests": "No pending requests",
+      "approve": "Approve",
+      "reject": "Reject"
     }
   }
 }
