@@ -47,6 +47,7 @@
     "denied": "Activa la ubicación para ver locales cercanos",
     "unavailable": "Ubicación no disponible"
   },
+  "ads": { "section": "Destacados" },
   "errors": {
     "loadFailed": "No se pudieron cargar los locales"
   },
@@ -123,6 +124,30 @@
       "edit": "Editar",
       "saveChanges": "Guardar cambios",
       "cancel": "Cancelar"
+    },
+    "sa": {
+      "businesses": "Empresas", "ads": "Anuncios", "requests": "Solicitudes",
+      "newBusiness": "Crear empresa", "businessName": "Nombre de la empresa",
+      "ownerName": "Nombre del dueño", "ownerEmail": "Correo del dueño", "ownerPassword": "Contraseña (mín. 8)",
+      "noPlan": "Sin plan", "noBranches": "Sin sucursales", "create": "Crear", "createError": "No se pudo crear",
+      "addBranch": "+ Sucursal", "addAccount": "+ Cuenta", "branchName": "Nombre de la sucursal",
+      "createBranch": "Crear sucursal", "role": "Rol", "branch": "Sucursal", "pickBranch": "Elegir sucursal",
+      "createAccount": "Crear cuenta",
+      "upgradeRequests": "Solicitudes de upgrade",
+      "adRequests": "Solicitudes de anuncio",
+      "noRequests": "Sin solicitudes pendientes",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "newAd": "Crear anuncio",
+      "adTitle": "Título",
+      "adImage": "Imagen del anuncio",
+      "business": "Empresa",
+      "placement": "Ubicación",
+      "placementSection": "Sección",
+      "placementPopup": "Popup",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "popupFull": "Cupo de popups lleno"
     }
   }
 }

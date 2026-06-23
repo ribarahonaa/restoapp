@@ -11,6 +11,8 @@ import { BranchList, SkeletonGrid } from "../components/BranchList.js";
 import { MapView, type MapMarker } from "../components/map/MapView.js";
 import { LanguageSwitcher } from "../components/LanguageSwitcher.js";
 import { categoryPinHtml } from "../lib/categories.js";
+import { AdSection } from "../components/AdSection.js";
+import { AdPopup } from "../components/AdPopup.js";
 import type { NearbyFilters } from "../api/types.js";
 
 // Fallback: Plaza de Armas, Santiago (si el usuario no da ubicación)
@@ -106,6 +108,7 @@ export function HomePage() {
             {t("errors.loadFailed")}
           </p>
         )}
+        <AdSection lat={center.lat} lng={center.lng} />
         {view === "list" ? (
           loading && branches.length === 0 ? (
             <SkeletonGrid />
@@ -118,6 +121,7 @@ export function HomePage() {
           </div>
         )}
       </main>
+      <AdPopup lat={center.lat} lng={center.lng} />
     </div>
   );
 }

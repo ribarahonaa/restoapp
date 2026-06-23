@@ -47,6 +47,7 @@
     "denied": "Enable location to see nearby places",
     "unavailable": "Location unavailable"
   },
+  "ads": { "section": "Featured" },
   "errors": {
     "loadFailed": "Could not load places"
   },
@@ -123,6 +124,30 @@
       "edit": "Edit",
       "saveChanges": "Save changes",
       "cancel": "Cancel"
+    },
+    "sa": {
+      "businesses": "Businesses", "ads": "Ads", "requests": "Requests",
+      "newBusiness": "Create business", "businessName": "Business name",
+      "ownerName": "Owner name", "ownerEmail": "Owner email", "ownerPassword": "Password (min. 8)",
+      "noPlan": "No plan", "noBranches": "No branches", "create": "Create", "createError": "Could not create",
+      "addBranch": "+ Branch", "addAccount": "+ Account", "branchName": "Branch name",
+      "createBranch": "Create branch", "role": "Role", "branch": "Branch", "pickBranch": "Pick branch",
+      "createAccount": "Create account",
+      "upgradeRequests": "Upgrade requests",
+      "adRequests": "Ad requests",
+      "noRequests": "No pending requests",
+      "approve": "Approve",
+      "reject": "Reject",
+      "newAd": "Create ad",
+      "adTitle": "Title",
+      "adImage": "Ad image",
+      "business": "Business",
+      "placement": "Placement",
+      "placementSection": "Section",
+      "placementPopup": "Popup",
+      "active": "Active",
+      "inactive": "Inactive",
+      "popupFull": "Popup quota full"
     }
   }
 }

@@ -103,3 +103,15 @@ export interface ReviewInput {
   rating: number;
   comment?: string;
 }
+
+export interface PublicAd {
+  id: string;
+  businessId: string;
+  branchId: string | null;
+  title: string;
+  description: string | null;
+  imageUrl: string | null;
+  startsAt: string;
+  endsAt: string;
+  distance: number | null;
+}

@@ -6,6 +6,7 @@ import type {
   NearbyFilters,
   Review,
   ReviewInput,
+  PublicAd,
 } from "./types.js";
 
 async function getJson<T>(url: string): Promise<T> {
@@ -49,4 +50,12 @@ export async function addReview(id: string, input: ReviewInput): Promise<ReviewR
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return res.json() as Promise<ReviewResult>;
+}
+
+export function getAds(lat: number, lng: number): Promise<PublicAd[]> {
+  return getJson<PublicAd[]>(`${API_URL}/ads?lat=${lat}&lng=${lng}`);
+}
+export async function getPopupAd(lat: number, lng: number): Promise<PublicAd | null> {
+  const { ad } = await getJson<{ ad: PublicAd | null }>(`${API_URL}/ads/popup?lat=${lat}&lng=${lng}`);
+  return ad;
 }

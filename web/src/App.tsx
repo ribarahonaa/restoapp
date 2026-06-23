@@ -7,6 +7,9 @@ import { BranchEditorPage } from "./pages/admin/BranchEditorPage.js";
 import { CreateBranchPage } from "./pages/admin/CreateBranchPage.js";
 import { AdminLayout } from "./components/admin/AdminLayout.js";
 import { RequireRole } from "./components/RequireRole.js";
+import { SaBusinessesPage } from "./pages/admin/sa/SaBusinessesPage.js";
+import { SaAdsPage } from "./pages/admin/sa/SaAdsPage.js";
+import { SaRequestsPage } from "./pages/admin/sa/SaRequestsPage.js";
 
 const ADMIN_ROLES = ["superadmin", "admin_general", "admin_sucursal"] as const;
 
@@ -26,6 +29,9 @@ export default function App() {
                 <Route path="branches" element={<OwnerBranchesPage />} />
                 <Route path="branches/new" element={<CreateBranchPage />} />
                 <Route path="branches/:id" element={<BranchEditorPage />} />
+                <Route path="superadmin/businesses" element={<RequireRole roles={["superadmin"]}><SaBusinessesPage /></RequireRole>} />
+                <Route path="superadmin/ads" element={<RequireRole roles={["superadmin"]}><SaAdsPage /></RequireRole>} />
+                <Route path="superadmin/requests" element={<RequireRole roles={["superadmin"]}><SaRequestsPage /></RequireRole>} />
               </Routes>
             </AdminLayout>
           </RequireRole>
