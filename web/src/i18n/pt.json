@@ -47,6 +47,7 @@
     "denied": "Ative a localização para ver lugares próximos",
     "unavailable": "Localização indisponível"
   },
+  "ads": { "section": "Destaques" },
   "errors": {
     "loadFailed": "Não foi possível carregar os lugares"
   },

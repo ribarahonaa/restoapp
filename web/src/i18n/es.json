@@ -47,6 +47,7 @@
     "denied": "Activa la ubicación para ver locales cercanos",
     "unavailable": "Ubicación no disponible"
   },
+  "ads": { "section": "Destacados" },
   "errors": {
     "loadFailed": "No se pudieron cargar los locales"
   },

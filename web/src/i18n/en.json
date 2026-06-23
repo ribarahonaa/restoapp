@@ -47,6 +47,7 @@
     "denied": "Enable location to see nearby places",
     "unavailable": "Location unavailable"
   },
+  "ads": { "section": "Featured" },
   "errors": {
     "loadFailed": "Could not load places"
   },
