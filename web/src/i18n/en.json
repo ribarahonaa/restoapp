@@ -136,7 +136,17 @@
       "adRequests": "Ad requests",
       "noRequests": "No pending requests",
       "approve": "Approve",
-      "reject": "Reject"
+      "reject": "Reject",
+      "newAd": "Create ad",
+      "adTitle": "Title",
+      "adImage": "Ad image",
+      "business": "Business",
+      "placement": "Placement",
+      "placementSection": "Section",
+      "placementPopup": "Popup",
+      "active": "Active",
+      "inactive": "Inactive",
+      "popupFull": "Popup quota full"
     }
   }
 }

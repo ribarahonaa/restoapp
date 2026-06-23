@@ -136,7 +136,17 @@
       "adRequests": "Solicitudes de anuncio",
       "noRequests": "Sin solicitudes pendientes",
       "approve": "Aprobar",
-      "reject": "Rechazar"
+      "reject": "Rechazar",
+      "newAd": "Crear anuncio",
+      "adTitle": "Título",
+      "adImage": "Imagen del anuncio",
+      "business": "Empresa",
+      "placement": "Ubicación",
+      "placementSection": "Sección",
+      "placementPopup": "Popup",
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "popupFull": "Cupo de popups lleno"
     }
   }
 }
