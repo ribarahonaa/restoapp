@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import "../i18n/index.js";
 import i18n from "../i18n/index.js";
@@ -24,5 +24,17 @@ describe("SaBusinessesPage", () => {
     expect(await screen.findByText("Grupo Demo")).toBeInTheDocument();
     expect(screen.getByText(/o@d\.cl/)).toBeInTheDocument();
     expect(screen.getByText("Local Centro")).toBeInTheDocument();
+  });
+
+  it("crea una sucursal en la empresa", async () => {
+    vi.spyOn(sa, "listBusinesses").mockResolvedValue(data as never);
+    const create = vi.spyOn(sa, "createSaBranch").mockResolvedValue({ id: "brNew" } as never);
+    render(<MemoryRouter><SaBusinessesPage /></MemoryRouter>);
+    await screen.findByText("Grupo Demo");
+    fireEvent.click(screen.getByRole("button", { name: /\+ sucursal/i }));
+    fireEvent.change(screen.getByLabelText(/nombre de la sucursal/i), { target: { value: "Suc Nueva" } });
+    fireEvent.change(screen.getByLabelText(/dirección/i), { target: { value: "Calle 1" } });
+    fireEvent.click(screen.getByRole("button", { name: /^crear sucursal$/i }));
+    await waitFor(() => expect(create).toHaveBeenCalledWith("biz1", expect.objectContaining({ name: "Suc Nueva" })));
   });
 });
