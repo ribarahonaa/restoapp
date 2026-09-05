@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from "react-leaflet";
 import L from "leaflet";
 
 export interface MapMarker {
@@ -15,6 +15,7 @@ interface MapViewProps {
   center: { lat: number; lng: number };
   markers: MapMarker[];
   zoom?: number;
+  route?: { lat: number; lng: number }[];
 }
 
 const DEFAULT_PIN = `<div style="width:36px;height:36px;border-radius:9999px;background:#fff;border:2px solid #ff4d2e;box-shadow:0 4px 10px rgba(27,27,31,.25);display:flex;align-items:center;justify-content:center;color:#ff4d2e;font-size:18px;line-height:1;">•</div>`;
@@ -38,7 +39,19 @@ function Recenter({ center }: { center: { lat: number; lng: number } }) {
   return null;
 }
 
-export function MapView({ center, markers, zoom = 14 }: MapViewProps) {
+// Al aparecer una ruta, encuadra el mapa para mostrarla completa.
+function FitRoute({ coords }: { coords: { lat: number; lng: number }[] }) {
+  const map = useMap();
+  useEffect(() => {
+    if (coords.length < 2) return;
+    const bounds = L.latLngBounds(coords.map((c) => [c.lat, c.lng] as [number, number]));
+    map.fitBounds(bounds, { padding: [48, 48] });
+  }, [coords, map]);
+  return null;
+}
+
+export function MapView({ center, markers, zoom = 14, route }: MapViewProps) {
+  const hasRoute = !!route && route.length >= 2;
   return (
     <MapContainer
       center={[center.lat, center.lng]}
@@ -47,11 +60,17 @@ export function MapView({ center, markers, zoom = 14 }: MapViewProps) {
       className="h-full w-full"
       scrollWheelZoom
     >
-      <Recenter center={center} />
+      {hasRoute ? <FitRoute coords={route!} /> : <Recenter center={center} />}
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      {hasRoute && (
+        <Polyline
+          positions={route!.map((c) => [c.lat, c.lng] as [number, number])}
+          pathOptions={{ color: "#ff4d2e", weight: 5, opacity: 0.85 }}
+        />
+      )}
       {markers.map((m) => (
         <Marker
           key={m.id}
@@ -59,7 +78,7 @@ export function MapView({ center, markers, zoom = 14 }: MapViewProps) {
           icon={pinIcon(m.iconHtml)}
           eventHandlers={m.onClick ? { click: m.onClick } : undefined}
         >
-          <Popup>{m.label}</Popup>
+          {!m.onClick && <Popup>{m.label}</Popup>}
         </Marker>
       ))}
     </MapContainer>

@@ -45,7 +45,15 @@
   "geo": {
     "requesting": "Obteniendo tu ubicación…",
     "denied": "Activa la ubicación para ver locales cercanos",
-    "unavailable": "Ubicación no disponible"
+    "unavailable": "Ubicación no disponible",
+    "locate": "Ubicarme"
+  },
+  "map": {
+    "today": "Hoy",
+    "closedToday": "Cerrado hoy",
+    "viewMore": "Ver más",
+    "go": "Ir",
+    "clearRoute": "Quitar ruta"
   },
   "ads": { "section": "Destacados" },
   "errors": {

@@ -1,7 +1,7 @@
-import { useMemo, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { MapPin, List, Map as MapIcon } from "lucide-react";
+import { MapPin, List, Map as MapIcon, LocateFixed, Loader2, X } from "lucide-react";
 import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePurposes } from "../hooks/usePurposes.js";
 import { useNearby } from "../hooks/useNearby.js";
@@ -9,11 +9,14 @@ import { usePersistedState } from "../hooks/usePersistedState.js";
 import { FilterBar, type FilterValue } from "../components/FilterBar.js";
 import { BranchList, SkeletonGrid } from "../components/BranchList.js";
 import { MapView, type MapMarker } from "../components/map/MapView.js";
+import { MapBranchSheet } from "../components/map/MapBranchSheet.js";
 import { LanguageSwitcher } from "../components/LanguageSwitcher.js";
 import { categoryPinHtml } from "../lib/categories.js";
+import { getBranch } from "../api/client.js";
+import { getRoute } from "../lib/route.js";
 import { AdSection } from "../components/AdSection.js";
 import { AdPopup } from "../components/AdPopup.js";
-import type { NearbyFilters } from "../api/types.js";
+import type { NearbyFilters, BranchDetail } from "../api/types.js";
 
 // Fallback: Plaza de Armas, Santiago (si el usuario no da ubicación)
 const FALLBACK = { lat: -33.4378, lng: -70.6504 };
@@ -48,14 +51,73 @@ export function HomePage() {
 
   const { branches, error, loading } = useNearby(nearbyFilters);
 
+  // Burbuja del local seleccionado en el mapa + ruta "Ir".
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [detail, setDetail] = useState<BranchDetail | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [route, setRoute] = useState<{ lat: number; lng: number }[] | undefined>();
+  const [routing, setRouting] = useState(false);
+
+  // Al seleccionar un pin, trae el detalle del local (fotos, horarios).
+  useEffect(() => {
+    if (!selectedId) return;
+    let alive = true;
+    setDetail(null);
+    setDetailLoading(true);
+    getBranch(selectedId)
+      .then((d) => alive && setDetail(d))
+      .catch(() => alive && setDetail(null))
+      .finally(() => alive && setDetailLoading(false));
+    return () => {
+      alive = false;
+    };
+  }, [selectedId]);
+
+  const closeSheet = () => {
+    setSelectedId(null);
+    setDetail(null);
+  };
+
+  // "Ir": traza ruta desde la ubicación del usuario al local y cierra la burbuja.
+  const handleGo = async () => {
+    if (geo.status !== "ready" || !detail) return;
+    setRouting(true);
+    try {
+      const r = await getRoute({ lat: geo.lat, lng: geo.lng }, { lat: detail.lat, lng: detail.lng });
+      setRoute(r.coords);
+      closeSheet();
+    } catch {
+      setRoute([
+        { lat: geo.lat, lng: geo.lng },
+        { lat: detail.lat, lng: detail.lng },
+      ]); // fallback: línea recta si OSRM falla
+      closeSheet();
+    } finally {
+      setRouting(false);
+    }
+  };
+
+  const selectedDistance = branches.find((b) => b.id === selectedId)?.distance;
+
   const markers: MapMarker[] = branches.map((b) => ({
     id: b.id,
     lat: b.lat,
     lng: b.lng,
     label: b.name,
     iconHtml: categoryPinHtml(b.category),
-    onClick: () => navigate(`/branch/${b.id}`),
+    onClick: () => setSelectedId(b.id),
   }));
+
+  if (geo.status === "ready") {
+    markers.push({
+      id: "__me__",
+      lat: geo.lat,
+      lng: geo.lng,
+      label: t("geo.locate"),
+      iconHtml:
+        '<div style="width:36px;height:36px;display:flex;align-items:center;justify-content:center"><div style="width:16px;height:16px;border-radius:9999px;background:#2563eb;border:3px solid #fff;box-shadow:0 0 0 3px rgba(37,99,235,.35)"></div></div>',
+    });
+  }
 
   return (
     <div className="flex h-screen flex-col bg-bg">
@@ -116,8 +178,43 @@ export function HomePage() {
             <BranchList branches={branches} />
           )
         ) : (
-          <div className="h-full w-full">
-            <MapView center={center} markers={markers} />
+          <div className="relative h-full w-full">
+            <MapView center={center} markers={markers} route={route} />
+            <button
+              type="button"
+              onClick={geo.locate}
+              disabled={geo.status === "loading"}
+              aria-label={t("geo.locate")}
+              title={t("geo.locate")}
+              className="absolute bottom-5 right-5 z-[1000] grid h-12 w-12 place-items-center rounded-full bg-surface text-brand shadow-lg ring-1 ring-line transition active:scale-95 disabled:opacity-60"
+            >
+              {geo.status === "loading" ? (
+                <Loader2 size={20} strokeWidth={2.5} className="animate-spin" />
+              ) : (
+                <LocateFixed size={20} strokeWidth={2.5} />
+              )}
+            </button>
+
+            {route && (
+              <button
+                type="button"
+                onClick={() => setRoute(undefined)}
+                className="absolute left-5 top-5 z-[1000] inline-flex items-center gap-1.5 rounded-full bg-surface px-3.5 py-2 text-sm font-bold text-ink shadow-lg ring-1 ring-line transition active:scale-95"
+              >
+                <X size={16} strokeWidth={2.5} /> {t("map.clearRoute")}
+              </button>
+            )}
+
+            <MapBranchSheet
+              branch={detail}
+              loading={detailLoading}
+              distance={selectedDistance}
+              routing={routing}
+              canRoute={geo.status === "ready"}
+              onClose={closeSheet}
+              onDetails={() => detail && navigate(`/branch/${detail.id}`)}
+              onGo={handleGo}
+            />
           </div>
         )}
       </main>

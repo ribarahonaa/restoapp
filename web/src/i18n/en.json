@@ -45,7 +45,15 @@
   "geo": {
     "requesting": "Getting your location…",
     "denied": "Enable location to see nearby places",
-    "unavailable": "Location unavailable"
+    "unavailable": "Location unavailable",
+    "locate": "Locate me"
+  },
+  "map": {
+    "today": "Today",
+    "closedToday": "Closed today",
+    "viewMore": "View more",
+    "go": "Go",
+    "clearRoute": "Clear route"
   },
   "ads": { "section": "Featured" },
   "errors": {
