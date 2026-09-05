@@ -6,10 +6,16 @@ import { purposesRouter } from "./purposes/purposes.routes.js";
 import { adsRouter } from "./ads/ads.routes.js";
 import { adminRouter } from "./admin/admin.routes.js";
 import { errorHandler } from "./middleware/error.js";
+import { env } from "./env.js";
 
 export function createApp() {
   const app = express();
-  app.use(cors());
+  // Sin CORS_ORIGIN => refleja cualquier origen (dev). Con valor => lista blanca.
+  const allowed = env.CORS_ORIGIN?.split(",").map((s) => s.trim()).filter(Boolean);
+  app.use(cors(allowed?.length ? { origin: allowed, credentials: true } : {}));
+  if (!allowed?.length) {
+    console.warn("[cors] CORS_ORIGIN sin definir: se permite cualquier origen (no usar en producción)");
+  }
   app.use(express.json());
   app.get("/health", (_req, res) => res.json({ ok: true }));
   app.use("/auth", authRouter);

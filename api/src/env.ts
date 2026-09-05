@@ -16,6 +16,9 @@ const schema = z.object({
   // Base alcanzable desde el navegador para servir imágenes (host, no red interna)
   MINIO_PUBLIC_URL: z.string().default("http://localhost:9000"),
   MAX_POPUPS_PER_DAY: z.coerce.number().default(3),
+  // Orígenes permitidos por CORS, separados por coma. Sin valor => se permite
+  // cualquier origen (cómodo en dev). En producción, fijar el/los dominio(s).
+  CORS_ORIGIN: z.string().optional(),
 });
 
 export const env = schema.parse(process.env);
