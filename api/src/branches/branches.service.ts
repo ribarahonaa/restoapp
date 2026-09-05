@@ -65,14 +65,19 @@ export async function getBranchDetail(id: string) {
         where: { active: true, startsAt: { lte: now }, endsAt: { gte: now } },
       },
       purposes: { include: { tag: true } },
-      reviews: { orderBy: { createdAt: "desc" } },
+      // Sólo las últimas reseñas para no cargar todo en memoria; el promedio y
+      // el total se calculan aparte con un aggregate sobre la tabla completa.
+      reviews: { orderBy: { createdAt: "desc" }, take: 20 },
     },
   });
   if (!branch) throw new HttpError(404, "branch_not_found");
-  const ratingCount = branch.reviews.length;
-  const ratingAvg = ratingCount
-    ? branch.reviews.reduce((s, r) => s + r.rating, 0) / ratingCount
-    : 0;
+  const ratingAgg = await prisma.review.aggregate({
+    where: { branchId: id },
+    _avg: { rating: true },
+    _count: true,
+  });
+  const ratingCount = ratingAgg._count;
+  const ratingAvg = ratingAgg._avg.rating ?? 0;
   const discountCodes = await prisma.discountCode.findMany({
     where: {
       businessId: branch.businessId,

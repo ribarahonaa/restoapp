@@ -37,16 +37,29 @@ businessesRouter.post("/", async (req, res, next) => {
   }
 });
 
-businessesRouter.get("/", async (_req, res, next) => {
+const listSchema = z.object({
+  skip: z.coerce.number().int().min(0).default(0),
+  take: z.coerce.number().int().min(1).max(100).default(50),
+});
+
+businessesRouter.get("/", async (req, res, next) => {
   try {
-    const businesses = await prisma.business.findMany({
-      orderBy: { name: "asc" },
-      include: {
-        plan: { select: { id: true, name: true, maxBranches: true, maxPromos: true, maxMenuItems: true } },
-        owner: { select: { id: true, email: true, name: true } },
-        branches: { select: { id: true, name: true, category: true, active: true }, orderBy: { name: "asc" } },
-      },
-    });
+    const { skip, take } = listSchema.parse(req.query);
+    const [total, businesses] = await Promise.all([
+      prisma.business.count(),
+      prisma.business.findMany({
+        orderBy: { name: "asc" },
+        skip,
+        take,
+        include: {
+          plan: { select: { id: true, name: true, maxBranches: true, maxPromos: true, maxMenuItems: true } },
+          owner: { select: { id: true, email: true, name: true } },
+          branches: { select: { id: true, name: true, category: true, active: true }, orderBy: { name: "asc" } },
+        },
+      }),
+    ]);
+    // Respuesta sigue siendo un array (no rompe al cliente); el total va en header.
+    res.set("X-Total-Count", String(total));
     res.json(businesses);
   } catch (e) {
     next(e);

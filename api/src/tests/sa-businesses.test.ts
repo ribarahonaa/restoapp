@@ -45,6 +45,18 @@ describe("superadmin · empresas", () => {
     expect(mine.branches.map((x: any) => x.id)).toContain(ctx.branch.id);
   });
 
+  it("pagina con skip/take y expone X-Total-Count", async () => {
+    // crea 3 empresas extra (además de la del fixture)
+    for (const n of ["Emp A", "Emp B", "Emp C"]) {
+      await request(app).post("/admin/superadmin/businesses").set("Authorization", await sa())
+        .send({ businessName: n, ownerEmail: `${n.replace(/\s/g, "").toLowerCase()}@d.cl`, ownerName: n, ownerPassword: "clave1234" });
+    }
+    const res = await request(app).get("/admin/superadmin/businesses?take=2&skip=0").set("Authorization", await sa());
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveLength(2);
+    expect(Number(res.headers["x-total-count"])).toBeGreaterThanOrEqual(4);
+  });
+
   it("actualiza nombre y plan de una empresa", async () => {
     const res = await request(app).patch(`/admin/superadmin/businesses/${ctx.biz.id}`).set("Authorization", await sa())
       .send({ name: "Renombrada", planId: ctx.pro.id });
