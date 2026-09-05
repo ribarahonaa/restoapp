@@ -57,7 +57,10 @@
   },
   "ads": { "section": "Destacados" },
   "errors": {
-    "loadFailed": "No se pudieron cargar los locales"
+    "loadFailed": "No se pudieron cargar los locales",
+    "crashed": "Algo salió mal",
+    "crashedBody": "Ocurrió un error inesperado. Intenta recargar la página.",
+    "reload": "Recargar"
   },
   "weekdays": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
   "admin": {

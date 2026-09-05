@@ -6,13 +6,16 @@ import "./i18n/index.js";
 import "./tailwind.css";
 import "leaflet/dist/leaflet.css";
 import { AuthProvider } from "./auth/AuthContext.js";
+import { ErrorBoundary } from "./components/ErrorBoundary.js";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </StrictMode>
 );

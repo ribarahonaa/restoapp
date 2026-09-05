@@ -57,7 +57,10 @@
   },
   "ads": { "section": "Destaques" },
   "errors": {
-    "loadFailed": "Não foi possível carregar os lugares"
+    "loadFailed": "Não foi possível carregar os lugares",
+    "crashed": "Algo deu errado",
+    "crashedBody": "Ocorreu um erro inesperado. Tente recarregar a página.",
+    "reload": "Recarregar"
   },
   "weekdays": ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
   "admin": {

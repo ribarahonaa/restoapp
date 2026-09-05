@@ -57,7 +57,10 @@
   },
   "ads": { "section": "Featured" },
   "errors": {
-    "loadFailed": "Could not load places"
+    "loadFailed": "Could not load places",
+    "crashed": "Something went wrong",
+    "crashedBody": "An unexpected error occurred. Try reloading the page.",
+    "reload": "Reload"
   },
   "weekdays": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
   "admin": {
