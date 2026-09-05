@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAds } from "../api/client.js";
 import type { PublicAd } from "../api/types.js";
+import { SafeImg } from "./SafeImg.js";
 
 export function AdSection({ lat, lng }: { lat: number; lng: number }) {
   const [ads, setAds] = useState<PublicAd[]>([]);
@@ -13,7 +14,7 @@ export function AdSection({ lat, lng }: { lat: number; lng: number }) {
       {ads.map((a) => (
         <div key={a.id} className="w-64 shrink-0 overflow-hidden rounded-2xl bg-surface shadow-sm ring-1 ring-line">
           <div className="h-28 w-full bg-brand-soft">
-            {a.imageUrl && <img src={a.imageUrl} alt={a.title} className="h-full w-full object-cover" />}
+            {a.imageUrl && <SafeImg src={a.imageUrl} alt={a.title} className="h-full w-full object-cover" />}
           </div>
           <div className="p-3">
             <p className="truncate font-bold text-ink">{a.title}</p>

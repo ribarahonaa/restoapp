@@ -11,6 +11,7 @@ import { Tabs } from "../components/Tabs.js";
 import { ItemSheet, type SheetItem } from "../components/ItemSheet.js";
 import { ReviewForm } from "../components/ReviewForm.js";
 import { RatingBadge, Stars } from "../components/RatingStars.js";
+import { SafeImg } from "../components/SafeImg.js";
 
 export function BranchDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -65,7 +66,12 @@ export function BranchDetailPage() {
       {/* Hero con imagen del local */}
       <div className={`relative h-60 bg-gradient-to-br ${CATEGORY_GRADIENT[branch.category]}`}>
         {branch.imageUrl ? (
-          <img src={branch.imageUrl} alt={branch.name} className="h-full w-full object-cover" />
+          <SafeImg
+            src={branch.imageUrl}
+            alt={branch.name}
+            className="h-full w-full object-cover"
+            fallback={<CatIcon size={96} strokeWidth={1.25} className="text-white/40" />}
+          />
         ) : (
           <CatIcon size={180} strokeWidth={1.25} className="absolute -right-6 -bottom-8 text-white/25" />
         )}
@@ -133,7 +139,7 @@ export function BranchDetailPage() {
                       >
                         <div className="h-28 w-full bg-brand-soft">
                           {p.imageUrl && (
-                            <img src={p.imageUrl} alt={p.title} className="h-full w-full object-cover" />
+                            <SafeImg src={p.imageUrl} alt={p.title} className="h-full w-full object-cover" />
                           )}
                         </div>
                         <div className="p-3">
@@ -180,7 +186,7 @@ export function BranchDetailPage() {
                         >
                           <span className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-bg">
                             {m.imageUrl && (
-                              <img src={m.imageUrl} alt={m.name} className="h-full w-full object-cover" />
+                              <SafeImg src={m.imageUrl} alt={m.name} className="h-full w-full object-cover" />
                             )}
                           </span>
                           <span className="min-w-0 flex-1">

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
+import { SafeImg } from "./SafeImg.js";
 
 export interface SheetItem {
   title: string;
@@ -51,7 +52,7 @@ export function ItemSheet({ item, onClose }: { item: SheetItem | null; onClose: 
         </button>
 
         {item.imageUrl && (
-          <img
+          <SafeImg
             src={item.imageUrl}
             alt={item.title}
             className="h-56 w-full object-cover sm:rounded-t-3xl"

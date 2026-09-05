@@ -5,6 +5,7 @@ import type { BranchDetail } from "../../api/types.js";
 import { CATEGORY_ICON } from "../../lib/categories.js";
 import { santiagoWeekday } from "../../lib/time.js";
 import { RatingBadge } from "../RatingStars.js";
+import { SafeImg } from "../SafeImg.js";
 
 interface Props {
   branch: BranchDetail | null;
@@ -118,10 +119,10 @@ function Content({
       {photos.length > 0 ? (
         <div className="no-scrollbar flex snap-x gap-2 overflow-x-auto p-3 pt-12">
           {photos.map((src, i) => (
-            <img
+            <SafeImg
               key={i}
               src={src}
-              alt=""
+              alt={branch.name}
               className="h-40 w-64 shrink-0 snap-start rounded-2xl object-cover"
             />
           ))}
