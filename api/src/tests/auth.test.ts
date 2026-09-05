@@ -54,6 +54,39 @@ describe("auth", () => {
     expect(res.status).toBe(401);
   });
 
+  it("refresh rota el token y revoca el anterior", async () => {
+    const reg = await request(app)
+      .post("/auth/register")
+      .send({ email: "a@b.cl", password: "secret123", name: "Ana" });
+    const r1 = reg.body.refreshToken;
+
+    const first = await request(app).post("/auth/refresh").send({ refreshToken: r1 });
+    expect(first.status).toBe(200);
+    const r2 = first.body.refreshToken;
+    expect(r2).not.toBe(r1);
+
+    // reusar el token ya rotado: 401 (y dispara revocación de la cadena)
+    const reuse = await request(app).post("/auth/refresh").send({ refreshToken: r1 });
+    expect(reuse.status).toBe(401);
+
+    // por reuse-detection, el token nuevo también queda revocado
+    const after = await request(app).post("/auth/refresh").send({ refreshToken: r2 });
+    expect(after.status).toBe(401);
+  });
+
+  it("logout revoca el refresh token", async () => {
+    const reg = await request(app)
+      .post("/auth/register")
+      .send({ email: "a@b.cl", password: "secret123", name: "Ana" });
+    const rt = reg.body.refreshToken;
+
+    const out = await request(app).post("/auth/logout").send({ refreshToken: rt });
+    expect(out.status).toBe(204);
+
+    const ref = await request(app).post("/auth/refresh").send({ refreshToken: rt });
+    expect(ref.status).toBe(401);
+  });
+
   it("rechaza registro con email inválido con 400", async () => {
     const res = await request(app)
       .post("/auth/register")

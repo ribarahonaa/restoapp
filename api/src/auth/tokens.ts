@@ -7,11 +7,17 @@ export interface TokenPayload {
   role: Role;
 }
 
+// El refresh lleva un jti (id del registro RefreshToken) para poder rotar y
+// revocar. Es opcional en la firma para casos que no persisten (p.ej. tests).
+export interface RefreshPayload extends TokenPayload {
+  jti?: string;
+}
+
 export function signAccessToken(payload: TokenPayload): string {
   return jwt.sign(payload, env.JWT_ACCESS_SECRET, { expiresIn: env.ACCESS_TOKEN_TTL });
 }
 
-export function signRefreshToken(payload: TokenPayload): string {
+export function signRefreshToken(payload: RefreshPayload): string {
   return jwt.sign(payload, env.JWT_REFRESH_SECRET, { expiresIn: env.REFRESH_TOKEN_TTL });
 }
 
@@ -19,6 +25,6 @@ export function verifyAccessToken(token: string): TokenPayload {
   return jwt.verify(token, env.JWT_ACCESS_SECRET) as TokenPayload;
 }
 
-export function verifyRefreshToken(token: string): TokenPayload {
-  return jwt.verify(token, env.JWT_REFRESH_SECRET) as TokenPayload;
+export function verifyRefreshToken(token: string): RefreshPayload {
+  return jwt.verify(token, env.JWT_REFRESH_SECRET) as RefreshPayload;
 }

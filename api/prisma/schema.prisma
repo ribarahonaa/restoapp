@@ -47,6 +47,20 @@ model User {
   branchAdmins    BranchAdmin[]
   suggestions     PlaceSuggestion[] @relation("Suggester")
   reviewed        PlaceSuggestion[] @relation("Reviewer")
+  refreshTokens   RefreshToken[]
+}
+
+// Refresh tokens emitidos: permiten rotación y revocación. El id es el jti
+// embebido en el JWT; al refrescar se revoca el anterior y se emite uno nuevo.
+model RefreshToken {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revokedAt DateTime?
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }
 
 model Business {

@@ -1,8 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
-import { registerUser, loginUser } from "./auth.service.js";
+import { registerUser, loginUser, rotateTokens, revokeRefreshToken } from "./auth.service.js";
 import { authenticate } from "../middleware/authenticate.js";
-import { verifyRefreshToken, signAccessToken, signRefreshToken } from "./tokens.js";
 import { HttpError } from "../middleware/error.js";
 import { prisma } from "../prisma.js";
 
@@ -37,16 +36,22 @@ authRouter.post("/login", async (req, res, next) => {
   }
 });
 
-authRouter.post("/refresh", (req, res, next) => {
+authRouter.post("/refresh", async (req, res, next) => {
   try {
     const token = z.object({ refreshToken: z.string() }).parse(req.body).refreshToken;
-    const payload = verifyRefreshToken(token);
-    res.json({
-      accessToken: signAccessToken({ sub: payload.sub, role: payload.role }),
-      refreshToken: signRefreshToken({ sub: payload.sub, role: payload.role }),
-    });
-  } catch {
-    next(new HttpError(401, "invalid_refresh"));
+    res.json(await rotateTokens(token));
+  } catch (e) {
+    next(e);
+  }
+});
+
+authRouter.post("/logout", async (req, res, next) => {
+  try {
+    const token = z.object({ refreshToken: z.string() }).parse(req.body).refreshToken;
+    await revokeRefreshToken(token);
+    res.status(204).end();
+  } catch (e) {
+    next(e);
   }
 });
 

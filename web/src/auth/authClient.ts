@@ -61,7 +61,16 @@ export async function me(): Promise<Me> {
   return res.json();
 }
 
-export function logout() {
+export async function logout() {
+  const refresh = localStorage.getItem(REFRESH_KEY);
+  if (refresh) {
+    // revoca el refresh en el servidor (best-effort)
+    fetch(`${API_URL}/auth/logout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ refreshToken: refresh }),
+    }).catch(() => {});
+  }
   clearSession();
 }
 
