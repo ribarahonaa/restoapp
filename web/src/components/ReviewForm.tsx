@@ -10,7 +10,7 @@ export function ReviewForm({ branchId, onAdded }: { branchId: string; onAdded: (
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const canSubmit = name.trim().length > 0 && rating >= 1 && !busy;
 
@@ -18,15 +18,16 @@ export function ReviewForm({ branchId, onAdded }: { branchId: string; onAdded: (
     e.preventDefault();
     if (!canSubmit) return;
     setBusy(true);
-    setError(false);
+    setError(null);
     try {
       await addReview(branchId, { authorName: name.trim(), rating, comment: comment.trim() || undefined });
       setName("");
       setRating(0);
       setComment("");
       onAdded();
-    } catch {
-      setError(true);
+    } catch (e) {
+      const msg = e instanceof Error && e.message === "duplicate_review" ? "review.duplicate" : "errors.loadFailed";
+      setError(msg);
     } finally {
       setBusy(false);
     }
@@ -80,7 +81,7 @@ export function ReviewForm({ branchId, onAdded }: { branchId: string; onAdded: (
         className="mb-2 w-full resize-none rounded-xl bg-bg px-3 py-2 text-sm text-ink ring-1 ring-line focus:outline-none focus:ring-brand"
       />
 
-      {error && <p className="mb-2 text-xs text-brand-dark">{t("errors.loadFailed")}</p>}
+      {error && <p className="mb-2 text-xs text-brand-dark">{t(error)}</p>}
 
       <button
         type="submit"

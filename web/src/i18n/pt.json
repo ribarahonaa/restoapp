@@ -12,7 +12,8 @@
     "name": "Seu nome",
     "comment": "Comentário (opcional)",
     "submit": "Publicar avaliação",
-    "empty": "Seja o primeiro a avaliar."
+    "empty": "Seja o primeiro a avaliar.",
+    "duplicate": "Você já publicou esta mesma avaliação."
   },
   "filters": {
     "category": "Categoria",

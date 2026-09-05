@@ -12,7 +12,8 @@
     "name": "Your name",
     "comment": "Comment (optional)",
     "submit": "Post review",
-    "empty": "Be the first to leave a review."
+    "empty": "Be the first to leave a review.",
+    "duplicate": "You already posted this same review."
   },
   "filters": {
     "category": "Category",

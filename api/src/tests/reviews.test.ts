@@ -55,4 +55,17 @@ describe("POST /branches/:id/reviews", () => {
     const res = await request(app).post(`/branches/no-existe/reviews`).send({ authorName: "X", rating: 4 });
     expect(res.status).toBe(404);
   });
+
+  it("409 al reenviar una reseña idéntica", async () => {
+    const id = await branchId("Cercano Bar");
+    const body = { authorName: "Ana", rating: 5, comment: "Excelente" };
+    expect((await request(app).post(`/branches/${id}/reviews`).send(body)).status).toBe(201);
+    expect((await request(app).post(`/branches/${id}/reviews`).send(body)).status).toBe(409);
+
+    // distinto comentario del mismo autor sí se permite
+    const other = await request(app)
+      .post(`/branches/${id}/reviews`)
+      .send({ authorName: "Ana", rating: 5, comment: "Otra cosa" });
+    expect(other.status).toBe(201);
+  });
 });

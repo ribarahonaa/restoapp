@@ -48,7 +48,7 @@ export async function addReview(id: string, input: ReviewInput): Promise<ReviewR
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  if (!res.ok) throw new Error(res.status === 409 ? "duplicate_review" : `HTTP ${res.status}`);
   return res.json() as Promise<ReviewResult>;
 }
 

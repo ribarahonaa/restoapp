@@ -87,9 +87,25 @@ export async function getBranchDetail(id: string) {
   return { ...branch, ratingAvg, ratingCount, discountCodes };
 }
 
+// Ventana anti-duplicados: se rechaza una reseña idéntica (mismo autor, nota y
+// comentario en el mismo local) enviada dentro de este lapso.
+const DUPLICATE_REVIEW_WINDOW_MS = 24 * 60 * 60 * 1000;
+
 export async function addReview(branchId: string, input: ReviewInput) {
   const branch = await prisma.branch.findFirst({ where: { id: branchId, active: true } });
   if (!branch) throw new HttpError(404, "branch_not_found");
+
+  const duplicate = await prisma.review.findFirst({
+    where: {
+      branchId,
+      authorName: input.authorName,
+      rating: input.rating,
+      comment: input.comment ?? null,
+      createdAt: { gte: new Date(Date.now() - DUPLICATE_REVIEW_WINDOW_MS) },
+    },
+  });
+  if (duplicate) throw new HttpError(409, "duplicate_review");
+
   const review = await prisma.review.create({
     data: {
       branchId,
