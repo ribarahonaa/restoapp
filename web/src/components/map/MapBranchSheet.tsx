@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { X, Navigation, Clock, MapPin, Loader2, ChevronRight } from "lucide-react";
 import type { BranchDetail } from "../../api/types.js";
 import { CATEGORY_ICON } from "../../lib/categories.js";
+import { santiagoWeekday } from "../../lib/time.js";
 import { RatingBadge } from "../RatingStars.js";
 
 interface Props {
@@ -107,8 +108,8 @@ function Content({
     )
   );
 
-  // Horario de hoy (0 = domingo, igual que Date.getDay()).
-  const today = branch.hours.find((h) => h.weekday === new Date().getDay());
+  // Horario de hoy según el día en Chile (los horarios se definen en esa zona).
+  const today = branch.hours.find((h) => h.weekday === santiagoWeekday());
   const dist = formatDistance(distance);
 
   return (
