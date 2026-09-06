@@ -11,6 +11,7 @@ export interface NearbyParams {
   purpose?: string; // slug
   promo?: boolean;
   open?: boolean;
+  q?: string; // búsqueda por nombre (parcial, case-insensitive)
 }
 
 export function buildNearbyQuery(p: NearbyParams): Prisma.Sql {
@@ -24,6 +25,11 @@ export function buildNearbyQuery(p: NearbyParams): Prisma.Sql {
 
   if (p.category) {
     filters.push(Prisma.sql`b."category" = ${p.category}::"Category"`);
+  }
+  if (p.q) {
+    // Escapa comodines LIKE del usuario para que \ % _ sean literales.
+    const pattern = `%${p.q.replace(/[\\%_]/g, "\\$&")}%`;
+    filters.push(Prisma.sql`b."name" ILIKE ${pattern}`);
   }
   if (p.purpose) {
     filters.push(Prisma.sql`EXISTS (

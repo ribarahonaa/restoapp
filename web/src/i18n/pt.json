@@ -15,6 +15,10 @@
     "empty": "Seja o primeiro a avaliar.",
     "duplicate": "Você já publicou esta mesma avaliação."
   },
+  "search": {
+    "placeholder": "Buscar lugares…",
+    "clear": "Limpar busca"
+  },
   "filters": {
     "category": "Categoria",
     "purpose": "Propósito",

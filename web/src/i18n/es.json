@@ -15,6 +15,10 @@
     "empty": "Sé el primero en dejar una reseña.",
     "duplicate": "Ya publicaste esta misma reseña."
   },
+  "search": {
+    "placeholder": "Buscar local…",
+    "clear": "Limpiar búsqueda"
+  },
   "filters": {
     "category": "Categoría",
     "purpose": "Propósito",

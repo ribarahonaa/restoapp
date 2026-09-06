@@ -6,7 +6,9 @@ import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePurposes } from "../hooks/usePurposes.js";
 import { useNearby } from "../hooks/useNearby.js";
 import { usePersistedState } from "../hooks/usePersistedState.js";
+import { useDebouncedValue } from "../hooks/useDebouncedValue.js";
 import { FilterBar, type FilterValue } from "../components/FilterBar.js";
+import { SearchBar } from "../components/SearchBar.js";
 import { BranchList, SkeletonGrid } from "../components/BranchList.js";
 import { MapView, type MapMarker } from "../components/map/MapView.js";
 import { MapBranchSheet } from "../components/map/MapBranchSheet.js";
@@ -33,6 +35,8 @@ export function HomePage() {
     open: false,
   });
   const [view, setView] = usePersistedState<ViewMode>("resto.view", "list");
+  const [search, setSearch] = useState("");
+  const q = useDebouncedValue(search.trim(), 300);
 
   const center = geo.status === "ready" ? { lat: geo.lat, lng: geo.lng } : FALLBACK;
 
@@ -45,8 +49,9 @@ export function HomePage() {
       purpose: filter.purpose,
       promo: filter.promo || undefined,
       open: filter.open || undefined,
+      q: q || undefined,
     }),
-    [center.lat, center.lng, filter]
+    [center.lat, center.lng, filter, q]
   );
 
   const { branches, error, loading } = useNearby(nearbyFilters);
@@ -137,8 +142,9 @@ export function HomePage() {
         </div>
       </header>
 
-      {/* Filtros */}
+      {/* Búsqueda + Filtros */}
       <div className="z-10 shrink-0 bg-surface pb-2 shadow-sm">
+        <SearchBar value={search} onChange={setSearch} />
         <FilterBar value={filter} purposes={purposes} onChange={setFilter} />
       </div>
 

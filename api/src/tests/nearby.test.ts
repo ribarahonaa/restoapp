@@ -45,6 +45,20 @@ describe("GET /branches/nearby", () => {
     expect(res.body.map((b: any) => b.name)).toEqual(["Cercano Lunch Promo"]);
   });
 
+  it("busca por nombre (parcial, case-insensitive)", async () => {
+    const bar = await request(app).get("/branches/nearby").query({ ...origin, q: "BAR" });
+    expect(bar.body.map((b: any) => b.name)).toEqual(["Cercano Bar"]);
+
+    const cercanos = await request(app).get("/branches/nearby").query({ ...origin, q: "cercano" });
+    const names = cercanos.body.map((b: any) => b.name);
+    expect(names).toContain("Cercano Bar");
+    expect(names).toContain("Cercano Lunch Promo");
+    expect(names).not.toContain("Lejano");
+
+    const nada = await request(app).get("/branches/nearby").query({ ...origin, q: "zzzzz" });
+    expect(nada.body).toHaveLength(0);
+  });
+
   it("incluye el lejano si el radio es grande", async () => {
     const res = await request(app).get("/branches/nearby").query({ ...origin, radius: 50000 });
     expect(res.body.map((b: any) => b.name)).toContain("Lejano");

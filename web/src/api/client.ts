@@ -25,6 +25,7 @@ export function getNearby(f: NearbyFilters): Promise<NearbyBranch[]> {
   if (f.purpose) p.set("purpose", f.purpose);
   if (f.promo) p.set("promo", "true");
   if (f.open) p.set("open", "true");
+  if (f.q) p.set("q", f.q);
   return getJson<NearbyBranch[]>(`${API_URL}/branches/nearby?${p.toString()}`);
 }
 

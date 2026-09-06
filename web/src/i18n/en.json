@@ -15,6 +15,10 @@
     "empty": "Be the first to leave a review.",
     "duplicate": "You already posted this same review."
   },
+  "search": {
+    "placeholder": "Search places…",
+    "clear": "Clear search"
+  },
   "filters": {
     "category": "Category",
     "purpose": "Purpose",

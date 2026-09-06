@@ -18,6 +18,7 @@ const nearbySchema = z.object({
   purpose: z.string().min(1).optional(),
   promo: boolParam,
   open: boolParam,
+  q: z.string().trim().min(1).max(80).optional(),
 });
 
 const reviewSchema = z.object({

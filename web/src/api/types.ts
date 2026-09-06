@@ -96,6 +96,7 @@ export interface NearbyFilters {
   purpose?: string;
   promo?: boolean;
   open?: boolean;
+  q?: string;
 }
 
 export interface ReviewInput {
