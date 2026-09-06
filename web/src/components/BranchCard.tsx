@@ -5,6 +5,7 @@ import type { NearbyBranch } from "../api/types.js";
 import { CATEGORY_ICON, CATEGORY_GRADIENT } from "../lib/categories.js";
 import { RatingBadge } from "./RatingStars.js";
 import { OpenBadge } from "./OpenBadge.js";
+import { FavButton } from "./FavButton.js";
 
 // Tiempo estimado a pie (~80 m/min), mínimo 5 min.
 function walkMinutes(distanceMeters: number) {
@@ -51,6 +52,11 @@ export function BranchCard({ branch, index = 0 }: { branch: NearbyBranch; index?
           <Clock size={12} strokeWidth={2.5} />
           {t("branch.eta", { min: eta })}
         </span>
+        {/* Favorito abajo-derecha */}
+        <FavButton
+          id={branch.id}
+          className="absolute bottom-2 right-2 grid h-8 w-8 place-items-center rounded-full bg-white/95 shadow-sm transition active:scale-90"
+        />
       </div>
       <div className="p-3">
         <h3 className="truncate font-display text-[15px] font-bold text-ink">{branch.name}</h3>

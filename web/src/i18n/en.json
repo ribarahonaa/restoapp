@@ -27,6 +27,12 @@
     "button": "Share",
     "copied": "Link copied"
   },
+  "fav": {
+    "add": "Save to favorites",
+    "remove": "Remove from favorites",
+    "only": "Favorites",
+    "empty": "No favorites yet. Tap the heart on a place."
+  },
   "filters": {
     "category": "Category",
     "purpose": "Purpose",

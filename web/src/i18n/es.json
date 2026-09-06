@@ -27,6 +27,12 @@
     "button": "Compartir",
     "copied": "Link copiado"
   },
+  "fav": {
+    "add": "Guardar en favoritos",
+    "remove": "Quitar de favoritos",
+    "only": "Favoritos",
+    "empty": "Aún no tienes favoritos. Toca el corazón en un local."
+  },
   "filters": {
     "category": "Categoría",
     "purpose": "Propósito",

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { MapPin, List, Map as MapIcon, LocateFixed, Loader2, X } from "lucide-react";
+import { MapPin, List, Map as MapIcon, LocateFixed, Loader2, X, Heart } from "lucide-react";
 import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePurposes } from "../hooks/usePurposes.js";
 import { useNearby } from "../hooks/useNearby.js";
@@ -14,6 +14,7 @@ import { MapView, type MapMarker } from "../components/map/MapView.js";
 import { MapBranchSheet } from "../components/map/MapBranchSheet.js";
 import { LanguageSwitcher } from "../components/LanguageSwitcher.js";
 import { categoryPinHtml } from "../lib/categories.js";
+import { useFavorites } from "../lib/favorites.js";
 import { getBranch } from "../api/client.js";
 import { getRoute } from "../lib/route.js";
 import { AdSection } from "../components/AdSection.js";
@@ -36,6 +37,8 @@ export function HomePage() {
   });
   const [view, setView] = usePersistedState<ViewMode>("resto.view", "list");
   const [search, setSearch] = useState("");
+  const [favOnly, setFavOnly] = useState(false);
+  const { isFavorite, count: favCount } = useFavorites();
   const q = useDebouncedValue(search.trim(), 300);
 
   const center = geo.status === "ready" ? { lat: geo.lat, lng: geo.lng } : FALLBACK;
@@ -102,9 +105,12 @@ export function HomePage() {
     }
   };
 
+  // Filtro "solo favoritos" (client-side, sobre los resultados cargados).
+  const displayed = favOnly ? branches.filter((b) => isFavorite(b.id)) : branches;
+
   const selectedDistance = branches.find((b) => b.id === selectedId)?.distance;
 
-  const markers: MapMarker[] = branches.map((b) => ({
+  const markers: MapMarker[] = displayed.map((b) => ({
     id: b.id,
     lat: b.lat,
     lng: b.lng,
@@ -154,12 +160,28 @@ export function HomePage() {
         </p>
       )}
 
-      {/* Toolbar: resultados + toggle vista */}
-      <div className="flex shrink-0 items-center justify-between px-4 py-2.5">
-        <span className="text-sm font-semibold text-ink">
-          {t("results", { count: branches.length })}
-        </span>
-        <div className="flex items-center gap-1 rounded-full bg-surface p-1 shadow-sm ring-1 ring-line">
+      {/* Toolbar: resultados + favoritos + toggle vista */}
+      <div className="flex shrink-0 items-center justify-between gap-2 px-4 py-2.5">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className="shrink-0 text-sm font-semibold text-ink">
+            {t("results", { count: displayed.length })}
+          </span>
+          <button
+            type="button"
+            onClick={() => setFavOnly((v) => !v)}
+            aria-pressed={favOnly}
+            className={`inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 transition active:scale-95 ${
+              favOnly
+                ? "bg-brand text-white ring-brand"
+                : "bg-surface text-mute ring-line hover:text-ink"
+            }`}
+          >
+            <Heart size={13} strokeWidth={2.5} className={favOnly ? "fill-white" : ""} />
+            {t("fav.only")}
+            {favCount > 0 && <span className="opacity-80">({favCount})</span>}
+          </button>
+        </div>
+        <div className="flex shrink-0 items-center gap-1 rounded-full bg-surface p-1 shadow-sm ring-1 ring-line">
           <ViewTab active={view === "list"} onClick={() => setView("list")}>
             <List size={15} strokeWidth={2.5} /> {t("view.list")}
           </ViewTab>
@@ -180,8 +202,10 @@ export function HomePage() {
         {view === "list" ? (
           loading && branches.length === 0 ? (
             <SkeletonGrid />
+          ) : favOnly && displayed.length === 0 ? (
+            <p className="px-4 py-16 text-center text-sm text-mute">{t("fav.empty")}</p>
           ) : (
-            <BranchList branches={branches} />
+            <BranchList branches={displayed} />
           )
         ) : (
           <div className="relative h-full w-full">
@@ -189,7 +213,7 @@ export function HomePage() {
               center={center}
               markers={markers}
               route={route}
-              fitTo={q ? branches.map((b) => ({ lat: b.lat, lng: b.lng })) : undefined}
+              fitTo={q || favOnly ? displayed.map((b) => ({ lat: b.lat, lng: b.lng })) : undefined}
             />
             <button
               type="button"
