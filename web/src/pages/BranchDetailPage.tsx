@@ -13,6 +13,7 @@ import { ReviewForm } from "../components/ReviewForm.js";
 import { RatingBadge, Stars } from "../components/RatingStars.js";
 import { SafeImg } from "../components/SafeImg.js";
 import { OpenBadge } from "../components/OpenBadge.js";
+import { ShareButton } from "../components/ShareButton.js";
 
 export function BranchDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -85,6 +86,11 @@ export function BranchDetailPage() {
         >
           <ArrowLeft size={20} strokeWidth={2.5} />
         </Link>
+
+        <ShareButton
+          title={branch.name}
+          className="absolute right-4 top-4 z-10 grid h-10 w-10 place-items-center rounded-full bg-white/95 text-ink shadow-md transition active:scale-95"
+        />
 
         <div className="absolute inset-x-0 bottom-0 px-4 pb-9 pt-10 text-white">
           <span className="inline-block rounded-full bg-white/20 px-2.5 py-1 text-xs font-bold uppercase tracking-wide backdrop-blur">
