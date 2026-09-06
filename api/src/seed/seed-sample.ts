@@ -43,10 +43,17 @@ interface MenuSpec {
 }
 
 async function main() {
-  console.log("Asegurando bucket MinIO…");
-  await ensureBucket();
-  console.log("Subiendo imágenes a MinIO…");
-  const img = await uploadAssets();
+  // Storage es best-effort: si no está configurado/alcanzable, se siembran los
+  // locales igual (sin fotos, el front cae al gradiente por categoría).
+  let img: Record<string, string | null> = Object.fromEntries(Object.keys(SRC).map((k) => [k, null]));
+  try {
+    console.log("Asegurando bucket de storage…");
+    await ensureBucket();
+    console.log("Subiendo imágenes…");
+    img = await uploadAssets();
+  } catch (e) {
+    console.warn(`  ⚠ storage no disponible, se siembra sin imágenes: ${(e as Error).message}`);
+  }
 
   const free = await prisma.plan.findUniqueOrThrow({ where: { name: "Free" } });
   const proPlan = await prisma.plan.findUnique({ where: { name: "Pro" } });

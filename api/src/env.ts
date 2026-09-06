@@ -10,6 +10,11 @@ const schema = z.object({
   REFRESH_TOKEN_TTL: z.coerce.number().default(604800),
   MINIO_ENDPOINT: z.string().default("minio"),
   MINIO_PORT: z.coerce.number().default(9000),
+  // TLS hacia el storage. MinIO local => false; S3/R2/Supabase => true.
+  MINIO_USE_SSL: z
+    .enum(["true", "false"])
+    .default("false")
+    .transform((v) => v === "true"),
   MINIO_ROOT_USER: z.string().default("minio"),
   MINIO_ROOT_PASSWORD: z.string().default("minio12345"),
   MINIO_BUCKET: z.string().default("restoapp"),
