@@ -10,7 +10,7 @@ interface Props {
 export function SearchBar({ value, onChange }: Props) {
   const { t } = useTranslation();
   return (
-    <div className="px-4 pb-1 pt-1">
+    <div className="px-4 pb-1 pt-3">
       <div className="relative">
         <Search
           size={17}
