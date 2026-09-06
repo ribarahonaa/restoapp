@@ -33,6 +33,7 @@ export function useNearby(filters: NearbyFilters | null): NearbyState {
     filters?.purpose,
     filters?.promo,
     filters?.open,
+    filters?.q,
   ]);
 
   return state;
