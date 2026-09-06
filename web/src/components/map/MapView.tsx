@@ -16,6 +16,9 @@ interface MapViewProps {
   markers: MapMarker[];
   zoom?: number;
   route?: { lat: number; lng: number }[];
+  // Puntos a encuadrar (ej. resultados de búsqueda). Tiene prioridad sobre el
+  // recentrado normal, pero no sobre una ruta activa.
+  fitTo?: { lat: number; lng: number }[];
 }
 
 const DEFAULT_PIN = `<div style="width:36px;height:36px;border-radius:9999px;background:#fff;border:2px solid #ff4d2e;box-shadow:0 4px 10px rgba(27,27,31,.25);display:flex;align-items:center;justify-content:center;color:#ff4d2e;font-size:18px;line-height:1;">•</div>`;
@@ -50,8 +53,28 @@ function FitRoute({ coords }: { coords: { lat: number; lng: number }[] }) {
   return null;
 }
 
-export function MapView({ center, markers, zoom = 14, route }: MapViewProps) {
+// Encuadra el mapa a un conjunto de puntos (ej. resultados de una búsqueda).
+// Con un solo punto centra con un zoom cómodo en vez de acercar al máximo.
+function FitPoints({ points }: { points: { lat: number; lng: number }[] }) {
+  const map = useMap();
+  const key = points.map((p) => `${p.lat},${p.lng}`).join("|");
+  useEffect(() => {
+    if (points.length === 0) return;
+    if (points.length === 1) {
+      map.setView([points[0].lat, points[0].lng], Math.max(map.getZoom(), 15));
+      return;
+    }
+    const bounds = L.latLngBounds(points.map((p) => [p.lat, p.lng] as [number, number]));
+    map.fitBounds(bounds, { padding: [56, 56], maxZoom: 16 });
+    // key resume los puntos; evita reencuadrar en cada render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, map]);
+  return null;
+}
+
+export function MapView({ center, markers, zoom = 14, route, fitTo }: MapViewProps) {
   const hasRoute = !!route && route.length >= 2;
+  const hasFit = !hasRoute && !!fitTo && fitTo.length > 0;
   return (
     <MapContainer
       center={[center.lat, center.lng]}
@@ -60,7 +83,13 @@ export function MapView({ center, markers, zoom = 14, route }: MapViewProps) {
       className="h-full w-full"
       scrollWheelZoom
     >
-      {hasRoute ? <FitRoute coords={route!} /> : <Recenter center={center} />}
+      {hasRoute ? (
+        <FitRoute coords={route!} />
+      ) : hasFit ? (
+        <FitPoints points={fitTo!} />
+      ) : (
+        <Recenter center={center} />
+      )}
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

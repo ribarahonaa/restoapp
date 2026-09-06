@@ -185,7 +185,12 @@ export function HomePage() {
           )
         ) : (
           <div className="relative h-full w-full">
-            <MapView center={center} markers={markers} route={route} />
+            <MapView
+              center={center}
+              markers={markers}
+              route={route}
+              fitTo={q ? branches.map((b) => ({ lat: b.lat, lng: b.lng })) : undefined}
+            />
             <button
               type="button"
               onClick={geo.locate}
