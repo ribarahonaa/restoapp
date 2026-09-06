@@ -1,0 +1,47 @@
+# Blueprint de Render para el API (plan free, Docker).
+# El front va a Cloudflare Pages / Vercel (ver DEPLOY.md), no aquí.
+# La base de datos es externa (Supabase); se pega su URL en DATABASE_URL.
+services:
+  - type: web
+    name: restoapp-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./api/Dockerfile.prod
+    dockerContext: ./api
+    healthCheckPath: /health
+    envVars:
+      # Postgres+PostGIS de Supabase (Connection string, modo "Session"/5432).
+      - key: DATABASE_URL
+        sync: false
+      # Secrets generados por Render (no reutilizar los de dev).
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: ACCESS_TOKEN_TTL
+        value: "900"
+      - key: REFRESH_TOKEN_TTL
+        value: "604800"
+      # Origen del front (URL de Cloudflare Pages / Vercel), ej https://restoapp.pages.dev
+      - key: CORS_ORIGIN
+        sync: false
+      # Siembra datos idempotente en el primer arranque. Ponlo en "true" una vez
+      # y luego vuélvelo "false".
+      - key: SEED_ON_START
+        value: "false"
+      # --- Storage (opcional para un primer test; sin esto no hay fotos) ---
+      # Supabase Storage endpoint S3, o Cloudflare R2. useSSL=true.
+      - key: MINIO_USE_SSL
+        value: "true"
+      - key: MINIO_ENDPOINT
+        sync: false
+      - key: MINIO_PORT
+        value: "443"
+      - key: MINIO_ROOT_USER
+        sync: false
+      - key: MINIO_ROOT_PASSWORD
+        sync: false
+      - key: MINIO_BUCKET
+        value: "restoapp"
+      - key: MINIO_PUBLIC_URL
+        sync: false

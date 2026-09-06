@@ -1,0 +1,20 @@
+# Imagen de producción del API.
+# - Compila TypeScript a dist/ y genera el cliente Prisma.
+# - Al arrancar: aplica migraciones (migrate deploy) y, si SEED_ON_START=true,
+#   siembra datos (idempotente) antes de levantar el servidor.
+# Mantiene src/ + tsx en la imagen para poder correr el seed (npm run seed:all).
+FROM node:20-slim
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y openssl && rm -rf /var/lib/apt/lists/*
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+RUN npx prisma generate && npm run build
+
+EXPOSE 3000
+
+# migrate deploy es idempotente; el seed sólo corre si SEED_ON_START=true.
+CMD ["sh", "-c", "npx prisma migrate deploy && if [ \"$SEED_ON_START\" = \"true\" ]; then npm run seed:all || true; fi && node dist/index.js"]
