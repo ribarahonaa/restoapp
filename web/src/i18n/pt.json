@@ -19,6 +19,10 @@
     "placeholder": "Buscar lugares…",
     "clear": "Limpar busca"
   },
+  "open": {
+    "now": "Aberto",
+    "closed": "Fechado"
+  },
   "filters": {
     "category": "Categoria",
     "purpose": "Propósito",

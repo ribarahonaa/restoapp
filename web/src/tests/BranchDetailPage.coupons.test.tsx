@@ -11,7 +11,7 @@ function detail(over: Partial<BranchDetail> = {}): BranchDetail {
   return {
     id: "b1", name: "Café Central", category: "cafe", address: "Plaza 1", lat: -33.4, lng: -70.6,
     phone: null, description: "Rico", imageUrl: null, ratingAvg: 4.5, ratingCount: 10,
-    hours: [], menuItems: [], promotions: [], purposes: [], reviews: [],
+    openNow: true, hours: [], menuItems: [], promotions: [], purposes: [], reviews: [],
     closedUntil: null, discountCodes: [],
     ...over,
   };

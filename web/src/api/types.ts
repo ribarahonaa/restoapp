@@ -12,6 +12,7 @@ export interface NearbyBranch {
   imageUrl: string | null;
   ratingAvg: number;
   ratingCount: number;
+  openNow: boolean;
   distance: number; // metros
 }
 
@@ -79,6 +80,7 @@ export interface BranchDetail {
   imageUrl: string | null;
   ratingAvg: number;
   ratingCount: number;
+  openNow: boolean;
   hours: ServiceHour[];
   menuItems: MenuItem[];
   promotions: Promotion[];

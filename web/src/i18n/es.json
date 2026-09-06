@@ -19,6 +19,10 @@
     "placeholder": "Buscar local…",
     "clear": "Limpiar búsqueda"
   },
+  "open": {
+    "now": "Abierto",
+    "closed": "Cerrado"
+  },
   "filters": {
     "category": "Categoría",
     "purpose": "Propósito",

@@ -25,6 +25,7 @@ export interface NearbyRow {
   imageUrl: string | null;
   ratingAvg: number;
   ratingCount: number;
+  openNow: boolean;
   distance: number;
 }
 
@@ -34,9 +35,9 @@ export interface ReviewInput {
   comment?: string;
 }
 
-export async function findNearby(f: NearbyFilters): Promise<NearbyRow[]> {
-  const now = new Date();
-  // weekday/hhmm en hora de Chile (America/Santiago) para "abierto ahora"
+// weekday (0=domingo) y HH:MM en hora de Chile (America/Santiago), base del
+// cálculo "abierto ahora" en todo el backend.
+function chileNowParts(now: Date): { weekday: number; hhmm: string } {
   const fmt = new Intl.DateTimeFormat("en-GB", {
     timeZone: "America/Santiago",
     weekday: "short",
@@ -48,9 +49,28 @@ export async function findNearby(f: NearbyFilters): Promise<NearbyRow[]> {
   const weekdayMap: Record<string, number> = {
     Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6,
   };
-  const weekday = weekdayMap[parts.weekday as string] ?? 0;
-  const hhmm = `${parts.hour}:${parts.minute}`;
+  return { weekday: weekdayMap[parts.weekday as string] ?? 0, hhmm: `${parts.hour}:${parts.minute}` };
+}
 
+// "Abierto ahora" a partir de los horarios (misma lógica que openNowSql en SQL,
+// incluido el cruce de medianoche). Mantener ambas en sync.
+function isOpenNow(
+  hours: { weekday: number; openTime: string; closeTime: string }[],
+  closedUntil: Date | null,
+  now: Date
+): boolean {
+  if (closedUntil && closedUntil > now) return false;
+  const { weekday, hhmm } = chileNowParts(now);
+  return hours.some((h) => {
+    if (h.weekday !== weekday) return false;
+    if (h.closeTime >= h.openTime) return hhmm >= h.openTime && hhmm <= h.closeTime;
+    return hhmm >= h.openTime || hhmm <= h.closeTime; // cruza medianoche
+  });
+}
+
+export async function findNearby(f: NearbyFilters): Promise<NearbyRow[]> {
+  const now = new Date();
+  const { weekday, hhmm } = chileNowParts(now);
   const query = buildNearbyQuery({ ...f, now, weekday, hhmm } as NearbyParams);
   return prisma.$queryRaw<NearbyRow[]>(query);
 }
@@ -79,6 +99,7 @@ export async function getBranchDetail(id: string) {
   });
   const ratingCount = ratingAgg._count;
   const ratingAvg = ratingAgg._avg.rating ?? 0;
+  const openNow = isOpenNow(branch.hours, branch.closedUntil, now);
   const discountCodes = await prisma.discountCode.findMany({
     where: {
       businessId: branch.businessId,
@@ -90,7 +111,7 @@ export async function getBranchDetail(id: string) {
     orderBy: { createdAt: "desc" },
     select: { id: true, code: true, type: true, value: true, startsAt: true, endsAt: true, branchId: true },
   });
-  return { ...branch, ratingAvg, ratingCount, discountCodes };
+  return { ...branch, ratingAvg, ratingCount, openNow, discountCodes };
 }
 
 // Ventana anti-duplicados: se rechaza una reseña idéntica (mismo autor, nota y

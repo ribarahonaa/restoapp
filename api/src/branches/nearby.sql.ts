@@ -14,6 +14,24 @@ export interface NearbyParams {
   q?: string; // búsqueda por nombre (parcial, case-insensitive)
 }
 
+// Expresión SQL booleana "abierto ahora": hay un horario de hoy que cubre la
+// hora actual (con soporte de horarios que cruzan medianoche) y no está cerrado
+// temporalmente. Se usa tanto para el filtro `open` como para la columna openNow.
+function openNowSql(p: NearbyParams): Prisma.Sql {
+  return Prisma.sql`(
+    EXISTS (
+      SELECT 1 FROM "ServiceHours" sh
+      WHERE sh."branchId" = b."id" AND sh."weekday" = ${p.weekday}
+        AND (
+          (sh."closeTime" >= sh."openTime" AND ${p.hhmm} >= sh."openTime" AND ${p.hhmm} <= sh."closeTime")
+          OR
+          (sh."closeTime" < sh."openTime" AND (${p.hhmm} >= sh."openTime" OR ${p.hhmm} <= sh."closeTime"))
+        )
+    )
+    AND (b."closedUntil" IS NULL OR b."closedUntil" <= now())
+  )`;
+}
+
 export function buildNearbyQuery(p: NearbyParams): Prisma.Sql {
   const origin = Prisma.sql`ST_SetSRID(ST_MakePoint(${p.lng}, ${p.lat}), 4326)::geography`;
 
@@ -46,16 +64,7 @@ export function buildNearbyQuery(p: NearbyParams): Prisma.Sql {
     )`);
   }
   if (p.open) {
-    filters.push(Prisma.sql`EXISTS (
-      SELECT 1 FROM "ServiceHours" sh
-      WHERE sh."branchId" = b."id" AND sh."weekday" = ${p.weekday}
-        AND (
-          (sh."closeTime" >= sh."openTime" AND ${p.hhmm} >= sh."openTime" AND ${p.hhmm} <= sh."closeTime")
-          OR
-          (sh."closeTime" < sh."openTime" AND (${p.hhmm} >= sh."openTime" OR ${p.hhmm} <= sh."closeTime"))
-        )
-    )`);
-    filters.push(Prisma.sql`(b."closedUntil" IS NULL OR b."closedUntil" <= now())`);
+    filters.push(openNowSql(p));
   }
 
   const where = Prisma.join(filters, " AND ");
@@ -65,6 +74,7 @@ export function buildNearbyQuery(p: NearbyParams): Prisma.Sql {
            b."phone", b."description", b."imageUrl",
            COALESCE(r."avg", 0)::float8 AS "ratingAvg",
            COALESCE(r."cnt", 0)::int    AS "ratingCount",
+           ${openNowSql(p)} AS "openNow",
            ST_Distance(b."geog", ${origin}) AS distance
     FROM "Branch" b
     LEFT JOIN (

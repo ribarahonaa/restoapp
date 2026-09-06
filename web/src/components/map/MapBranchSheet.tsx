@@ -6,6 +6,7 @@ import { CATEGORY_ICON } from "../../lib/categories.js";
 import { santiagoWeekday } from "../../lib/time.js";
 import { RatingBadge } from "../RatingStars.js";
 import { SafeImg } from "../SafeImg.js";
+import { OpenBadge } from "../OpenBadge.js";
 
 interface Props {
   branch: BranchDetail | null;
@@ -155,9 +156,12 @@ function Content({
           {branch.address}
         </p>
 
-        <p className="mt-1.5 flex items-center gap-1.5 text-sm font-medium text-ink">
-          <Clock size={14} strokeWidth={2.25} className="shrink-0 text-brand" />
-          {today ? `${t("map.today")} ${today.openTime}–${today.closeTime}` : t("map.closedToday")}
+        <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium text-ink">
+          <span className="inline-flex items-center gap-1.5">
+            <Clock size={14} strokeWidth={2.25} className="shrink-0 text-brand" />
+            {today ? `${t("map.today")} ${today.openTime}–${today.closeTime}` : t("map.closedToday")}
+          </span>
+          <OpenBadge open={branch.openNow} />
         </p>
 
         {/* Acciones */}

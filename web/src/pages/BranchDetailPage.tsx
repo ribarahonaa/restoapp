@@ -12,6 +12,7 @@ import { ItemSheet, type SheetItem } from "../components/ItemSheet.js";
 import { ReviewForm } from "../components/ReviewForm.js";
 import { RatingBadge, Stars } from "../components/RatingStars.js";
 import { SafeImg } from "../components/SafeImg.js";
+import { OpenBadge } from "../components/OpenBadge.js";
 
 export function BranchDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -92,8 +93,9 @@ export function BranchDetailPage() {
           <h1 className="mt-2 font-display text-2xl font-extrabold leading-tight drop-shadow">
             {branch.name}
           </h1>
-          <div className="mt-2 flex items-center gap-3 text-sm">
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-sm">
             <RatingBadge value={branch.ratingAvg} count={branch.ratingCount} />
+            <OpenBadge open={branch.openNow} />
             <span className="inline-flex items-center gap-1 opacity-90">
               <MapPin size={13} strokeWidth={2.25} />
               {branch.address}

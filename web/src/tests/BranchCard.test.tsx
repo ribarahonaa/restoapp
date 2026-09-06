@@ -25,6 +25,7 @@ const branch: NearbyBranch = {
   imageUrl: null,
   ratingAvg: 4.5,
   ratingCount: 12,
+  openNow: true,
   distance: 1500,
 };
 

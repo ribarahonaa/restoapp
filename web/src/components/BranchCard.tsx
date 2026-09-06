@@ -4,6 +4,7 @@ import { MapPin, Clock } from "lucide-react";
 import type { NearbyBranch } from "../api/types.js";
 import { CATEGORY_ICON, CATEGORY_GRADIENT } from "../lib/categories.js";
 import { RatingBadge } from "./RatingStars.js";
+import { OpenBadge } from "./OpenBadge.js";
 
 // Tiempo estimado a pie (~80 m/min), mínimo 5 min.
 function walkMinutes(distanceMeters: number) {
@@ -37,6 +38,10 @@ export function BranchCard({ branch, index = 0 }: { branch: NearbyBranch; index?
             aria-hidden="true"
           />
         )}
+        {/* Estado abierto/cerrado arriba-izquierda */}
+        <span className="absolute left-2 top-2">
+          <OpenBadge open={branch.openNow} className="shadow-sm" />
+        </span>
         {/* Rating arriba-derecha */}
         <span className="absolute right-2 top-2 rounded-full bg-white/95 px-2 py-1 text-xs text-ink shadow-sm">
           <RatingBadge value={branch.ratingAvg} count={branch.ratingCount} />

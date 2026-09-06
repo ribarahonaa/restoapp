@@ -19,6 +19,10 @@
     "placeholder": "Search places…",
     "clear": "Clear search"
   },
+  "open": {
+    "now": "Open",
+    "closed": "Closed"
+  },
   "filters": {
     "category": "Category",
     "purpose": "Purpose",
