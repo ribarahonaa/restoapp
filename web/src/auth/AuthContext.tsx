@@ -17,6 +17,7 @@ interface AuthValue {
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
   signOut: () => void;
+  refreshUser: () => Promise<void>;
 }
 
 const Ctx = createContext<AuthValue | null>(null);
@@ -74,8 +75,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setStatus("anon");
     resetToLocal();
   };
+  const refreshUser = async () => {
+    try { setUser(await me()); } catch { /* ignora */ }
+  };
 
-  return <Ctx.Provider value={{ user, status, signIn, signUp, signOut }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ user, status, signIn, signUp, signOut, refreshUser }}>{children}</Ctx.Provider>;
 }
 
 export function useAuth(): AuthValue {

@@ -41,14 +41,14 @@ describe("RequireRole", () => {
 
   it("redirige a /admin si el rol no aplica", async () => {
     vi.spyOn(authClient, "hasRefreshToken").mockReturnValue(true);
-    vi.spyOn(authClient, "me").mockResolvedValue({ id: "u1", email: "g@d.cl", name: "G", role: "admin_general", preferredLang: "es" });
+    vi.spyOn(authClient, "me").mockResolvedValue({ id: "u1", email: "g@d.cl", name: "G", role: "admin_general", preferredLang: "es", avatarUrl: null });
     renderAt("/admin/super");
     expect(await screen.findByText("ADMIN_HOME")).toBeInTheDocument();
   });
 
   it("muestra el contenido si el rol aplica", async () => {
     vi.spyOn(authClient, "hasRefreshToken").mockReturnValue(true);
-    vi.spyOn(authClient, "me").mockResolvedValue({ id: "u1", email: "s@d.cl", name: "S", role: "superadmin", preferredLang: "es" });
+    vi.spyOn(authClient, "me").mockResolvedValue({ id: "u1", email: "s@d.cl", name: "S", role: "superadmin", preferredLang: "es", avatarUrl: null });
     renderAt("/admin/super");
     expect(await screen.findByText("SUPER_ONLY")).toBeInTheDocument();
   });

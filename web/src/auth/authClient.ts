@@ -7,6 +7,7 @@ export interface Me {
   name: string;
   role: Role;
   preferredLang: string;
+  avatarUrl: string | null;
 }
 
 const REFRESH_KEY = "resto.refresh";

@@ -8,7 +8,7 @@ import * as authClient from "../auth/authClient.js";
 beforeEach(async () => { await i18n.changeLanguage("es"); vi.restoreAllMocks(); });
 
 it("registra creando cuenta y cierra el modal", async () => {
-  vi.spyOn(authClient, "register").mockResolvedValue({ id: "u1", email: "a@a.cl", name: "Ana", role: "usuario", preferredLang: "es" });
+  vi.spyOn(authClient, "register").mockResolvedValue({ id: "u1", email: "a@a.cl", name: "Ana", role: "usuario", preferredLang: "es", avatarUrl: null });
   const onClose = vi.fn();
   render(<AuthProvider><AuthSheet open onClose={onClose} /></AuthProvider>);
   fireEvent.click(screen.getByRole("tab", { name: /crear cuenta/i }));
