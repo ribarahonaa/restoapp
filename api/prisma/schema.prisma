@@ -48,6 +48,7 @@ model User {
   suggestions     PlaceSuggestion[] @relation("Suggester")
   reviewed        PlaceSuggestion[] @relation("Reviewer")
   refreshTokens   RefreshToken[]
+  reviews         Review[]
 }
 
 // Refresh tokens emitidos: permiten rotación y revocación. El id es el jti
@@ -121,6 +122,9 @@ model Review {
   branchId   String
   branch     Branch   @relation(fields: [branchId], references: [id])
   authorName String
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  verified   Boolean  @default(false)
   rating     Int // 1..5
   comment    String?
   createdAt  DateTime @default(now())
