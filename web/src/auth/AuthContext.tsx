@@ -7,6 +7,8 @@ import {
   hasRefreshToken,
   type Me,
 } from "./authClient.js";
+import { getLocalIds, setFavoritesFromServer, resetToLocal } from "../lib/favorites.js";
+import { mergeFavorites } from "../api/favoritesClient.js";
 
 type Status = "loading" | "authed" | "anon";
 interface AuthValue {
@@ -19,6 +21,19 @@ interface AuthValue {
 
 const Ctx = createContext<AuthValue | null>(null);
 
+// Al pasar a "authed": sube los favoritos guardados localmente (anónimo),
+// mergea con los de la cuenta y adopta la lista resultante. Un fallo de red
+// no debe romper el login.
+async function syncFavoritesOnAuth() {
+  try {
+    const ids = getLocalIds();
+    const merged = await mergeFavorites(ids);
+    setFavoritesFromServer(merged);
+  } catch {
+    // sin red / error del servidor: se mantienen los favoritos locales
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<Me | null>(null);
   const [status, setStatus] = useState<Status>("loading");
@@ -29,9 +44,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return;
     }
     me()
-      .then((u) => {
+      .then(async (u) => {
         setUser(u);
         setStatus("authed");
+        await syncFavoritesOnAuth();
       })
       .catch(() => setStatus("anon"));
   }, []);
@@ -40,16 +56,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const u = await apiLogin(email, password);
     setUser(u);
     setStatus("authed");
+    await syncFavoritesOnAuth();
   };
   const signUp = async (name: string, email: string, password: string) => {
     const u = await apiRegister(name, email, password);
     setUser(u);
     setStatus("authed");
+    await syncFavoritesOnAuth();
   };
   const signOut = () => {
     apiLogout();
     setUser(null);
     setStatus("anon");
+    resetToLocal();
   };
 
   return <Ctx.Provider value={{ user, status, signIn, signUp, signOut }}>{children}</Ctx.Provider>;
