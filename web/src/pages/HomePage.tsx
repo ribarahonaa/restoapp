@@ -13,6 +13,7 @@ import { BranchList, SkeletonGrid } from "../components/BranchList.js";
 import { MapView, type MapMarker } from "../components/map/MapView.js";
 import { MapBranchSheet } from "../components/map/MapBranchSheet.js";
 import { LanguageSwitcher } from "../components/LanguageSwitcher.js";
+import { AccountButton } from "../components/auth/AccountButton.js";
 import { categoryPinHtml } from "../lib/categories.js";
 import { useFavorites } from "../lib/favorites.js";
 import { getBranch } from "../api/client.js";
@@ -144,7 +145,10 @@ export function HomePage() {
               {t("nearYou")}
             </p>
           </div>
-          <LanguageSwitcher />
+          <div className="flex items-center gap-2">
+            <AccountButton />
+            <LanguageSwitcher />
+          </div>
         </div>
       </header>
 

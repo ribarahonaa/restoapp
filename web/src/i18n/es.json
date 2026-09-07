@@ -75,6 +75,20 @@
     "clearRoute": "Quitar ruta"
   },
   "ads": { "section": "Destacados" },
+  "account": {
+    "signIn": "Ingresar",
+    "signOut": "Cerrar sesión",
+    "tabLogin": "Ingresar",
+    "tabRegister": "Crear cuenta",
+    "name": "Nombre",
+    "email": "Correo",
+    "password": "Contraseña",
+    "submitLogin": "Entrar",
+    "submitRegister": "Crear cuenta",
+    "errorLogin": "Credenciales inválidas",
+    "errorRegister": "No se pudo crear la cuenta",
+    "emailTaken": "Ese correo ya está registrado"
+  },
   "errors": {
     "loadFailed": "No se pudieron cargar los locales",
     "crashed": "Algo salió mal",

@@ -75,6 +75,20 @@
     "clearRoute": "Clear route"
   },
   "ads": { "section": "Featured" },
+  "account": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "tabLogin": "Sign in",
+    "tabRegister": "Create account",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "submitLogin": "Sign in",
+    "submitRegister": "Create account",
+    "errorLogin": "Invalid credentials",
+    "errorRegister": "Could not create the account",
+    "emailTaken": "That email is already registered"
+  },
   "errors": {
     "loadFailed": "Could not load places",
     "crashed": "Something went wrong",

@@ -75,6 +75,20 @@
     "clearRoute": "Remover rota"
   },
   "ads": { "section": "Destaques" },
+  "account": {
+    "signIn": "Entrar",
+    "signOut": "Sair",
+    "tabLogin": "Entrar",
+    "tabRegister": "Criar conta",
+    "name": "Nome",
+    "email": "E-mail",
+    "password": "Senha",
+    "submitLogin": "Entrar",
+    "submitRegister": "Criar conta",
+    "errorLogin": "Credenciais inválidas",
+    "errorRegister": "Não foi possível criar a conta",
+    "emailTaken": "Esse e-mail já está cadastrado"
+  },
   "errors": {
     "loadFailed": "Não foi possível carregar os lugares",
     "crashed": "Algo deu errado",
