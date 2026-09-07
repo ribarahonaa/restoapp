@@ -7,6 +7,7 @@ import { adsRouter } from "./ads/ads.routes.js";
 import { adminRouter } from "./admin/admin.routes.js";
 import { authenticate } from "./middleware/authenticate.js";
 import { favoritesRouter } from "./me/favorites.routes.js";
+import { profileRouter } from "./me/profile.routes.js";
 import { errorHandler } from "./middleware/error.js";
 import { env } from "./env.js";
 
@@ -26,6 +27,7 @@ export function createApp() {
   app.use("/ads", adsRouter);
   app.use("/admin", adminRouter);
   app.use("/me/favorites", authenticate, favoritesRouter);
+  app.use("/me", authenticate, profileRouter);
   app.use(errorHandler);
   return app;
 }
