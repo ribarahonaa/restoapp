@@ -47,6 +47,7 @@ describe("auth", () => {
     expect(me.status).toBe(200);
     expect(me.body.email).toBe("a@b.cl");
     expect(me.body.role).toBe("usuario");
+    expect(me.body).toHaveProperty("avatarUrl", null);
   });
 
   it("/me sin token devuelve 401", async () => {

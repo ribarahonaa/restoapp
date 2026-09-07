@@ -59,7 +59,7 @@ authRouter.get("/me", authenticate, async (req, res, next) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: req.user!.sub },
-      select: { id: true, email: true, name: true, role: true, preferredLang: true },
+      select: { id: true, email: true, name: true, role: true, preferredLang: true, avatarUrl: true },
     });
     if (!user) throw new HttpError(404, "not_found");
     res.json(user);
