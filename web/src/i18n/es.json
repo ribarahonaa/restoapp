@@ -13,7 +13,9 @@
     "comment": "Comentario (opcional)",
     "submit": "Publicar reseña",
     "empty": "Sé el primero en dejar una reseña.",
-    "duplicate": "Ya publicaste esta misma reseña."
+    "duplicate": "Ya publicaste esta misma reseña.",
+    "loginGate": "Inicia sesión para dejar tu reseña",
+    "loginCta": "Ingresar"
   },
   "search": {
     "placeholder": "Buscar local…",

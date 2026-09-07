@@ -13,7 +13,9 @@
     "comment": "Comentário (opcional)",
     "submit": "Publicar avaliação",
     "empty": "Seja o primeiro a avaliar.",
-    "duplicate": "Você já publicou esta mesma avaliação."
+    "duplicate": "Você já publicou esta mesma avaliação.",
+    "loginGate": "Faça login para deixar sua avaliação",
+    "loginCta": "Entrar"
   },
   "search": {
     "placeholder": "Buscar lugares…",

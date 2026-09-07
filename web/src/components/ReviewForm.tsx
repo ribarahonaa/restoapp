@@ -2,17 +2,36 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Star } from "lucide-react";
 import { addReview } from "../api/client.js";
+import { useAuth } from "../auth/AuthContext.js";
+import { AuthSheet } from "./auth/AuthSheet.js";
 
 export function ReviewForm({ branchId, onAdded }: { branchId: string; onAdded: () => void }) {
   const { t } = useTranslation();
-  const [name, setName] = useState("");
+  const { status } = useAuth();
+  const [authOpen, setAuthOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
   const [comment, setComment] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const canSubmit = name.trim().length > 0 && rating >= 1 && !busy;
+  if (status !== "authed") {
+    return (
+      <div className="rounded-2xl bg-surface p-4 text-center shadow-sm ring-1 ring-line">
+        <p className="mb-2 text-sm text-mute">{t("review.loginGate")}</p>
+        <button
+          type="button"
+          onClick={() => setAuthOpen(true)}
+          className="rounded-xl bg-brand px-4 py-2 text-sm font-bold text-white"
+        >
+          {t("review.loginCta")}
+        </button>
+        <AuthSheet open={authOpen} onClose={() => setAuthOpen(false)} />
+      </div>
+    );
+  }
+
+  const canSubmit = rating >= 1 && !busy;
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -20,13 +39,12 @@ export function ReviewForm({ branchId, onAdded }: { branchId: string; onAdded: (
     setBusy(true);
     setError(null);
     try {
-      await addReview(branchId, { authorName: name.trim(), rating, comment: comment.trim() || undefined });
-      setName("");
+      await addReview(branchId, { rating, comment: comment.trim() || undefined });
       setRating(0);
       setComment("");
       onAdded();
     } catch (e) {
-      const msg = e instanceof Error && e.message === "duplicate_review" ? "review.duplicate" : "errors.loadFailed";
+      const msg = e instanceof Error && e.message === "already_reviewed" ? "review.duplicate" : "errors.loadFailed";
       setError(msg);
     } finally {
       setBusy(false);
@@ -64,14 +82,6 @@ export function ReviewForm({ branchId, onAdded }: { branchId: string; onAdded: (
         })}
       </div>
 
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder={t("review.name")}
-        maxLength={60}
-        className="mb-2 w-full rounded-xl bg-bg px-3 py-2 text-sm text-ink ring-1 ring-line focus:outline-none focus:ring-brand"
-      />
       <textarea
         value={comment}
         onChange={(e) => setComment(e.target.value)}

@@ -5,6 +5,7 @@ import "../i18n/index.js";
 import i18n from "../i18n/index.js";
 import { BranchDetailPage } from "../pages/BranchDetailPage.js";
 import * as client from "../api/client.js";
+import * as authCtx from "../auth/AuthContext.js";
 import type { BranchDetail } from "../api/types.js";
 
 function detail(over: Partial<BranchDetail> = {}): BranchDetail {
@@ -20,6 +21,13 @@ function detail(over: Partial<BranchDetail> = {}): BranchDetail {
 beforeEach(async () => {
   await i18n.changeLanguage("es");
   vi.restoreAllMocks();
+  vi.spyOn(authCtx, "useAuth").mockReturnValue({
+    user: null,
+    status: "anon",
+    signIn: vi.fn(),
+    signUp: vi.fn(),
+    signOut: vi.fn(),
+  } as never);
 });
 
 function renderPage() {

@@ -1,4 +1,5 @@
 import { API_URL } from "../env.js";
+import { authedFetch } from "../auth/authClient.js";
 import type {
   NearbyBranch,
   BranchDetail,
@@ -44,12 +45,12 @@ export interface ReviewResult {
 }
 
 export async function addReview(id: string, input: ReviewInput): Promise<ReviewResult> {
-  const res = await fetch(`${API_URL}/branches/${id}/reviews`, {
+  const res = await authedFetch(`/branches/${id}/reviews`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(input),
   });
-  if (!res.ok) throw new Error(res.status === 409 ? "duplicate_review" : `HTTP ${res.status}`);
+  if (!res.ok) throw new Error(res.status === 409 ? "already_reviewed" : `HTTP ${res.status}`);
   return res.json() as Promise<ReviewResult>;
 }
 

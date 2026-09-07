@@ -13,7 +13,9 @@
     "comment": "Comment (optional)",
     "submit": "Post review",
     "empty": "Be the first to leave a review.",
-    "duplicate": "You already posted this same review."
+    "duplicate": "You already posted this same review.",
+    "loginGate": "Sign in to leave your review",
+    "loginCta": "Sign in"
   },
   "search": {
     "placeholder": "Search places…",

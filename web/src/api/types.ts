@@ -102,7 +102,6 @@ export interface NearbyFilters {
 }
 
 export interface ReviewInput {
-  authorName: string;
   rating: number;
   comment?: string;
 }
