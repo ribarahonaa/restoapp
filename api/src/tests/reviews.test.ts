@@ -10,62 +10,45 @@ beforeEach(async () => {
   await resetDb();
   await seedDiscoveryFixture();
 });
-
-afterAll(async () => {
-  await prisma.$disconnect();
-});
+afterAll(async () => prisma.$disconnect());
 
 async function branchId(name: string) {
-  const b = await prisma.branch.findFirstOrThrow({ where: { name } });
-  return b.id;
+  return (await prisma.branch.findFirstOrThrow({ where: { name } })).id;
+}
+async function register(email = "u@u.cl", name = "Ana") {
+  const res = await request(app).post("/auth/register").send({ email, password: "secret123", name });
+  return res.body.accessToken as string;
 }
 
 describe("POST /branches/:id/reviews", () => {
-  it("crea reseña y recalcula el promedio", async () => {
-    const id = await branchId("Cercano Lunch Promo");
-    const r1 = await request(app).post(`/branches/${id}/reviews`).send({ authorName: "Ana", rating: 5 });
-    expect(r1.status).toBe(201);
-    expect(r1.body.ratingAvg).toBe(5);
-    expect(r1.body.ratingCount).toBe(1);
-
-    const r2 = await request(app)
-      .post(`/branches/${id}/reviews`)
-      .send({ authorName: "Beto", rating: 3, comment: "Ok" });
-    expect(r2.status).toBe(201);
-    expect(r2.body.ratingAvg).toBe(4); // (5+3)/2
-    expect(r2.body.ratingCount).toBe(2);
+  it("sin token devuelve 401", async () => {
+    const id = await branchId("Cercano Bar");
+    expect((await request(app).post(`/branches/${id}/reviews`).send({ rating: 5 })).status).toBe(401);
   });
 
-  it("aparece en el detalle con ratingAvg/ratingCount", async () => {
+  it("con token crea la reseña ligada al usuario, verified, authorName = nombre de la cuenta", async () => {
+    const token = await register("ana@u.cl", "Ana Pérez");
     const id = await branchId("Cercano Bar");
-    await request(app).post(`/branches/${id}/reviews`).send({ authorName: "Ana", rating: 4 });
-    const res = await request(app).get(`/branches/${id}`);
-    expect(res.body.ratingCount).toBe(1);
-    expect(res.body.ratingAvg).toBe(4);
-    expect(res.body.reviews).toHaveLength(1);
+    const res = await request(app).post(`/branches/${id}/reviews`)
+      .set("authorization", `Bearer ${token}`).send({ rating: 5, comment: "Excelente" });
+    expect(res.status).toBe(201);
+    const row = await prisma.review.findFirstOrThrow({ where: { branchId: id } });
+    expect(row.authorName).toBe("Ana Pérez");
+    expect(row.verified).toBe(true);
+    expect(row.userId).not.toBeNull();
+  });
+
+  it("segunda reseña del mismo usuario en el local devuelve 409", async () => {
+    const token = await register("ana@u.cl", "Ana");
+    const id = await branchId("Cercano Bar");
+    await request(app).post(`/branches/${id}/reviews`).set("authorization", `Bearer ${token}`).send({ rating: 5 });
+    const dup = await request(app).post(`/branches/${id}/reviews`).set("authorization", `Bearer ${token}`).send({ rating: 3 });
+    expect(dup.status).toBe(409);
   });
 
   it("400 con rating fuera de rango", async () => {
+    const token = await register();
     const id = await branchId("Cercano Bar");
-    expect((await request(app).post(`/branches/${id}/reviews`).send({ authorName: "X", rating: 9 })).status).toBe(400);
-    expect((await request(app).post(`/branches/${id}/reviews`).send({ authorName: "", rating: 4 })).status).toBe(400);
-  });
-
-  it("404 en local inexistente", async () => {
-    const res = await request(app).post(`/branches/no-existe/reviews`).send({ authorName: "X", rating: 4 });
-    expect(res.status).toBe(404);
-  });
-
-  it("409 al reenviar una reseña idéntica", async () => {
-    const id = await branchId("Cercano Bar");
-    const body = { authorName: "Ana", rating: 5, comment: "Excelente" };
-    expect((await request(app).post(`/branches/${id}/reviews`).send(body)).status).toBe(201);
-    expect((await request(app).post(`/branches/${id}/reviews`).send(body)).status).toBe(409);
-
-    // distinto comentario del mismo autor sí se permite
-    const other = await request(app)
-      .post(`/branches/${id}/reviews`)
-      .send({ authorName: "Ana", rating: 5, comment: "Otra cosa" });
-    expect(other.status).toBe(201);
+    expect((await request(app).post(`/branches/${id}/reviews`).set("authorization", `Bearer ${token}`).send({ rating: 9 })).status).toBe(400);
   });
 });

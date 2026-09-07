@@ -29,12 +29,6 @@ export interface NearbyRow {
   distance: number;
 }
 
-export interface ReviewInput {
-  authorName: string;
-  rating: number;
-  comment?: string;
-}
-
 // weekday (0=domingo) y HH:MM en hora de Chile (America/Santiago), base del
 // cálculo "abierto ahora" en todo el backend.
 function chileNowParts(now: Date): { weekday: number; hhmm: string } {
@@ -114,37 +108,22 @@ export async function getBranchDetail(id: string) {
   return { ...branch, ratingAvg, ratingCount, openNow, discountCodes };
 }
 
-// Ventana anti-duplicados: se rechaza una reseña idéntica (mismo autor, nota y
-// comentario en el mismo local) enviada dentro de este lapso.
-const DUPLICATE_REVIEW_WINDOW_MS = 24 * 60 * 60 * 1000;
-
-export async function addReview(branchId: string, input: ReviewInput) {
+export async function addReview(
+  branchId: string,
+  userId: string,
+  input: { rating: number; comment?: string }
+) {
   const branch = await prisma.branch.findFirst({ where: { id: branchId, active: true } });
   if (!branch) throw new HttpError(404, "branch_not_found");
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) throw new HttpError(401, "invalid_token");
 
-  const duplicate = await prisma.review.findFirst({
-    where: {
-      branchId,
-      authorName: input.authorName,
-      rating: input.rating,
-      comment: input.comment ?? null,
-      createdAt: { gte: new Date(Date.now() - DUPLICATE_REVIEW_WINDOW_MS) },
-    },
-  });
-  if (duplicate) throw new HttpError(409, "duplicate_review");
+  const existing = await prisma.review.findFirst({ where: { branchId, userId } });
+  if (existing) throw new HttpError(409, "already_reviewed");
 
   const review = await prisma.review.create({
-    data: {
-      branchId,
-      authorName: input.authorName,
-      rating: input.rating,
-      comment: input.comment ?? null,
-    },
+    data: { branchId, userId, authorName: user.name, rating: input.rating, comment: input.comment ?? null, verified: true },
   });
-  const agg = await prisma.review.aggregate({
-    where: { branchId },
-    _avg: { rating: true },
-    _count: true,
-  });
+  const agg = await prisma.review.aggregate({ where: { branchId }, _avg: { rating: true }, _count: true });
   return { review, ratingAvg: agg._avg.rating ?? 0, ratingCount: agg._count };
 }

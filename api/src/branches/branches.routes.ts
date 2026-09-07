@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { findNearby, getBranchDetail, addReview } from "./branches.service.js";
+import { authenticate } from "../middleware/authenticate.js";
 
 export const branchesRouter = Router();
 
@@ -22,7 +23,6 @@ const nearbySchema = z.object({
 });
 
 const reviewSchema = z.object({
-  authorName: z.string().trim().min(1).max(60),
   rating: z.coerce.number().int().min(1).max(5),
   comment: z.string().trim().max(500).optional(),
 });
@@ -44,10 +44,10 @@ branchesRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-branchesRouter.post("/:id/reviews", async (req, res, next) => {
+branchesRouter.post("/:id/reviews", authenticate, async (req, res, next) => {
   try {
     const body = reviewSchema.parse(req.body);
-    res.status(201).json(await addReview(req.params.id, body));
+    res.status(201).json(await addReview(req.params.id, req.user!.sub, body));
   } catch (e) {
     next(e);
   }
