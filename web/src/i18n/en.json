@@ -85,7 +85,18 @@
   "menu": { "open": "Open menu", "close": "Close menu" },
   "profile": {
     "title": "Your profile",
-    "signInPrompt": "Sign in to see your profile"
+    "signInPrompt": "Sign in to see your profile",
+    "editName": "Edit name",
+    "save": "Save",
+    "email": "Email",
+    "changePhoto": "Change photo",
+    "removePhoto": "Remove photo",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "passwordChanged": "Password updated",
+    "wrongPassword": "Current password is incorrect",
+    "avatarError": "Could not update the photo"
   },
   "account": {
     "signIn": "Sign in",

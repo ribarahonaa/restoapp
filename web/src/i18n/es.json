@@ -85,7 +85,18 @@
   "menu": { "open": "Abrir menú", "close": "Cerrar menú" },
   "profile": {
     "title": "Tu perfil",
-    "signInPrompt": "Inicia sesión para ver tu perfil"
+    "signInPrompt": "Inicia sesión para ver tu perfil",
+    "editName": "Editar nombre",
+    "save": "Guardar",
+    "email": "Correo",
+    "changePhoto": "Cambiar foto",
+    "removePhoto": "Quitar foto",
+    "changePassword": "Cambiar contraseña",
+    "currentPassword": "Contraseña actual",
+    "newPassword": "Nueva contraseña",
+    "passwordChanged": "Contraseña actualizada",
+    "wrongPassword": "La contraseña actual no es correcta",
+    "avatarError": "No se pudo actualizar la foto"
   },
   "account": {
     "signIn": "Ingresar",
