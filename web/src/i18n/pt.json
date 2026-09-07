@@ -82,6 +82,11 @@
     "clearRoute": "Remover rota"
   },
   "ads": { "section": "Destaques" },
+  "menu": { "open": "Abrir menu", "close": "Fechar menu" },
+  "profile": {
+    "title": "Seu perfil",
+    "signInPrompt": "Faça login para ver seu perfil"
+  },
   "account": {
     "signIn": "Entrar",
     "signOut": "Sair",

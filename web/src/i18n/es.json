@@ -82,6 +82,11 @@
     "clearRoute": "Quitar ruta"
   },
   "ads": { "section": "Destacados" },
+  "menu": { "open": "Abrir menú", "close": "Cerrar menú" },
+  "profile": {
+    "title": "Tu perfil",
+    "signInPrompt": "Inicia sesión para ver tu perfil"
+  },
   "account": {
     "signIn": "Ingresar",
     "signOut": "Cerrar sesión",

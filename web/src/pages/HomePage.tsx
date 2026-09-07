@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { MapPin, List, Map as MapIcon, LocateFixed, Loader2, X, Heart } from "lucide-react";
+import { MapPin, List, Map as MapIcon, LocateFixed, Loader2, X, Heart, Menu } from "lucide-react";
 import { useGeolocation } from "../hooks/useGeolocation.js";
 import { usePurposes } from "../hooks/usePurposes.js";
 import { useNearby } from "../hooks/useNearby.js";
@@ -12,8 +12,9 @@ import { SearchBar } from "../components/SearchBar.js";
 import { BranchList, SkeletonGrid } from "../components/BranchList.js";
 import { MapView, type MapMarker } from "../components/map/MapView.js";
 import { MapBranchSheet } from "../components/map/MapBranchSheet.js";
-import { LanguageSwitcher } from "../components/LanguageSwitcher.js";
-import { AccountButton } from "../components/auth/AccountButton.js";
+import { SideMenu } from "../components/SideMenu.js";
+import { Avatar } from "../components/Avatar.js";
+import { useAuth } from "../auth/AuthContext.js";
 import { categoryPinHtml } from "../lib/categories.js";
 import { useFavorites } from "../lib/favorites.js";
 import { getBranch } from "../api/client.js";
@@ -32,6 +33,8 @@ export function HomePage() {
   const navigate = useNavigate();
   const geo = useGeolocation();
   const purposes = usePurposes();
+  const { status, user } = useAuth();
+  const [menuOpen, setMenuOpen] = useState(false);
   const [filter, setFilter] = usePersistedState<FilterValue>("resto.filter", {
     promo: false,
     open: false,
@@ -135,20 +138,24 @@ export function HomePage() {
     <div className="flex h-screen flex-col bg-bg">
       {/* Header */}
       <header className="z-20 shrink-0 bg-surface px-4 pt-3 pb-2 shadow-sm">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="font-display text-lg font-extrabold tracking-tight text-brand">
-              {t("appName")}
-            </h1>
-            <p className="mt-0.5 flex items-center gap-1 text-xs font-medium text-mute">
-              <MapPin size={13} strokeWidth={2.5} className="text-brand" />
-              {t("nearYou")}
-            </p>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <button type="button" aria-label={t("menu.open")} onClick={() => setMenuOpen(true)}
+              className="grid h-9 w-9 place-items-center rounded-full text-ink ring-1 ring-line active:scale-95">
+              <Menu size={18} strokeWidth={2.5} />
+            </button>
+            <div className="min-w-0">
+              <h1 className="font-display text-lg font-extrabold tracking-tight text-brand">{t("appName")}</h1>
+              <p className="mt-0.5 flex items-center gap-1 text-xs font-medium text-mute">
+                <MapPin size={13} strokeWidth={2.5} className="text-brand" />{t("nearYou")}
+              </p>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <AccountButton />
-            <LanguageSwitcher />
-          </div>
+          <button type="button" onClick={() => setMenuOpen(true)} className="shrink-0" aria-label={t("menu.open")}>
+            {status === "authed" && user
+              ? <Avatar name={user.name} url={user.avatarUrl} size={32} />
+              : <span className="rounded-full bg-brand px-3 py-1.5 text-xs font-bold text-white">{t("account.signIn")}</span>}
+          </button>
         </div>
       </header>
 
@@ -258,6 +265,7 @@ export function HomePage() {
         )}
       </main>
       <AdPopup lat={center.lat} lng={center.lng} />
+      <SideMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
     </div>
   );
 }

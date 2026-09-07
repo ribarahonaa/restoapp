@@ -82,6 +82,11 @@
     "clearRoute": "Clear route"
   },
   "ads": { "section": "Featured" },
+  "menu": { "open": "Open menu", "close": "Close menu" },
+  "profile": {
+    "title": "Your profile",
+    "signInPrompt": "Sign in to see your profile"
+  },
   "account": {
     "signIn": "Sign in",
     "signOut": "Sign out",
