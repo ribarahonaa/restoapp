@@ -49,6 +49,7 @@ model User {
   reviewed        PlaceSuggestion[] @relation("Reviewer")
   refreshTokens   RefreshToken[]
   reviews         Review[]
+  favorites       FavoriteBranch[]
 }
 
 // Refresh tokens emitidos: permiten rotación y revocación. El id es el jti
@@ -112,6 +113,7 @@ model Branch {
   reviews     Review[]
   discountCodes DiscountCode[]
   ads           Ad[]
+  favorites     FavoriteBranch[]
 
   @@index([businessId])
   @@index([planId])
@@ -130,6 +132,16 @@ model Review {
   createdAt  DateTime @default(now())
 
   @@index([branchId])
+}
+
+model FavoriteBranch {
+  userId    String
+  branchId  String
+  createdAt DateTime @default(now())
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  branch    Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  @@id([userId, branchId])
+  @@index([userId])
 }
 
 model BranchAdmin {
