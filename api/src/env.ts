@@ -24,6 +24,8 @@ const schema = z.object({
   // Orígenes permitidos por CORS, separados por coma. Sin valor => se permite
   // cualquier origen (cómodo en dev). En producción, fijar el/los dominio(s).
   CORS_ORIGIN: z.string().optional(),
+  PRESENCE_RADIUS_M: z.coerce.number().default(150),
+  REVIEW_MIN_DWELL_MINUTES: z.coerce.number().default(20),
 });
 
 export const env = schema.parse(process.env);

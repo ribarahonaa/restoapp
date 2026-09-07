@@ -50,6 +50,7 @@ model User {
   refreshTokens   RefreshToken[]
   reviews         Review[]
   favorites       FavoriteBranch[]
+  visits          Visit[]
 }
 
 // Refresh tokens emitidos: permiten rotación y revocación. El id es el jti
@@ -114,6 +115,7 @@ model Branch {
   discountCodes DiscountCode[]
   ads           Ad[]
   favorites     FavoriteBranch[]
+  visits        Visit[]
 
   @@index([businessId])
   @@index([planId])
@@ -140,6 +142,17 @@ model FavoriteBranch {
   createdAt DateTime @default(now())
   user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   branch    Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  @@id([userId, branchId])
+  @@index([userId])
+}
+
+model Visit {
+  userId     String
+  branchId   String
+  startedAt  DateTime @default(now())
+  lastSeenAt DateTime @default(now())
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  branch     Branch @relation(fields: [branchId], references: [id], onDelete: Cascade)
   @@id([userId, branchId])
   @@index([userId])
 }
