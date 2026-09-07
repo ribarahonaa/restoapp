@@ -15,7 +15,12 @@
     "empty": "Be the first to leave a review.",
     "duplicate": "You already posted this same review.",
     "loginGate": "Sign in to leave your review",
-    "loginCta": "Sign in"
+    "loginCta": "Sign in",
+    "needGps": "Turn on location to leave a review",
+    "checkin": "I'm here (check in)",
+    "tooFar": "Get closer to the place to check in",
+    "wait": "You'll be able to review in ~{{min}} min",
+    "verified": "Verified visit"
   },
   "search": {
     "placeholder": "Search places…",

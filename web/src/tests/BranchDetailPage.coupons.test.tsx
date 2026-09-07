@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import "../i18n/index.js";
 import i18n from "../i18n/index.js";
@@ -51,5 +51,20 @@ describe("BranchDetailPage — cupones y cierre", () => {
     vi.spyOn(client, "getBranch").mockResolvedValue(detail({ discountCodes: [{ id: "d1", code: "VERANO20", type: "percent", value: "20", startsAt: "2026-01-01T00:00:00.000Z", endsAt: "2026-12-01T00:00:00.000Z", branchId: "b1" }] }));
     renderPage();
     expect(await screen.findByText("VERANO20")).toBeInTheDocument();
+  });
+
+  it("muestra la píldora de visita verificada sólo en reseñas verificadas", async () => {
+    vi.spyOn(client, "getBranch").mockResolvedValue(
+      detail({
+        reviews: [
+          { id: "r1", authorName: "Ana", rating: 5, comment: null, createdAt: "2026-01-01T00:00:00.000Z", verified: true },
+          { id: "r2", authorName: "Luis", rating: 4, comment: null, createdAt: "2026-01-01T00:00:00.000Z", verified: false },
+        ],
+      })
+    );
+    renderPage();
+    fireEvent.click(await screen.findByRole("tab", { name: /Horarios/i }));
+    expect(await screen.findByText("Visita verificada")).toBeInTheDocument();
+    expect(screen.getAllByText("Visita verificada")).toHaveLength(1);
   });
 });

@@ -52,6 +52,7 @@ export interface Review {
   rating: number;
   comment: string | null;
   createdAt: string;
+  verified: boolean;
 }
 
 export interface BranchPurposeTag {
@@ -104,6 +105,14 @@ export interface NearbyFilters {
 export interface ReviewInput {
   rating: number;
   comment?: string;
+  lat: number;
+  lng: number;
+}
+
+export interface ReviewEligibility {
+  eligible: boolean;
+  reason?: string;
+  canReviewAt?: string;
 }
 
 export interface PublicAd {

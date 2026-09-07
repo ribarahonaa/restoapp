@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, MapPin, ChevronRight } from "lucide-react";
+import { ArrowLeft, MapPin, ChevronRight, CheckCircle2 } from "lucide-react";
 import { getBranch } from "../api/client.js";
 import type { BranchDetail, MenuItem, Promotion, PublicDiscountCode } from "../api/types.js";
 import { CATEGORY_ICON, CATEGORY_GRADIENT, categoryPinHtml } from "../lib/categories.js";
@@ -268,7 +268,15 @@ export function BranchDetailPage() {
                   {branch.reviews.map((r) => (
                     <li key={r.id} className="rounded-2xl bg-surface p-3 shadow-sm ring-1 ring-line">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-ink">{r.authorName}</span>
+                        <span className="flex items-center gap-1.5">
+                          <span className="font-bold text-ink">{r.authorName}</span>
+                          {r.verified && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-bold text-emerald-700">
+                              <CheckCircle2 size={12} strokeWidth={2.5} />
+                              {t("review.verified")}
+                            </span>
+                          )}
+                        </span>
                         <Stars value={r.rating} />
                       </div>
                       {r.comment && <p className="mt-1 text-sm text-mute">{r.comment}</p>}

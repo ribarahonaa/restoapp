@@ -15,7 +15,12 @@
     "empty": "Seja o primeiro a avaliar.",
     "duplicate": "Você já publicou esta mesma avaliação.",
     "loginGate": "Faça login para deixar sua avaliação",
-    "loginCta": "Entrar"
+    "loginCta": "Entrar",
+    "needGps": "Ative a localização para poder avaliar",
+    "checkin": "Estou aqui (check-in)",
+    "tooFar": "Aproxime-se do local para fazer check-in",
+    "wait": "Você poderá avaliar em ~{{min}} min",
+    "verified": "Visita verificada"
   },
   "search": {
     "placeholder": "Buscar lugares…",

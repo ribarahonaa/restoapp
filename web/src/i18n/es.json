@@ -15,7 +15,12 @@
     "empty": "Sé el primero en dejar una reseña.",
     "duplicate": "Ya publicaste esta misma reseña.",
     "loginGate": "Inicia sesión para dejar tu reseña",
-    "loginCta": "Ingresar"
+    "loginCta": "Ingresar",
+    "needGps": "Activa la ubicación para poder reseñar",
+    "checkin": "Estoy aquí (check-in)",
+    "tooFar": "Acércate al local para hacer check-in",
+    "wait": "Podrás reseñar en ~{{min}} min",
+    "verified": "Visita verificada"
   },
   "search": {
     "placeholder": "Buscar local…",

@@ -7,6 +7,7 @@ import type {
   NearbyFilters,
   Review,
   ReviewInput,
+  ReviewEligibility,
   PublicAd,
 } from "./types.js";
 
@@ -53,6 +54,18 @@ export async function addReview(id: string, input: ReviewInput): Promise<ReviewR
   if (!res.ok) throw new Error(res.status === 409 ? "already_reviewed" : `HTTP ${res.status}`);
   return res.json() as Promise<ReviewResult>;
 }
+
+export const checkIn = async (id: string, lat: number, lng: number) =>
+  (
+    await authedFetch(`/branches/${id}/checkin`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lat, lng }),
+    })
+  ).json();
+
+export const getReviewEligibility = async (id: string, lat: number, lng: number) =>
+  (await authedFetch(`/branches/${id}/review-eligibility?lat=${lat}&lng=${lng}`)).json() as Promise<ReviewEligibility>;
 
 export function getAds(lat: number, lng: number): Promise<PublicAd[]> {
   return getJson<PublicAd[]>(`${API_URL}/ads?lat=${lat}&lng=${lng}`);
