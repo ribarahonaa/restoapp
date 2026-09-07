@@ -21,4 +21,35 @@ describe("ProfileSection", () => {
     fireEvent.click(screen.getByRole("button", { name: /guardar/i }));
     await waitFor(() => expect(spy).toHaveBeenCalledWith("Ana2"));
   });
+
+  it("cambiar contraseña con error no-invalid_password muestra el mensaje genérico (no wrongPassword)", async () => {
+    vi.spyOn(profileClient, "changePassword").mockRejectedValue(new Error("HTTP 500"));
+    render(<ProfileSection />);
+    fireEvent.click(screen.getByRole("button", { name: /cambiar contraseña/i }));
+    fireEvent.change(screen.getByPlaceholderText(/contraseña actual/i), { target: { value: "oldpass" } });
+    fireEvent.change(screen.getByPlaceholderText(/nueva contraseña/i), { target: { value: "newpass" } });
+    fireEvent.click(screen.getByRole("button", { name: /guardar/i }));
+    await waitFor(() => expect(screen.getByText("No se pudo guardar los cambios")).toBeInTheDocument());
+    expect(screen.queryByText("La contraseña actual no es correcta")).not.toBeInTheDocument();
+  });
+
+  it("cambiar contraseña con invalid_password muestra el mensaje específico", async () => {
+    vi.spyOn(profileClient, "changePassword").mockRejectedValue(new Error("invalid_password"));
+    render(<ProfileSection />);
+    fireEvent.click(screen.getByRole("button", { name: /cambiar contraseña/i }));
+    fireEvent.change(screen.getByPlaceholderText(/contraseña actual/i), { target: { value: "oldpass" } });
+    fireEvent.change(screen.getByPlaceholderText(/nueva contraseña/i), { target: { value: "newpass" } });
+    fireEvent.click(screen.getByRole("button", { name: /guardar/i }));
+    await waitFor(() => expect(screen.getByText("La contraseña actual no es correcta")).toBeInTheDocument());
+  });
+
+  it("editar nombre con falla de updateName muestra error genérico y deja el formulario abierto", async () => {
+    vi.spyOn(profileClient, "updateName").mockRejectedValue(new Error("HTTP 500"));
+    render(<ProfileSection />);
+    fireEvent.click(screen.getByRole("button", { name: /editar nombre/i }));
+    fireEvent.change(screen.getByDisplayValue("Ana"), { target: { value: "Ana2" } });
+    fireEvent.click(screen.getByRole("button", { name: /guardar/i }));
+    await waitFor(() => expect(screen.getByText("No se pudo guardar los cambios")).toBeInTheDocument());
+    expect(screen.getByDisplayValue("Ana2")).toBeInTheDocument();
+  });
 });

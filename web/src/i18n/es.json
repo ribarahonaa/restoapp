@@ -96,7 +96,8 @@
     "newPassword": "Nueva contraseña",
     "passwordChanged": "Contraseña actualizada",
     "wrongPassword": "La contraseña actual no es correcta",
-    "avatarError": "No se pudo actualizar la foto"
+    "avatarError": "No se pudo actualizar la foto",
+    "saveError": "No se pudo guardar los cambios"
   },
   "account": {
     "signIn": "Ingresar",

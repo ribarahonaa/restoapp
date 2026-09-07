@@ -18,6 +18,7 @@ export function ProfileSection() {
   const [editingName, setEditingName] = useState(false);
   const [nameValue, setNameValue] = useState("");
   const [nameBusy, setNameBusy] = useState(false);
+  const [nameError, setNameError] = useState<string | null>(null);
 
   const [changingPassword, setChangingPassword] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -29,17 +30,20 @@ export function ProfileSection() {
 
   const startEditName = () => {
     setNameValue(user.name);
+    setNameError(null);
     setEditingName(true);
   };
 
   const handleSaveName = async () => {
     setNameBusy(true);
+    setNameError(null);
     try {
       await updateName(nameValue);
       await refreshUser();
       setEditingName(false);
     } catch {
       // se deja el formulario abierto para reintentar
+      setNameError(t("profile.saveError"));
     } finally {
       setNameBusy(false);
     }
@@ -86,7 +90,7 @@ export function ProfileSection() {
       setNewPassword("");
     } catch (err) {
       const invalid = err instanceof Error && err.message === "invalid_password";
-      setPasswordMsg({ type: "error", text: invalid ? t("profile.wrongPassword") : t("profile.wrongPassword") });
+      setPasswordMsg({ type: "error", text: invalid ? t("profile.wrongPassword") : t("profile.saveError") });
     } finally {
       setPasswordBusy(false);
     }
@@ -105,6 +109,7 @@ export function ProfileSection() {
                 onChange={(e) => setNameValue(e.target.value)}
                 className="rounded-xl border border-ink/10 bg-bg px-3 py-2 text-sm text-ink outline-none focus:border-brand"
               />
+              {nameError && <p className="text-xs font-medium text-red-600">{nameError}</p>}
               <div className="flex gap-2">
                 <button
                   type="button"

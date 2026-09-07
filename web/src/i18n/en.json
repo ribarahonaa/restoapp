@@ -96,7 +96,8 @@
     "newPassword": "New password",
     "passwordChanged": "Password updated",
     "wrongPassword": "Current password is incorrect",
-    "avatarError": "Could not update the photo"
+    "avatarError": "Could not update the photo",
+    "saveError": "Couldn't save changes"
   },
   "account": {
     "signIn": "Sign in",
