@@ -1,6 +1,7 @@
 import { prisma } from "../prisma.js";
 import { buildNearbyQuery, type NearbyParams } from "./nearby.sql.js";
 import { HttpError } from "../middleware/error.js";
+import { assertCanReview } from "./presence.js";
 
 export interface NearbyFilters {
   lat: number;
@@ -111,8 +112,9 @@ export async function getBranchDetail(id: string) {
 export async function addReview(
   branchId: string,
   userId: string,
-  input: { rating: number; comment?: string }
+  input: { rating: number; comment?: string; lat: number; lng: number }
 ) {
+  await assertCanReview(userId, branchId, input.lat, input.lng);
   const branch = await prisma.branch.findFirst({ where: { id: branchId, active: true } });
   if (!branch) throw new HttpError(404, "branch_not_found");
   const user = await prisma.user.findUnique({ where: { id: userId } });
