@@ -7,7 +7,7 @@ import {
   hasRefreshToken,
   type Me,
 } from "./authClient.js";
-import { getLocalIds, setFavoritesFromServer, resetToLocal } from "../lib/favorites.js";
+import { getLocalIds, setFavoritesFromServer, resetToLocal, clearLocal } from "../lib/favorites.js";
 import { mergeFavorites } from "../api/favoritesClient.js";
 
 type Status = "loading" | "authed" | "anon";
@@ -29,6 +29,10 @@ async function syncFavoritesOnAuth() {
     const ids = getLocalIds();
     const merged = await mergeFavorites(ids);
     setFavoritesFromServer(merged);
+    // merge exitoso: la lista anónima ya fue absorbida por esta cuenta.
+    // Se borra para que no vuelva a mezclarse con la próxima cuenta que
+    // inicie sesión en este mismo dispositivo (ver fix-wave-report).
+    clearLocal();
   } catch {
     // sin red / error del servidor: se mantienen los favoritos locales
   }

@@ -66,6 +66,18 @@ export function getLocalIds(): string[] {
   return [...loadLocal()];
 }
 
+// Borra la lista anónima (localStorage + snapshot en memoria) tras un merge
+// exitoso, para que no vuelva a mezclarse con la próxima cuenta que inicie
+// sesión en este mismo dispositivo. Debe llamarse SIEMPRE después de
+// setFavoritesFromServer(merged) al terminar un login exitoso.
+export function clearLocal(): void {
+  try {
+    localStorage.removeItem(KEY);
+  } catch {
+    // sin acceso a localStorage
+  }
+}
+
 function subscribe(l: () => void) {
   listeners.add(l);
   return () => listeners.delete(l);
