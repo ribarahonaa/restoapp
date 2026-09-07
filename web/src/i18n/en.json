@@ -84,7 +84,6 @@
   "ads": { "section": "Featured" },
   "menu": { "open": "Open menu", "close": "Close menu" },
   "profile": {
-    "title": "Your profile",
     "signInPrompt": "Sign in to see your profile",
     "editName": "Edit name",
     "save": "Save",
@@ -96,6 +95,7 @@
     "newPassword": "New password",
     "passwordChanged": "Password updated",
     "wrongPassword": "Current password is incorrect",
+    "passwordTooShort": "New password must be at least 8 characters",
     "avatarError": "Could not update the photo",
     "saveError": "Couldn't save changes"
   },

@@ -8,7 +8,10 @@ export async function updateName(name: string): Promise<Me> {
 
 export async function changePassword(currentPassword: string, newPassword: string): Promise<void> {
   const res = await authedFetch("/me/password", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ currentPassword, newPassword }) });
-  if (!res.ok) throw new Error(res.status === 400 ? "invalid_password" : `HTTP ${res.status}`);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || `HTTP ${res.status}`);
+  }
 }
 
 export async function uploadAvatar(file: File): Promise<{ avatarUrl: string }> {

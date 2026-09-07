@@ -84,7 +84,6 @@
   "ads": { "section": "Destacados" },
   "menu": { "open": "Abrir menú", "close": "Cerrar menú" },
   "profile": {
-    "title": "Tu perfil",
     "signInPrompt": "Inicia sesión para ver tu perfil",
     "editName": "Editar nombre",
     "save": "Guardar",
@@ -96,6 +95,7 @@
     "newPassword": "Nueva contraseña",
     "passwordChanged": "Contraseña actualizada",
     "wrongPassword": "La contraseña actual no es correcta",
+    "passwordTooShort": "La nueva contraseña debe tener al menos 8 caracteres",
     "avatarError": "No se pudo actualizar la foto",
     "saveError": "No se pudo guardar los cambios"
   },

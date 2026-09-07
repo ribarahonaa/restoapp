@@ -81,6 +81,10 @@ export function ProfileSection() {
   };
 
   const handleChangePassword = async () => {
+    if (newPassword.length < 8) {
+      setPasswordMsg({ type: "error", text: t("profile.passwordTooShort") });
+      return;
+    }
     setPasswordBusy(true);
     setPasswordMsg(null);
     try {
@@ -89,8 +93,14 @@ export function ProfileSection() {
       setCurrentPassword("");
       setNewPassword("");
     } catch (err) {
-      const invalid = err instanceof Error && err.message === "invalid_password";
-      setPasswordMsg({ type: "error", text: invalid ? t("profile.wrongPassword") : t("profile.saveError") });
+      const code = err instanceof Error ? err.message : "";
+      const text =
+        code === "invalid_password"
+          ? t("profile.wrongPassword")
+          : code === "validation_error"
+            ? t("profile.passwordTooShort")
+            : t("profile.saveError");
+      setPasswordMsg({ type: "error", text });
     } finally {
       setPasswordBusy(false);
     }
