@@ -39,6 +39,18 @@ export async function login(email: string, password: string): Promise<Me> {
   return me();
 }
 
+export async function register(name: string, email: string, password: string): Promise<Me> {
+  const res = await fetch(`${API_URL}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password }),
+  });
+  if (!res.ok) throw new Error(res.status === 409 ? "email_taken" : "register_failed");
+  const { accessToken: a, refreshToken: r } = await res.json();
+  setSession(a, r);
+  return me();
+}
+
 export async function refreshSession(): Promise<void> {
   const refresh = localStorage.getItem(REFRESH_KEY);
   if (!refresh) throw new Error("no_refresh");

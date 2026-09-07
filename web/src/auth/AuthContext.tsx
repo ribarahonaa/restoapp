@@ -1,11 +1,19 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { login as apiLogin, logout as apiLogout, me, hasRefreshToken, type Me } from "./authClient.js";
+import {
+  login as apiLogin,
+  logout as apiLogout,
+  register as apiRegister,
+  me,
+  hasRefreshToken,
+  type Me,
+} from "./authClient.js";
 
 type Status = "loading" | "authed" | "anon";
 interface AuthValue {
   user: Me | null;
   status: Status;
   signIn: (email: string, password: string) => Promise<void>;
+  signUp: (name: string, email: string, password: string) => Promise<void>;
   signOut: () => void;
 }
 
@@ -33,13 +41,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(u);
     setStatus("authed");
   };
+  const signUp = async (name: string, email: string, password: string) => {
+    const u = await apiRegister(name, email, password);
+    setUser(u);
+    setStatus("authed");
+  };
   const signOut = () => {
     apiLogout();
     setUser(null);
     setStatus("anon");
   };
 
-  return <Ctx.Provider value={{ user, status, signIn, signOut }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ user, status, signIn, signUp, signOut }}>{children}</Ctx.Provider>;
 }
 
 export function useAuth(): AuthValue {
