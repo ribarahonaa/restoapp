@@ -46,3 +46,25 @@ describe("POST /me/password", () => {
     expect(login.body.accessToken).toBeTruthy();
   });
 });
+
+const PNG = Buffer.from("89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000a49444154789c6360000002000154a24f5f0000000049454e44ae426082", "hex");
+
+describe("avatar", () => {
+  it("sube el avatar y me lo refleja; DELETE lo limpia", async () => {
+    const t = await tokenFor("av@av.cl");
+    const up = await request(app).post("/me/avatar").set("authorization", `Bearer ${t}`).attach("file", PNG, { filename: "a.png", contentType: "image/png" });
+    expect(up.status).toBe(201);
+    expect(typeof up.body.avatarUrl).toBe("string");
+    const me = await request(app).get("/auth/me").set("authorization", `Bearer ${t}`);
+    expect(me.body.avatarUrl).toBe(up.body.avatarUrl);
+    const del = await request(app).delete("/me/avatar").set("authorization", `Bearer ${t}`);
+    expect(del.status).toBe(204);
+    const me2 = await request(app).get("/auth/me").set("authorization", `Bearer ${t}`);
+    expect(me2.body.avatarUrl).toBeNull();
+  });
+  it("400 con tipo inválido", async () => {
+    const t = await tokenFor("av2@av.cl");
+    const up = await request(app).post("/me/avatar").set("authorization", `Bearer ${t}`).attach("file", Buffer.from("hola"), { filename: "a.txt", contentType: "text/plain" });
+    expect(up.status).toBe(400);
+  });
+});
