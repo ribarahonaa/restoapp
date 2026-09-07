@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { prisma } from "../prisma.js";
 import { buildNearbyQuery, type NearbyParams } from "./nearby.sql.js";
 import { HttpError } from "../middleware/error.js";
@@ -123,9 +124,20 @@ export async function addReview(
   const existing = await prisma.review.findFirst({ where: { branchId, userId } });
   if (existing) throw new HttpError(409, "already_reviewed");
 
-  const review = await prisma.review.create({
-    data: { branchId, userId, authorName: user.name, rating: input.rating, comment: input.comment ?? null, verified: true },
-  });
+  let review;
+  try {
+    review = await prisma.review.create({
+      data: { branchId, userId, authorName: user.name, rating: input.rating, comment: input.comment ?? null, verified: true },
+    });
+  } catch (e) {
+    // findFirst + create no es atómico: un doble envío concurrente puede
+    // pasar el chequeo dos veces y chocar contra el índice único parcial
+    // (userId, branchId). Ese caso también es "ya reseñado", no un 500.
+    if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
+      throw new HttpError(409, "already_reviewed");
+    }
+    throw e;
+  }
   const agg = await prisma.review.aggregate({ where: { branchId }, _avg: { rating: true }, _count: true });
   return { review, ratingAvg: agg._avg.rating ?? 0, ratingCount: agg._count };
 }

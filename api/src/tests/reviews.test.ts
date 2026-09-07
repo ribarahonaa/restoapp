@@ -59,6 +59,23 @@ describe("POST /branches/:id/reviews", () => {
     expect(dup.status).toBe(409);
   });
 
+  it("dos envíos concurrentes del mismo usuario: uno 201 y el otro 409 (nunca 500)", async () => {
+    // findFirst + create no es atómico: si ambos envíos pasan el chequeo de
+    // duplicado antes de que cualquiera cree la fila, el segundo create choca
+    // con el índice único parcial (userId, branchId) y debe mapearse a 409,
+    // no a 500.
+    const token = await register("ana@u.cl", "Ana");
+    const id = await branchId("Cercano Bar");
+    await ageCheckIn(app, token, id, "ana@u.cl");
+    const send = (rating: number) =>
+      request(app).post(`/branches/${id}/reviews`).set("authorization", `Bearer ${token}`).send({ rating, ...AT });
+    const [r1, r2] = await Promise.all([send(5), send(3)]);
+    const statuses = [r1.status, r2.status].sort((a, b) => a - b);
+    expect(statuses).toEqual([201, 409]);
+    const rows = await prisma.review.findMany({ where: { branchId: id, userId: (await prisma.user.findFirstOrThrow({ where: { email: "ana@u.cl" } })).id } });
+    expect(rows).toHaveLength(1);
+  });
+
   it("400 con rating fuera de rango", async () => {
     const token = await register();
     const id = await branchId("Cercano Bar");
