@@ -55,17 +55,23 @@ export async function addReview(id: string, input: ReviewInput): Promise<ReviewR
   return res.json() as Promise<ReviewResult>;
 }
 
-export const checkIn = async (id: string, lat: number, lng: number) =>
-  (
-    await authedFetch(`/branches/${id}/checkin`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ lat, lng }),
-    })
-  ).json();
+export async function checkIn(id: string, lat: number, lng: number) {
+  const res = await authedFetch(`/branches/${id}/checkin`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ lat, lng }),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.error || "checkin_failed");
+  return body;
+}
 
-export const getReviewEligibility = async (id: string, lat: number, lng: number) =>
-  (await authedFetch(`/branches/${id}/review-eligibility?lat=${lat}&lng=${lng}`)).json() as Promise<ReviewEligibility>;
+export async function getReviewEligibility(id: string, lat: number, lng: number): Promise<ReviewEligibility> {
+  const res = await authedFetch(`/branches/${id}/review-eligibility?lat=${lat}&lng=${lng}`);
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.error || "eligibility_failed");
+  return body as ReviewEligibility;
+}
 
 export function getAds(lat: number, lng: number): Promise<PublicAd[]> {
   return getJson<PublicAd[]>(`${API_URL}/ads?lat=${lat}&lng=${lng}`);

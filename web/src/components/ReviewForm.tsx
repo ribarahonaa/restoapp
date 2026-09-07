@@ -77,8 +77,8 @@ export function ReviewForm({ branchId, onAdded }: { branchId: string; onAdded: (
       await checkIn(branchId, lat, lng);
       const res = await getReviewEligibility(branchId, lat, lng);
       setElig(res);
-    } catch {
-      setError("review.tooFar");
+    } catch (e) {
+      setError(e instanceof Error && e.message === "too_far" ? "review.tooFar" : "errors.loadFailed");
     } finally {
       setCheckingIn(false);
     }

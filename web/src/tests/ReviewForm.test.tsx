@@ -64,6 +64,21 @@ describe("ReviewForm — estados de presencia", () => {
     expect(screen.getByRole("button", { name: "Estoy aquí (check-in)" })).toBeInTheDocument();
   });
 
+  it("no_checkin: si el check-in falla con too_far, muestra el mensaje review.tooFar", async () => {
+    mockAuth("authed");
+    vi.spyOn(geoHook, "useGeolocation").mockReturnValue({ status: "ready", lat: -33.4, lng: -70.6, locate } as never);
+    vi.spyOn(client, "getReviewEligibility").mockResolvedValue({ eligible: false, reason: "no_checkin" });
+    vi.spyOn(client, "checkIn").mockRejectedValue(new Error("too_far"));
+
+    render(<ReviewForm branchId="b1" onAdded={vi.fn()} />);
+
+    const btn = await screen.findByRole("button", { name: "Estoy aquí (check-in)" });
+    expect(screen.queryByText("Acércate al local para hacer check-in")).not.toBeInTheDocument();
+    fireEvent.click(btn);
+
+    expect(await screen.findByText("Acércate al local para hacer check-in")).toBeInTheDocument();
+  });
+
   it("too_soon: muestra minutos de espera", async () => {
     mockAuth("authed");
     vi.spyOn(geoHook, "useGeolocation").mockReturnValue({ status: "ready", lat: -33.4, lng: -70.6, locate } as never);
